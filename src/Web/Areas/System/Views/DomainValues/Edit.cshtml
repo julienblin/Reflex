@@ -1,0 +1,13 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.DomainValues.DomainValueEdit
+@{
+    ViewBag.Title = "Editer la valeur " + Model.Name;
+}
+
+<section>
+    <div class="page-header">
+        <h1>Editer la valeur @Model.Name
+        </h1>
+    </div>
+</section>
+
+@Html.Partial("_Form")

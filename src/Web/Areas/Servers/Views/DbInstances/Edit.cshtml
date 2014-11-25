@@ -1,0 +1,13 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.DbInstances.DbInstanceEdit
+@{
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+    ViewBag.Title = "Édition d'une instance de base de donnés";
+}
+
+<div class="page-header">
+    <h2>
+        Modification d'une instance
+    </h2>
+</div>
+
+@Html.Partial("_Form", Model)

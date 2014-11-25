@@ -1,0 +1,122 @@
+﻿@using CGI.Reflex.Web
+@model CGI.Reflex.Web.Areas.System.Models.Users.UsersIndex
+@{
+    ViewBag.Title = "Utilisateurs";
+}
+<section>
+    <div class="page-header">
+        <h2>
+            Utilisateurs
+
+            @if (IsActionAllowed("Create"))
+            {
+                <a href="@Url.Action("Create")" class="btn btn-success btn-mini" rel="tooltip" title="Ajouter un utilisateur"><i class="icon-plus-sign icon-white"></i></a>
+            }
+            <a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+        </h2>
+        <section>
+            <div class="row">
+                <div class="span12">
+                    @{ var formClass = Model.SearchDefined ? "collapse in" : "collapse"; }
+                    <div id="searchForm" class="@formClass">
+                        <div class="well">
+                            @using (Html.BeginForm("Index", "Users", FormMethod.Get))
+                            {
+                                <div class="row">
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.NameOrEmail)
+                                            @Html.EditorFor(m => m.NameOrEmail)
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Companies)
+                                            @Html.EditorFor(m => m.Companies)
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Roles)
+                                            @Html.ListBoxFor(m => m.Roles, new MultiSelectList(Model.AvailableRoles, "Id", "Name"), new { data_select2_enabled = string.Empty, multiple = string.Empty })
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <label class="checkbox" style="width:auto;">
+                                                    <input type="checkbox" name="IncludeLockedOut" value="true" @(Model.IncludeLockedOut ? "checked=\"checked\"" : "") /> @WebResources.IncludeLockedOut
+                                                </label>
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+                                <a href="@Url.Action("Index")" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>
+                                
+                                <div style="float:right;">
+                                    <b>@Model.SearchResults.TotalItems</b> utilisateur(s)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+
+
+<section id="results">
+    <div class="row">
+        <div class="span12">
+            @if (Model.HasResults)
+            {
+                @Html.Pager()
+
+                <table class="table table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th>@Html.OrderLink("Nom", "UserName")</th>
+                            <th>@Html.OrderLink("Rôle", "Role.Name")</th>
+                            <th>@Html.OrderLink("Courriel", "Email")</th>
+                            <th>@Html.OrderLink("Compagnie", "Company")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.SearchResults.Items)
+                        {
+                            <tr class="@(user.IsLockedOut ? "text-warning" : "")">
+                                <td class="span2">@user.UserName</td>
+                                <td class="span2">@user.Role.Name</td>
+                                <td class="span4">@user.Email</td>
+                                <td class="span2">@user.Company</td>
+                                <td class="span2" style="text-align:right">
+                                    @if (IsActionAllowed("Edit") && Model.AuthorizedRoles.Contains(user.Role))
+                                    {
+                                        <a href="@Url.Action("Edit", new { id = user.Id })" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+                                    }
+                                    
+                                    @Html.HistoryLink("User", user.Id, "btn-mini", "Voir l'historique")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @Html.Pager()
+            }
+            else
+            {
+                <blockquote>
+                    <p>Aucun résultat trouvé.</p>
+                </blockquote>
+            }
+        </div>
+    </div>
+</section>

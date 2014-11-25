@@ -1,0 +1,320 @@
+﻿@model CGI.Reflex.Web.Models.Home.SummaryDetails
+@using System.Globalization
+@using CGI.Reflex.Core.Entities
+
+@helper HierarchycalLines(IEnumerable<CGI.Reflex.Core.Queries.Series.ApplicationSeriesResultNode> nodes, int level)
+    {
+        foreach (var node in nodes)
+        {
+            var backPos = -162 + (level * 18);
+        <tr class="tr-node" style="@(node.Parent == null ? "" : "display:none;")" data-parent-id='@(node.Parent != null ? node.Parent.NodeCriteria.Id.ToString(CultureInfo.InvariantCulture) : "")' data-parent-ids='@(node.Parent != null ? string.Join(" ", node.Parent.NodeCriteria.AllParentIds) : "")'>
+            <td class="@(node.Children.Count == 0 ? "jstree-leaf" : "jstree-closed") @(node == nodes.Last() ? "tree-node-last" : "tree-node")" style="padding-left: @(level * 18)px; background-position: @(backPos)px 0;">
+                <ins class="jstree-icon" style="@(node.Children.Count == 0 ? "" : "cursor: pointer;")" data-id="@node.NodeCriteria.Id">&nbsp;</ins>
+                @AppSearchLink(node.NodeCriteria.ToString(), node.NodeCriteria, null, false)
+            </td>
+            @if(Model.LineCriteria == "Technology")
+            {
+                <td class="span1" style="text-align: center; vertical-align: middle;">
+                    @{var status = ((Technology)node.NodeCriteria).GetEndOfSupportStatus();}
+                    @switch (status)
+	                {
+                        case Technology.EndOfSupportStatus.UpToDate:
+                            <span class="label label-success" style="font-size:inherit; line-height:inherit;">@(((Technology)node.NodeCriteria).EndOfSupport.Value.ToShortDateString())</span>
+                        break;
+                        case Technology.EndOfSupportStatus.AlmostOutdated:
+                            <span class="label label-warning" style="font-size:inherit; line-height:inherit;">@(((Technology)node.NodeCriteria).EndOfSupport.Value.ToShortDateString())</span>
+                        break;
+                        case Technology.EndOfSupportStatus.Outdated:
+                            <span class="label label-danger" style="font-size:inherit; line-height:inherit;">@(((Technology)node.NodeCriteria).EndOfSupport.Value.ToShortDateString())</span>
+                        break;
+	                }
+                </td>
+            }
+            @for (var i = 0; i < Model.Result.Columns.Count; ++i)
+            {
+                <td class="span1" style="text-align: right;">
+                    @if (Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values)
+                    {
+                        @node.GetCount(i)
+                    }
+                    else
+                    {
+                        @Model.Result.GetPercent(@node.GetCount(i))@:&nbsp;%
+                    }
+                </td>
+            }
+            <td class="span1" style="text-align: right;">
+                @if (Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values)
+                {
+                    <b>@node.Total</b>
+                }
+                else
+                {
+                    <b>@Model.Result.GetPercent(node.Total)&nbsp;%</b>
+                }
+            </td>
+        </tr>
+        @HierarchycalLines(@node.Children, level + 1)
+        }
+}
+
+@helper AppSearchLink(string linkText, object lineCriteria, object columnCriteria, bool bubble)
+    {
+        var routeValues = new RouteValueDictionary();
+        routeValues["area"] = "Applications";
+        switch (Model.LineCriteria)
+        {
+            case "ApplicationType":
+                routeValues["ApplicationTypes"] = ((BaseEntity)lineCriteria).Id;
+                break;
+            case "ApplicationCriticity":
+                routeValues["Criticities"] = ((BaseEntity)lineCriteria).Id;
+                break;
+            case "ApplicationStatus":
+                routeValues["Statuses"] = ((BaseEntity)lineCriteria).Id;
+                break;
+            case "Technology":
+                routeValues["Technology"] = ((BaseEntity)lineCriteria).Id;
+                break;
+            case "Sector":
+                routeValues["Sector"] = ((BaseEntity)lineCriteria).Id;
+                break;
+        }
+
+        if (columnCriteria != null)
+        {
+            switch (Model.ColumnCriteria)
+            {
+                case "ApplicationType":
+                    routeValues["ApplicationTypes"] = ((BaseEntity)columnCriteria).Id;
+                    break;
+                case "ApplicationCriticity":
+                    routeValues["Criticities"] = ((BaseEntity)columnCriteria).Id;
+                    break;
+                case "ApplicationStatus":
+                    routeValues["Statuses"] = ((BaseEntity)columnCriteria).Id;
+                    break;
+            }
+        }
+
+        var htmlAttributes = new Dictionary<string, object>();
+        if (bubble)
+        {
+            htmlAttributes["data-link-bubble"] = "td";
+        }
+    
+    @Html.ActionLink(linkText, "Index", "Applications", routeValues, htmlAttributes)
+}
+
+
+
+<div class="row">
+    <div class="span12">
+        <div class="well">
+            @using (Ajax.BeginForm("SummaryDetails", null, new AjaxOptions { HttpMethod = "Get", UpdateTargetId = "results" }, new { data_update_history = "true" }))
+            {
+                <div class="row">
+                    <div class="span4">
+                        <div class="control-group">
+                            @Html.LabelFor(m => m.LineCriteria)
+                            @Html.DropDownListFor(m => m.LineCriteria, new SelectList(@Model.LineCriteriaList, "Key", "Value"), new { data_submit_form = "true" })
+                        </div>
+                    </div>
+                    <div class="span5">
+                        <div class="control-group">
+                            <label class="checkbox">
+                                @Html.CheckBoxFor(m => m.OnlyActiveApplications, new { data_submit_form = "true" })
+                                @Html.LabelFor(m => m.OnlyActiveApplications)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="span4">
+                        <div class="control-group">
+                            @Html.LabelFor(m => m.ColumnCriteria)
+                            @Html.DropDownListFor(m => m.ColumnCriteria, new SelectList(@Model.ColumnCriteriaList, "Key", "Value"), new { data_submit_form = "true" })
+                        </div>
+                    </div>
+
+                    <div class="span5">
+                        @if (Model.Result.LineMultiplicities != CGI.Reflex.Core.Queries.Series.LineMultiplicities.ManyToOne)
+                        {
+                            <div class="control-group">
+                                <label class="radio">
+                                    <input type="radio" name="DisplayType" value="Values" @(Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values ? "checked" : "") data-submit-form="true"> Affichage par valeurs
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="DisplayType" value="Percentage" @(Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Percentage ? "checked" : "") data-submit-form="true"> Affichage par pourcentages
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="span12">
+        @if (Model.Result.Lines.Any())
+        {
+            <table class="table table-condensed table-bordered jstree jstree-0 jstree-focused jstree-default">
+                <thead>
+                    @if (Model.Result.Columns.Count == 0)
+                    {
+                        <tr>
+                            <th colspan="@(Model.LineCriteria == "Technology" ? "2" : "")">@Model.LineCriteriaDisplayName</th>
+                            <th style="text-align: center;">Total</th>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th  colspan="@(Model.LineCriteria == "Technology" ? "2" : "")" rowspan="2" style="vertical-align: top;">@Model.LineCriteriaDisplayName</th>
+                            <th colspan="@Model.Result.Columns.Count" style="text-align: center;">@Model.ColumnCriteriaDisplayName</th>
+                            <th rowspan="2" style="text-align: center; vertical-align: top;">Total</th>
+                        </tr>
+                        <tr>
+                            @foreach (var col in Model.Result.Columns)
+                            {
+                                var dvCol = col as DomainValue;
+                                if (dvCol != null)
+                                {
+                                    <th style="text-align: right;">@Html.ColorSpan(dvCol.Color)&nbsp;@Html.Raw(dvCol.Name.Replace(" ", "&nbsp;"))</th>
+                                }
+                                else
+                                {
+                                    <th style="text-align: right;">@(col != null ? col.ToString() : "N/A")</th>
+                                }
+                            }
+                        </tr>
+                    }
+                </thead>
+                <tbody>
+                    @if (Model.Result.AreLinesHierarchical)
+                    {
+                        @HierarchycalLines(Model.Result.GetRootNodes(), 0)
+                    }
+                    else
+                    {
+                        foreach (var line in Model.Result.Lines)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                                        var dvLineCrit = line.LineCriteria as DomainValue;
+                                    }
+                                    @if (dvLineCrit != null)
+                                    {
+                                    
+                                        @Html.ColorSpan(dvLineCrit.Color)
+                                        @AppSearchLink(dvLineCrit.Name, dvLineCrit, null, true)
+                                    }
+                                    else
+                                    {
+                                        if (line.LineCriteria == null)
+                                        {
+                                             @:N/A
+                                        }
+                                        else
+                                        {
+                                            @AppSearchLink(line.LineCriteria.ToString(), line.LineCriteria, null, true)
+                                        }
+                                    }
+                                </td>
+                                @for (var i = 0; i < Model.Result.Columns.Count; ++i)
+                                {
+                                    <td class="span1" style="text-align: right;">
+                                        @if (Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values)
+                                        {
+                                            @AppSearchLink(line.GetCount(i).ToString(CultureInfo.InvariantCulture), line.LineCriteria, Model.Result.Columns[i], true)
+                                        }
+                                        else
+                                        {
+                                            @AppSearchLink(Model.Result.GetPercent(line.GetCount(i)) + " %", line.LineCriteria, Model.Result.Columns[i], true)
+                                        }
+                                    </td>
+                                }
+                                <td class="span1" style="text-align: right;">
+                                    @if (Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values)
+                                    {
+                                        <b>@line.Total</b>
+                                    }
+                                    else
+                                    {
+                                         <b>@Model.Result.GetPercent(line.Total)&nbsp;%</b>
+                                    }
+                                </td>
+                            </tr> 
+                        }
+                    }
+
+                    @if (Model.Result.LineMultiplicities == CGI.Reflex.Core.Queries.Series.LineMultiplicities.OneToOne)
+                    {
+                        <tr>
+                            <td style="text-align: right;">
+                                <b>Total : </b>
+                            </td>
+                            @for (var i = 0; i < Model.Result.Columns.Count; ++i)
+                            {
+                                <td class="span1" style="text-align: right;">
+                                    @if (Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values)
+                                    {
+                                        @Model.Result.GetTotalCount(i)
+                                    }
+                                    else
+                                    {
+                                        @(Model.Result.GetPercent(Model.Result.GetTotalCount(i)))@:&nbsp;%
+                                    }
+                                </td>
+                            }
+                            <td class="span1" style="text-align: right;">
+                                @if (Model.DisplayType == CGI.Reflex.Web.Models.Home.DisplayType.Values)
+                                {
+                                    <b>@Model.Result.GetGrandTotal()</b>
+                                }
+                                else
+                                {
+                                    <b>@Model.Result.GetPercent(Model.Result.GetGrandTotal())&nbsp;%</b>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <blockquote>
+                <p>Aucune donnée disponible.</p>
+            </blockquote>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('ins.jstree-icon').on('click', function () {
+            var currentId = $(this).attr('data-id');
+            var parentTd = $(this).closest('td');
+            if (!parentTd.hasClass('jstree-leaf')) {
+                if (parentTd.hasClass('jstree-open')) {
+                    parentTd.removeClass('jstree-open');
+                    parentTd.addClass('jstree-closed');
+                    $("tr[data-parent-ids~='" + currentId + "']").hide();
+                    $("tr[data-parent-ids~='" + currentId + "']").each(function () {
+                        $('td:first', $(this)).removeClass('jstree-open').addClass('jstree-closed');
+                    });
+                } else {
+                    parentTd.removeClass('jstree-closed');
+                    parentTd.addClass('jstree-open');
+                    $("tr[data-parent-id='" + currentId + "']").show();
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,23 @@
+﻿@model CGI.Reflex.Web.Models.Home.SummaryDetails
+@{
+    ViewBag.Title = "Sommaire des applications";
+}
+
+<link href="@Url.Content("~/Content/css/jstree.css")" rel="stylesheet" type="text/css" />
+<section>
+    <div class="page-header">
+        <h2>Sommaire des applications</h2>
+    </div>
+</section>
+
+<section id="results" style="margin-top: 10px;">
+    @Html.Partial("_Results")
+</section>
+
+<section>
+    <div class="row">
+        <div class="span12">
+            <a href="@Url.Action("Index")" class="btn"><i class="icon-arrow-left"></i> Retour</a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,101 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Roles.RoleEdit
+<section>
+    <div class="row">
+        <div class="span12">
+            @using (Html.BeginForm(Model.FormAction, "Roles", FormMethod.Post, new { id = "roleForm" }))
+            {
+                if (Model.Id != 0)
+                {
+                    @Html.EditorFor(m => m.ConcurrencyVersion)
+                }
+
+                <div class="row">
+                    <div class="span12">
+                        <fieldset>
+                            <legend>Informations générales</legend>
+                            <div class="control-group">
+                                @Html.RLabelFor(m => m.Name)
+                                @Html.EditorFor(m => m.Name)
+                                <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+                            </div>
+                            <div class="control-group">
+                                @Html.RLabelFor(m => m.Description)
+                                @Html.TextAreaFor(m => m.Description, new { @class = "span6", rows = 5 })
+                                <span class="help-inline">@Html.ValidationMessageFor(m => m.Description)</span>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="span12">
+                        <fieldset>
+                            <legend>Operations</legend>
+
+                            <div class="span5" style="margin-top: 20px">
+                                <div class="control-group">
+                                    <label class="control-label" for="availableFunctionsListBox">Fonctions disponibles</label>
+                                        @Html.ListBox("availableFunctionsListBox", new SelectList(Model.AvailableFunctions), new { size = 30, @class = "span4" })
+                                </div>
+                            </div>
+
+                            <div class="span6" style="margin-top: 20px">
+                        
+                                <div class="row">
+                                    <div class="span1" style="margin-top: 12%">
+                                        <div class="row" style="margin-bottom: 20px">
+                                            <div class="span1">
+                                                <a id="addToAllowed" class="btn"><i class="icon-arrow-right"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span1">
+                                                <a id="removeFromAllowed" class="btn"><i class="icon-arrow-left"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.AllowedOperations)
+                                            @Html.ListBoxFor(m => m.AllowedOperations, new MultiSelectList(Model.AllowedOperations), new { size = 12, @class = "span4" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="span1" style="margin-top: 12%">
+                                        <div class="row" style="margin-bottom: 20px">
+                                            <div class="span1">
+                                                <a id="addToDenied" class="btn"><i class="icon-arrow-right"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span1">
+                                                <a id="removeFromDenied" class="btn"><i class="icon-arrow-left"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.DeniedOperations)
+                                            @Html.ListBoxFor(m => m.DeniedOperations, new MultiSelectList(Model.DeniedOperations, null), new { size = 12, @class = "span4" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </fieldset>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="span10">
+                        <a class="btn btn-primary" data-submit-form="true">OK</a>
+                        <a class="btn btn-small" href="@Url.Action("Index", "Roles")">Annuler</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

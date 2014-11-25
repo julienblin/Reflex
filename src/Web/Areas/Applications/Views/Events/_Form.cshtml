@@ -1,0 +1,60 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Events.EventEdit
+
+
+@using (Html.BeginForm(@Model.FormAction, "Events"))
+{
+    @Html.EditorFor(m => m.Id)
+    @Html.EditorFor(m => m.ConcurrencyVersion)
+    <section>
+        <div class="row">
+            <div class="span10">
+                <div class="control-group error">
+                    <span class="help-block">
+                    </span> 
+                </div>
+             </div>
+        </div>
+
+        <div class="row">
+            <div class="span5">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Date)
+                    @Html.EditorFor(m => m.Date)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Date)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Type)
+                    @Html.EditorFor(m => m.Type)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Type)</span>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Source)
+                    @Html.TextBoxFor(m => m.Source, new { data_autocomplete_source = Url.Action("EventSources", "Autocomplete", new { area = "" }) })
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Source)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span5">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new { style="width:510px", rows = 18 })
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Description)</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section>
+        <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+        <a class="btn" href="@Url.Action("Details")">Annuler</a>
+    </section>
+}

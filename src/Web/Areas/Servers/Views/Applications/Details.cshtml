@@ -1,0 +1,28 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Applications.ApplicationsIndex
+@{
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+    ViewBag.Title = ViewBag.ServerName + " - Applications";
+}
+
+
+<section>
+    <div class="page-header">
+        <h2>Applications
+            @Html.HistoryLinkProperty("Server", Model.ServerId, "btn-mini", "Voir l'historique", "ApplicationLinks")
+        </h2>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="span10">
+            <div class="row-fluid">
+                <div id="results" class="span12">
+
+                    @Html.Partial("_List")
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

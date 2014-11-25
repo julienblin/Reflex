@@ -1,0 +1,22 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Landscapes.LandscapeInfo
+
+
+<td style="border-top:none;"></td>
+<td colspan="3" style="border-top:none;">
+	<div class="details">
+
+		@{ bool hasDetails = false; }
+
+		@if (@Model.ServersDetails.SelectedServer.Any())
+		{
+			hasDetails = true;
+            <label>Serveurs</label>
+			@Html.Partial("_LandscapesServersDisplay", Model.ServersDetails)
+        }
+												
+		@if (!hasDetails)
+        {
+			<p>Il n'y a pas d'informations supplémentaires pour ce landscape.</p>
+		}
+	</div>
+</td>

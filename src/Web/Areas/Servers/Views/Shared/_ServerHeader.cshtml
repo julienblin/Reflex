@@ -1,0 +1,16 @@
+﻿@if (ViewBag.ServerHeader == null)
+{
+    throw new Exception("No ViewBag.ServerHeader has been defined. You're probably missing [ServerHeader] attribute on the controller action.");
+}
+<section id="serverHeader">
+    <div class="well">
+        <div class="row">
+            <div class="span6 applicationCode">
+                <h2>@ViewBag.ServerHeader.Name</h2>
+            </div>
+            <div class="span5 applicationName" >
+                <h2>@ViewBag.ServerHeader.Alias</h2>
+            </div>
+        </div>
+    </div>
+</section>

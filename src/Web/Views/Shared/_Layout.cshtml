@@ -1,0 +1,64 @@
+﻿@using System.Web.Optimization
+
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.ToString()">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - @ViewBag.AppName</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="CGI">
+    @Styles.Render("~/Content/bundles/css")
+    <!--[if lt IE 9]>
+      <script src="@Url.Content("~/Content/js/html5.js")"></script>
+      <style type="text/css">
+        .btn-mini { padding-right: 0; }
+        .ie-overflow-fix { width: 95%; }
+      </style>
+    <![endif]-->
+    @Scripts.Render("~/Content/bundles/js")
+    @if (IsSectionDefined("head"))
+    {
+        @RenderSection("head")
+    }
+</head>
+<body>
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="@Url.Action("Index", "Home", new { area = "" })">@ViewBag.AppName</a>
+                @Html.Partial("GlobalNavigation")
+            </div>
+        </div>
+    </div>
+    <div id="container" class="container">
+        @Html.Partial("Flashes")
+
+        @RenderBody()
+        
+        <div id="defaultModal" class="modal fade" data-backdrop="static"></div>
+        <div id="largeModal" class="modal largeModal fade" data-backdrop="static"></div>
+        <hr>
+        <footer>
+            <p>@ViewBag.CopyrightInfo</p>
+            @if (ViewBag.Config.Environment != CGI.Reflex.Web.Configuration.ConfigEnvironment.Production)
+            {
+                <p>@ViewBag.Config.Environment - @ViewBag.AppVersion</p>
+            }
+            else
+            {
+                <p>&nbsp;</p>
+            }
+        </footer>
+    </div>
+
+    @if (IsSectionDefined("javascript"))
+    {
+        <script type="text/javascript">
+            @RenderSection("javascript")
+        </script>
+    }
+</body>
+</html>

@@ -1,0 +1,142 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.ImportExport.ImportConfig
+           
+@{
+    ViewBag.Title = "Import";
+}
+
+<section>
+    <div class="page-header">
+        <h2>Importer / Exporter des données</h2>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="span12">
+            <div class="row" style="margin-top: 20px">
+                <div class="span1">
+                    <span class="badge">1</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 10px">
+                <div class="span3">
+                    <div class="control-group">
+                        @Html.DropDownListFor(m => m.Importer, new SelectList(@Model.ImportersList, "Key", "Value"))
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px">
+                <div class="span1">
+                    <span class="badge">2</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 10px">
+                @if (IsActionAllowed("Result"))
+                {
+                    <div class="span2">
+                        @using (Html.BeginForm("GetTemplate", "ImportExport", FormMethod.Post))
+                        {
+                            <text>
+                                <input name="name" type="hidden" value="@Model.Importer" data-linked-to="importer" >
+                                <a class="btn" data-submit-form="true" disabled data-linked-to="importer"><i class="icon-file"></i>&nbsp;Modèle&nbsp;d'import</a>
+                            </text>
+                        }
+                    </div>
+                }
+                
+                @if(IsActionAllowed("Result") && IsActionAllowed("Export"))
+                {
+                    <div class="span1">
+                        <span class="badge badge-info">OU</span>
+                    </div>
+                }
+                
+                @if (IsActionAllowed("Export"))
+                {
+                    <div class="span2">
+                        @using (Html.BeginForm("Export", "ImportExport", FormMethod.Post, new { id = "formExport" }))
+                        {
+                            <text>
+                                <input name="name" type="hidden" value="@Model.Importer" data-linked-to="importer" >
+                                <a class="btn btn-info" data-submit-form="true" disabled data-linked-to="importer"><i class="icon-download icon-white"></i>&nbsp;Exporter&nbsp;les&nbsp;données</a>
+                            </text>
+                        }
+                    </div>
+                }
+            </div>
+            
+            @if (IsActionAllowed("Result"))
+            {
+                <div class="row" style="margin-top: 20px">
+                    <div class="span1">
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px">
+                    <div class="span2">
+                        <a class="btn btn-inverse" data-toggle="modal" data-target="#importModal" disabled data-linked-to="importer"><i class="icon-upload icon-white"></i>&nbsp;Importer&nbsp;les&nbsp;données</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@using (Html.BeginForm("Result", "ImportExport", FormMethod.Post, new { id = "formImport", enctype = "multipart/form-data" }))
+{
+    <div class="modal hide" id="importModal">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Importer</h3>
+        </div>
+        <div class="modal-body">
+            <div class="alert">
+                <strong>Attention!</strong>
+                <ul>
+                    <li>Le fichier à importer doit respecter le format obtenu à l'étape précédente.</li>
+                    <li>L'import ne peut pas supprimer des données, par contre il peut modifier des données existantes.</li>
+                    <li>Cette opération ne peut être annulée.</li>
+                </ul>
+            </div>
+            <input name="name" type="hidden" value="@Model.Importer" data-linked-to="importer" >
+            <input type="file" name="file" id="file" />
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn btn-warning" data-submit-form="true">Importer</a>
+            <a href="#" class="btn" data-dismiss="modal">Annuler</a>
+        </div>
+    </div>
+}
+
+<div class="modal hide" id="importInProgressModal">
+    <div class="modal-header">
+        <h3>Importation en cours</h3>
+    </div>
+    <div class="modal-body">
+        <div class="progress progress-warning progress-striped active">
+            <div class="bar" style="width: 100%;"></div>
+        </div>
+    </div>
+</div>
+
+@section javascript {
+    $(function() {
+        $('#Importer').on('change', function(event) {
+            if($(this).val() == '') {
+                $("a[data-linked-to='importer']").attr('disabled', 'disabled');
+            } else {
+                $("a[data-linked-to='importer']").removeAttr('disabled');
+            }
+            $("input[data-linked-to='importer']").val($(this).val());
+        });
+
+        $('#formImport').on('submit', function(event) {
+            $('#importModal').modal('hide');
+            $('#importInProgressModal').modal('show');
+        });
+    });
+}

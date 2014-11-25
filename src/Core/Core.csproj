@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{858A177F-4268-401C-81E9-9551D2EA2321}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CGI.Reflex.Core</RootNamespace>
+    <AssemblyName>CGI.Reflex.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\Core\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\Core\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\CGI.Reflex.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.69.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ClosedXML.0.69.2\lib\net40-client\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.3.3.1.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Attributes\AuditableAttribute.cs" />
+    <Compile Include="Attributes\AuditableCollectionReferenceAttribute.cs" />
+    <Compile Include="Attributes\DomainValueAttribute.cs" />
+    <Compile Include="Attributes\EmailAttribute.cs" />
+    <Compile Include="Attributes\ForwardAuditAttribute.cs" />
+    <Compile Include="Attributes\IndexedAttribute.cs" />
+    <Compile Include="Attributes\NotAuditableAttribute.cs" />
+    <Compile Include="Attributes\UniqueAttribute.cs" />
+    <Compile Include="Calculation\BaseTechnologiesCalculation.cs" />
+    <Compile Include="Calculation\DbInstancesTechnologies.cs" />
+    <Compile Include="Calculation\ICalculation.cs" />
+    <Compile Include="Calculation\IntegrationsTechnologies.cs" />
+    <Compile Include="Calculation\ServersTechnologies.cs" />
+    <Compile Include="Calculation\Technologies.cs" />
+    <Compile Include="Commands\AbstractCommand.cs" />
+    <Compile Include="Commands\GetCriticalTechnologiesCommand.cs" />
+    <Compile Include="CoreResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CoreResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\AppContactLink.cs" />
+    <Compile Include="Entities\AppInfo.cs" />
+    <Compile Include="Entities\Application.cs" />
+    <Compile Include="Entities\ApplicationReview.cs" />
+    <Compile Include="Entities\AppServerLink.cs" />
+    <Compile Include="Entities\AppTechnoLink.cs" />
+    <Compile Include="Entities\AuditInfo.cs" />
+    <Compile Include="Entities\AuditInfoAction.cs" />
+    <Compile Include="Entities\AuditInfoProperty.cs" />
+    <Compile Include="Entities\BaseConcurrentEntity.cs" />
+    <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Entities\BaseHierarchicalEntity.cs" />
+    <Compile Include="Entities\ColorPalette.cs" />
+    <Compile Include="Entities\AppDbInstanceLink.cs" />
+    <Compile Include="Entities\ITimestamped.cs" />
+    <Compile Include="Entities\LogEntry.cs" />
+    <Compile Include="Entities\ReflexConfiguration.cs" />
+    <Compile Include="Entities\Contact.cs" />
+    <Compile Include="Entities\DbInstance.cs" />
+    <Compile Include="Entities\DbInstanceTechnoLink.cs" />
+    <Compile Include="Entities\IHierarchicalEntity.cs" />
+    <Compile Include="Entities\Question.cs" />
+    <Compile Include="Entities\QuestionAnswer.cs" />
+    <Compile Include="Entities\QuestionType.cs" />
+    <Compile Include="Entities\ServerTechnoLink.cs" />
+    <Compile Include="Entities\IntegrationTechnoLink.cs" />
+    <Compile Include="Entities\DomainValue.cs" />
+    <Compile Include="Entities\DomainValueCategory.cs" />
+    <Compile Include="Entities\Event.cs" />
+    <Compile Include="Entities\Integration.cs" />
+    <Compile Include="Entities\IOptimisticConcurrency.cs" />
+    <Compile Include="Entities\Landscape.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Sector.cs" />
+    <Compile Include="Entities\Server.cs" />
+    <Compile Include="Entities\Technology.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserAuthentication.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="Importers\BaseFileImporter.cs" />
+    <Compile Include="Importers\ApplicationsFileImporter.cs" />
+    <Compile Include="Importers\IntegrationsFileImporter.cs" />
+    <Compile Include="Importers\LandscapesAndServersFileImporter.cs" />
+    <Compile Include="Importers\Models\ApplicationModel.cs" />
+    <Compile Include="Importers\Models\AppTechnoModel.cs" />
+    <Compile Include="Importers\Models\AppServerModel.cs" />
+    <Compile Include="Importers\Models\AppContactModel.cs" />
+    <Compile Include="Importers\Models\AppDbInstanceModel.cs" />
+    <Compile Include="Importers\Models\IntegrationTechnoModel.cs" />
+    <Compile Include="Importers\Models\DbInstanceModel.cs" />
+    <Compile Include="Importers\Models\IntegrationModel.cs" />
+    <Compile Include="Importers\Models\EventModel.cs" />
+    <Compile Include="Importers\Models\ServerModel.cs" />
+    <Compile Include="Importers\Models\LandscapeModel.cs" />
+    <Compile Include="Importers\Models\ServerTechnoModel.cs" />
+    <Compile Include="Importers\Models\TechnologyModel.cs" />
+    <Compile Include="Importers\TechnologiesFileImporter.cs" />
+    <Compile Include="Importers\Models\ContactModel.cs" />
+    <Compile Include="Importers\Models\SectorModel.cs" />
+    <Compile Include="Importers\ReferenceNotFoundException.cs" />
+    <Compile Include="Importers\SectorsAndContactsFileImporter.cs" />
+    <Compile Include="Importers\DomainValuesFileImporter.cs" />
+    <Compile Include="Importers\FileImporterResult.cs" />
+    <Compile Include="Importers\IFileImporter.cs" />
+    <Compile Include="Importers\FileImporters.cs" />
+    <Compile Include="Importers\ImportOperationLineResult.cs" />
+    <Compile Include="Importers\Models\BaseImporterModel.cs" />
+    <Compile Include="Importers\Models\DomainValueModel.cs" />
+    <Compile Include="Importers\Models\IImporterModel.cs" />
+    <Compile Include="Listeners\AuditEventListener.cs" />
+    <Compile Include="Listeners\DataAnnotationsEventListener.cs" />
+    <Compile Include="Listeners\DomainValueCategoryEventListener.cs" />
+    <Compile Include="Listeners\ForwardAuditEventListener.cs" />
+    <Compile Include="Listeners\TimestampedEventListener.cs" />
+    <Compile Include="Log\DBLogAppender.cs" />
+    <Compile Include="Log\NHSQLAppender.cs" />
+    <Compile Include="Mappings\AppContactLinkMap.cs" />
+    <Compile Include="Mappings\AppInfoMap.cs" />
+    <Compile Include="Mappings\ApplicationMap.cs" />
+    <Compile Include="Mappings\ApplicationReviewMap.cs" />
+    <Compile Include="Mappings\AppServerLinkMap.cs" />
+    <Compile Include="Mappings\AppTechnoLinkMap.cs" />
+    <Compile Include="Mappings\AuditInfoMap.cs" />
+    <Compile Include="Mappings\AuditInfoPropertyMap.cs" />
+    <Compile Include="Mappings\BaseConcurrentEntityMap.cs" />
+    <Compile Include="Mappings\BaseEntityMap.cs" />
+    <Compile Include="Mappings\BaseHierarchicalEntityMap.cs" />
+    <Compile Include="Mappings\AppDbInstanceLinkMap.cs" />
+    <Compile Include="Mappings\LogEntryMap.cs" />
+    <Compile Include="Mappings\ReflexConfigurationMap.cs" />
+    <Compile Include="Mappings\ContactMap.cs" />
+    <Compile Include="Mappings\Conventions\DataAnnotationsPropertyConvention.cs" />
+    <Compile Include="Mappings\Conventions\HasManyConvention.cs" />
+    <Compile Include="Mappings\Conventions\HasManyToManyConvention.cs" />
+    <Compile Include="Mappings\Conventions\Inflector.cs" />
+    <Compile Include="Mappings\Conventions\ReferenceConvention.cs" />
+    <Compile Include="Mappings\Conventions\TableNameConvention.cs" />
+    <Compile Include="Mappings\DbInstanceTechnoLinkMap.cs" />
+    <Compile Include="Mappings\DbInstanceMap.cs" />
+    <Compile Include="Mappings\QuestionAnswerMap.cs" />
+    <Compile Include="Mappings\QuestionMap.cs" />
+    <Compile Include="Mappings\ServerTechnoLinkMap.cs" />
+    <Compile Include="Mappings\IntegrationTechnoLinkMap.cs" />
+    <Compile Include="Mappings\DomainValueMap.cs" />
+    <Compile Include="Mappings\EventMap.cs" />
+    <Compile Include="Mappings\IntegrationMap.cs" />
+    <Compile Include="Mappings\LandscapeMap.cs" />
+    <Compile Include="Mappings\SectorMap.cs" />
+    <Compile Include="Mappings\ServerMap.cs" />
+    <Compile Include="Mappings\TechnologyMap.cs" />
+    <Compile Include="Mappings\UserAuthenticationMap.cs" />
+    <Compile Include="Mappings\UserTypes\CalculationUserType.cs" />
+    <Compile Include="Mappings\UserTypes\ColorUserType.cs" />
+    <Compile Include="Mappings\RoleMap.cs" />
+    <Compile Include="Mappings\ExceptionConverters\SQLiteSQLExceptionConverter.cs" />
+    <Compile Include="Mappings\ExceptionConverters\SQLServerExceptionConverter.cs" />
+    <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Mappings\UserTypes\DelimitedListUserType.cs" />
+    <Compile Include="Queries\AppContactLinkQuery.cs" />
+    <Compile Include="Queries\AppTechnoQuery.cs" />
+    <Compile Include="Queries\BaseQueryOver.cs" />
+    <Compile Include="Queries\ApplicationQuery.cs" />
+    <Compile Include="Queries\AuditInfoQuery.cs" />
+    <Compile Include="Queries\BaseHierarchicalQueryOver.cs" />
+    <Compile Include="Queries\ContactByEscapedFullNameQuery.cs" />
+    <Compile Include="Queries\ContactQuery.cs" />
+    <Compile Include="Queries\DbInstanceQuery.cs" />
+    <Compile Include="Queries\LogEntryQuery.cs" />
+    <Compile Include="Queries\Review\ApplicationsReview.cs" />
+    <Compile Include="Queries\Review\ApplicationsReviewResult.cs" />
+    <Compile Include="Queries\Review\ApplicationsReviewResultLine.cs" />
+    <Compile Include="Queries\Series\ApplicationSeries.cs" />
+    <Compile Include="Queries\Series\ApplicationSeriesResult.cs" />
+    <Compile Include="Queries\Series\ApplicationSeriesResultLine.cs" />
+    <Compile Include="Queries\Series\ApplicationSeriesResultNode.cs" />
+    <Compile Include="Queries\Series\Criteria\ApplicationTypeAppColumnCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\ApplicationTypeAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\BaseAppColumnCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\BaseAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\CategoryAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\SectorAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\UserRangeAppColumnCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\UserRangeAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\CriticityAppColumnCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\CriticityAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\IAppColumnCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\IAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\StatusAppColumnCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\StatusAppLineCriteria.cs" />
+    <Compile Include="Queries\Series\Criteria\TechnologyAppLineCriteria.cs" />
+    <Compile Include="Queries\ServerTechnoQuery.cs" />
+    <Compile Include="Queries\Criterions\XmlIn.cs" />
+    <Compile Include="Queries\LandscapeQuery.cs" />
+    <Compile Include="Queries\QuestionQuery.cs" />
+    <Compile Include="Queries\ServerQuery.cs" />
+    <Compile Include="Queries\SingleResultQuery.cs" />
+    <Compile Include="Queries\TechnologyByEscapedFullNameQuery.cs" />
+    <Compile Include="Queries\TechnologyHierarchicalQuery.cs" />
+    <Compile Include="Queries\DomainValueQuery.cs" />
+    <Compile Include="Queries\EventQuery.cs" />
+    <Compile Include="Queries\IntegrationQuery.cs" />
+    <Compile Include="IPaginationResult.cs" />
+    <Compile Include="Queries\OrderType.cs" />
+    <Compile Include="PaginationResult.cs" />
+    <Compile Include="Queries\QueryIntermediateResult.cs" />
+    <Compile Include="Queries\QueryOverExtensions.cs" />
+    <Compile Include="Queries\RoleQuery.cs" />
+    <Compile Include="Queries\SectorHierarchicalQuery.cs" />
+    <Compile Include="Queries\TechnologyQuery.cs" />
+    <Compile Include="Queries\UserQuery.cs" />
+    <Compile Include="References.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferencesConfiguration.cs" />
+    <Compile Include="Seed\ApplicationSeeder.cs" />
+    <Compile Include="Seed\BaseSeeder.cs" />
+    <Compile Include="Seed\ContactSeeder.cs" />
+    <Compile Include="Seed\DomainValuesSeeder.cs" />
+    <Compile Include="Seed\ISeeder.cs" />
+    <Compile Include="Seed\LandscapeSeeder.cs" />
+    <Compile Include="Seed\QuestionSeed.cs" />
+    <Compile Include="Seed\ReflexConfigurationSeeder.cs" />
+    <Compile Include="Seed\RoleSeeder.cs" />
+    <Compile Include="Seed\SectorSeeder.cs" />
+    <Compile Include="Seed\ServerSeeder.cs" />
+    <Compile Include="Seed\TechnologySeeder.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="Utilities\Encryption.cs" />
+    <Compile Include="Utilities\PasswordPolicy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CoreResources.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CoreResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>CoreResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\build\StyleCop.Targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

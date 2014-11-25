@@ -1,0 +1,92 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Logs.LogsIndex
+
+@using CGI.Reflex.Core;
+
+<section id="results">
+    <div class="row">
+        <div class="span12">
+            @if (Model.HasResults)
+            {                
+                @Html.Pager("#results")
+
+                <table class="table table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@Html.OrderLink("Date", "Date")</th>
+                            <th>@Html.OrderLink("Level", "Level")</th>
+                            <th>@Html.OrderLink("Logger", "Logger")</th>
+                            <th>@Html.OrderLink("CorrelationId", "CorrelationId")</th>
+                            <th>@Html.OrderLink("User", "LoggedUser")</th>
+                            <th>Message</th>
+                            <th
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var logEntry in Model.SearchResults.Items)
+                        {
+                            <tr>
+                                <td width="15px">
+                                    <a class="btn btn-mini" data-toggle-target-row="#log-@logEntry.Id" rel="tooltip" title="Détails"><i class="icon-info-sign"></i></a>
+                                </td>
+                                <td class="span2">@logEntry.Date</td>
+                                <td class="span1">@logEntry.Level</td>
+                                <td class="span1">@logEntry.Logger</td>
+                                <td class="span1">@logEntry.CorrelationId</td>
+                                <td class="span1">@logEntry.LoggedUser</td>
+                                <td>@logEntry.Message.TruncateWords(100)</td>
+                                <td class="span2" style="text-align:right">
+                                  @if (IsActionAllowed("Delete"))
+                                  {
+                                        @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "DeleteModal", "Logs", new { id = logEntry.Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Supprimer" })
+                                  }
+                                </td>
+                            </tr>
+                            <tr style="display:none"></tr>
+                            <tr id="log-@logEntry.Id" style="display:none">
+                                <td style="border-top:none;"></td>
+                                <td colspan="6" style="border-top:none;">
+                                    <div class="details">
+                                        <span>
+											<label>
+												Message
+											</label>
+                                            <p>
+											    @Html.MultilineText(logEntry.Message)
+                                            </p>
+										</span>
+                                        <span>
+											<label>
+												Context
+											</label>
+                                            <p>
+											    @Html.MultilineText(logEntry.Context)
+                                            </p>
+										</span>
+                                        <span>
+											<label>
+												Exception
+											</label>
+                                            <p>
+												@Html.MultilineText(logEntry.Exception)
+                                            </p>
+										</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                
+                @Html.Pager("#results")
+            }
+            else
+            {
+                <blockquote>
+                    <p>
+                        Aucun résultat trouvé.</p>
+                </blockquote>
+            }
+        </div>
+    </div>
+</section>

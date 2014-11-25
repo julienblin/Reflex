@@ -1,0 +1,39 @@
+﻿@model CGI.Reflex.Web.Models.UserSessions.Login
+@{
+    ViewBag.Title = "Connexion";
+    ViewBag.FlashPosition = "offset4 span4";
+}
+<div class="row">
+    <div class="span4 offset4">
+        @using (Html.BeginForm("Login", "UserSessions", FormMethod.Post, new { @class = "well" }))
+        {
+            @Html.EditorFor(m => m.ReturnUrl)
+
+            <fieldset style="margin-bottom: 0">
+                <legend>Connexion à @ViewBag.AppName</legend>
+                
+                <div class="control-group">
+                    @Html.LabelFor(m => m.NameOrEmail)
+                    @Html.EditorFor(m => m.NameOrEmail)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.NameOrEmail)</span>
+                </div>
+
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Password)
+                    @Html.EditorFor(m => m.Password)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Password)</span>
+                </div>
+            </fieldset>
+            
+            <input type="submit" value="Connexion" class="btn btn-primary" />
+            <a href="@Url.Action("ResetPassword")" class="btn" style="margin-left: 10px;"><i class="icon-inbox"></i> Mot de passe oublié ?</a>
+        }
+    </div>
+</div>
+
+@section javascript
+{
+    $(function() {
+        $("#NameOrEmail").focus();
+    });
+}

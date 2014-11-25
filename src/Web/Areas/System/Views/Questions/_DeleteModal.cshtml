@@ -1,0 +1,15 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Questions.QuestionEdit
+
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Suppression d'une question</h3>
+</div>
+<div class="modal-body">
+    <p>Êtes-vous sûr de vouloir supprimer la question <i>@Model.Name</i> ?</p>
+    <p>La question ainsi que les réponses seront retirées de toutes les applications.</p>
+    </div>
+    <div class="modal-footer">
+    <a class="btn btn-danger" data-dismiss="modal" data-delete-question-id="@Model.Id"><i class="icon-remove icon-white"></i> Supprimer</a>
+    <a class="btn" data-dismiss="modal">Annuler</a>
+
+</div>

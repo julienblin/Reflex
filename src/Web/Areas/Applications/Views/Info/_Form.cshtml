@@ -1,0 +1,152 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Info.InfoEdit
+
+<div class="page-header">
+    <h2>Informations générales</h2>
+</div>
+
+<div class="row">
+    <div class="span10 infoEdit">
+        @using (@Html.BeginForm("Edit", "Info", FormMethod.Post))
+        {
+            @Html.EditorFor(m => m.Id)
+            @Html.EditorFor(m => m.ConcurrencyVersion)
+            <fieldset>
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Name)
+                            <div class="controls">
+                                @Html.EditorFor(m => m.Name)
+                                <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Code)
+                            <div class="controls">
+                                @Html.EditorFor(m => m.Code)
+                                <span class="help-inline">@Html.ValidationMessageFor(m => m.Code)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.TypeId)
+                            <div class="controls">
+                                @Html.EditorFor(m => m.TypeId)
+                                <div class="help-inline">@Html.ValidationMessageFor(m => m.TypeId)</div>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.StatusId, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(m => m.StatusId)
+                                <div class="help-inline">@Html.ValidationMessageFor(m => m.StatusId)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.CriticityId, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(m => m.CriticityId)
+                                <div class="help-inline">@Html.ValidationMessageFor(m => m.CriticityId)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Certification)
+                            <div class="controls">
+                                @Html.EditorFor(m => m.Certification)
+                                <div class="help-inline">@Html.ValidationMessageFor(m => m.Certification)</div>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.UserRange, new { @class = "control-label nowrap" })
+                            <div class="controls">
+                                @Html.EditorFor(m => m.UserRange)
+                                <div class="help-inline">@Html.ValidationMessageFor(m => m.UserRange)</div>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="span4">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.SectorId, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(m => m.SectorId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Category)
+                            @Html.EditorFor(m => m.Category, new { descriptionTarget = "#dvCategoryDescription" })
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.CategoryDescription)
+                            @Html.TextAreaFor(m => m.CategoryDescription, new { @class = "span6", rows = 2, id="dvCategoryDescription", @readonly="readonly"  })
+                        </div>
+                    </div>
+                </div>
+				
+                <div class="row">
+                    <div class="span10">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Description)
+                            @Html.TextAreaFor(m => m.Description, new { @class = "span9", rows = 3 })
+                            <div class="help-inline">@Html.ValidationMessageFor(m => m.Description)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="span10">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.MaintenanceWindow)
+                            @Html.TextAreaFor(m => m.MaintenanceWindow, new { @class = "span9", rows = 3 })
+                            <div class="help-inline">@Html.ValidationMessageFor(m => m.Notes)</div>
+                        </div>
+                    </div>
+				</div>
+
+				<div class="row">
+                    <div class="span10">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Notes)
+                            @Html.TextAreaFor(m => m.Notes, new { @class = "span9", rows = 3 })
+                            <div class="help-inline">@Html.ValidationMessageFor(m => m.Notes)</div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+            
+			<div class="row">
+                <div class="span10">
+				    <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+				    <a class="btn btn-small" href="@Url.Action("Details")">Annuler</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,109 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Logs.LogsIndex
+@{
+    ViewBag.Title = "Logs";
+}
+
+
+<section>
+    <div class="page-header">
+        <h2>
+            Logs
+            <a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+        </h2>
+        <section>
+            <div class="row">
+                <div class="span12">
+                    @{ var formClass = Model.SearchDefined ? "collapse in" : "collapse"; }
+                    <div id="searchForm" class="@formClass">
+                        <div class="well">
+                            @using (Html.BeginForm("Index", "Logs", FormMethod.Get))
+                            {
+                                <div class="row">
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.CorrelationId)
+                                            @Html.EditorFor(m => m.CorrelationId)
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Level)
+                                            @Html.DropDownListFor(m => m.Level, new SelectList(Model.Levels))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Logger)
+                                            @Html.DropDownListFor(m => m.Logger, new SelectList(Model.Loggers))
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.User)
+                                            @Html.DropDownListFor(m => m.User, new SelectList(Model.Users))
+                                        </div>
+                                    </div>
+								</div>
+								
+                                <div class="row">
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Message)
+                                            @Html.EditorFor(m => m.Message)
+                                        </div>
+                                    </div>
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Context)
+                                            @Html.EditorFor(m => m.Context)
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="span5">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Exception)
+                                            @Html.EditorFor(m => m.Exception)
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+                                <a href="@Url.Action("Index")" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>
+                                <a class="btn btn-danger btn-small" style="margin-left: 30px;" href="#modalDeleteSearch" data-toggle="modal"><i class="icon-remove-circle icon-white"></i> Supprimer les logs de la recherche</a>
+                                <div style="float:right;">
+                                    <b>@Model.SearchResults.TotalItems</b> entrée(s) de log
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+@Html.Partial("_List")
+
+<div class="modal fade" id="modalDeleteSearch" data-backdrop="static">
+    @{
+        var queryStringDictionary = new RouteValueDictionary(Request.QueryString.AllKeys.ToDictionary(key => key, key => (object)Request.QueryString[key]));
+    }
+    @using (Html.BeginForm("DeleteSearch", "Logs", queryStringDictionary, FormMethod.Post))
+    {
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Suppression des logs de la recherche</h3>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer @Model.SearchResults.TotalItems éléments?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-danger"><i class="icon-remove-circle icon-white"></i> Supprimer</button>
+            <a class="btn" data-dismiss="modal">Annuler</a>
+        </div>
+    }
+</div>

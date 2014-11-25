@@ -1,0 +1,127 @@
+﻿@using CGI.Reflex.Core.Entities
+@model IEnumerable<CGI.Reflex.Core.Entities.Technology>
+
+@{
+    var editable = true;
+    var linkToApplicationSearch = false;
+    
+    if (ViewData.Keys.Contains("editable"))
+    {
+        editable = (bool)ViewData["editable"];
+    }
+
+    if (ViewData.Keys.Contains("linkToApplicationSearch"))
+    {
+        linkToApplicationSearch = (bool)ViewData["linkToApplicationSearch"];
+    }
+}
+
+@if (IsAllowed("/Technologies"))
+{
+    <table class="table table-striped table-condensed">
+        <tr>
+            <th></th>
+            <th>Type</th>
+            <th>Nom</th>
+            <th>Date&nbsp;de&nbsp;fin&nbsp;de&nbsp;support</th>
+            <th></th>
+        </tr>
+        @foreach (var techno in Model)
+        {
+            var technoInfoId = String.Concat("techno-info-", Guid.NewGuid());
+            var hasDetails = (techno.Contact != null) || !string.IsNullOrEmpty(techno.Description);
+            <tr>
+                <td style="width: 15px;">
+                    @if (hasDetails)
+                    {
+                        <a class="btn btn-mini" data-toggle-target-row="#@technoInfoId" rel="tooltip" title="Détails")>
+                            <i class="icon-info-sign"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-mini" disabled>
+                            <i class="icon-info-sign"></i>
+                        </a>
+                    }
+                    <input type="hidden" name="technoIds" value="@techno.Id" />
+                </td>
+                <td class="span3">
+                    @(techno.TechnologyType == null ? "" : techno.TechnologyType.Name)
+                </td>
+                <td>
+                    @if (linkToApplicationSearch)
+                    {
+                        @Html.ActionLink(techno.FullName, "Index", "Applications", new { area = "Applications", Technology = techno.Id }, new { })
+                    }
+                    else
+                    {
+                        @techno.FullName
+                    }
+                </td>
+                <td class="span2">
+                    @if (techno.EndOfSupport.HasValue)
+                    {
+                        switch (techno.GetEndOfSupportStatus())
+                        {
+                            case Technology.EndOfSupportStatus.Unknown:
+                            case Technology.EndOfSupportStatus.UpToDate:
+                                <span class="label label-success" style="font-size:inherit;">@techno.EndOfSupport.Value.ToShortDateString()</span>
+                                                                                        break;
+                            case Technology.EndOfSupportStatus.AlmostOutdated:
+                                <span class="label label-warning" style="font-size:inherit;">@techno.EndOfSupport.Value.ToShortDateString() </span>
+                                                                                        break;
+                            case Technology.EndOfSupportStatus.Outdated:
+                                <span class="label label-danger" style="font-size:inherit;">@techno.EndOfSupport.Value.ToShortDateString() </span>
+                                                                                       break;
+                        }
+                    }
+                </td>
+                <td class="span2" style="text-align:right">
+                    @if (editable)
+                    {
+                        <a href="" class="btn btn-danger btn-mini" data-delete-techno="true" data-techno-id="@techno.Id"><i class="icon-remove icon-white"></i></a>
+                    }
+                </td>
+            </tr>   
+        
+            <tr style="display:none"></tr>
+            <tr id="@technoInfoId" style="display:none">
+                <td style="border-top:none;"></td>
+                <td colspan="6" style="border-top:none;">
+            	    <div class="details">
+			            @if (techno.Contact != null)
+                        {
+				            <span>
+					            <label>
+						            Contact
+					            </label>
+                                <p>
+                                    @Html.Partial("DisplayTemplates/Contact", techno.Contact.Id)
+                                </p>
+				            </span>
+                        }
+            
+                        @if (!string.IsNullOrEmpty(techno.Description))
+                        {
+				            <span>
+					            <label>
+						            Description
+					            </label>
+					            @Html.FormattedText(techno.Description)
+				            </span>
+                        }
+            
+                        @if (!hasDetails)
+                        {
+                            <p>Il n'y a pas d'informations supplémentaires pour cette technologie.</p>
+                        }
+            
+                 </div>
+
+                </td>
+            </tr>
+
+        }
+    </table>
+}

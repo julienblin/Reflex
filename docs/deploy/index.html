@@ -1,0 +1,513 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Reflex - Deployment guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reflex deployment guide">
+    <meta name="author" content="CGI">
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 60px; }
+        .page-header { margin-top: 60px; }
+        input { margin-top: 5px; }
+    </style>
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="assets/img/favicon.ico">
+</head>
+<body data-spy="scroll">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="#" style='background: transparent url("assets/img/REFLEX_logo.png") no-repeat 20px 5px;
+                    text-indent: -1000px; width: 105px;'>Reflex</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="#introduction">Introduction</a></li>
+                        <li><a href="#prerequisites">Prerequisites</a></li>
+                        <li><a href="#package-content">Package content</a></li>
+                        <li><a href="#environment">Environment</a></li>
+                        <li><a href="#database">Database</a></li>
+                        <li><a href="#website">Website</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <h1>
+            Reflex deployment guide</h1>
+        <h3>
+            This document is a guide to deploy the CGI Reflex application.</h3>
+        <section id="introduction">
+            <div class="page-header">
+                <h1>
+                    Introduction</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <p>
+                        This guide is intended for system administrators who wish to deploy the CGI Reflex
+                        application in a production environnement.</p>
+                    <p>
+                        It assumes basic knowledge of Windows and Sql Server system administration tasks.
+                    </p>
+                </div>
+                <div class="span5">
+                    <form action="#" class="form-horizontal well">
+                    <p>
+                        This column allows you to type the variables you choose during the installation.
+                        This document will then dynamically update those references to use the actual values.
+                    </p>
+                    <p>
+                        Additionally, checkboxes in front of actions to perform allows you to strike the
+                        text when the action is done.
+                    </p>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section id="prerequisites">
+            <div class="page-header">
+                <h1>
+                    Prerequisites</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <p>
+                        Reflex is supported when ran on the following environment:</p>
+                    <ul>
+                        <li>Microsoft Windows 2008 Server R2 64bits or Windows 2012 Server 64bits
+                            <ul>
+                                <li>IIS 7.5</li>
+                                <li><a href="http://go.microsoft.com/?linkid=9810135">.Net Framework 4.5</a></li>
+                            </ul>
+                        </li>
+                        <li>Microsoft Sql Server 2008 R2 64bits</li>
+                        <li>An accessible SMTP server</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="package-content">
+            <div class="page-header">
+                <h1>
+                    Package content</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <p>
+                        Once unzipped, the deployment package has the following directory structure:</p>
+                    <ul>
+                        <li><b>Web</b>: the pre-compiled web application</li>
+                        <li><b>Commands</b>: the reflex command-line tool, used to perform various tasks</li>
+                        <li><b>Docs</b>: the present guide</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="environment">
+            <div class="page-header">
+                <h1>
+                    Environment</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <p>
+                        The first step is to prepare the environment:</p>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <h3>
+                        Create a user</h3>
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a local or domain user with minimum privileges (referenced as <code data-replace="ReflexAppUser">
+                                ReflexAppUser</code> in the rest of the guide)</li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Add the user to the web server local group <code>IIS_IUSRS</code></li>
+                    </ul>
+                </div>
+                <div class="span5">
+                    <form action="#" class="form-horizontal well">
+                    <div class="control-group">
+                        <label class="control-label" for="reflexAppUserTxt">
+                            ReflexAppUser:</label>
+                        <div class="controls">
+                            <input type="text" id="reflexAppUserTxt" data-replace-target="ReflexAppUser">
+                            <p class="help-block">
+                                Name of the web application user</p>
+                        </div>
+                    </div>
+                    </form>
+                    <div class="alert alert-block alert-info">
+                        <h4 class="alert-heading">
+                            Domain user or local user?</h4>
+                        <ul>
+                            <li>Choose a domain user if both the web server and database server are on different
+                                machines and on the same domain; <b>this is the recommanded configuration</b> and
+                                allow the usage of trusted connections (windows authentication) between the web
+                                application and the database.</li>
+                            <li>Use a local user in other cases; if the web application and the database are on
+                                different servers, the connection will have to be done using SQL authentication.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <h3>
+                        Create folders</h3>
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a folder for the web applications (referenced as <code data-replace="WebAppFolder">
+                                WebAppFolder</code>) and give the user <code data-replace="ReflexAppUser">ReflexAppUser</code>
+                            the following permissions on the folder and its subfolders:
+                            <ul>
+                                <li><code>List folder contents</code></li>
+                                <li><code>Read</code></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a folder for the logs (referenced as <code data-replace="LogFolder">LogFolder</code>)
+                            and give the user <code data-replace="ReflexAppUser">ReflexAppUser</code> the following
+                            permissions on the folder and its subfolders:
+                            <ul>
+                                <li><code>List folder contents</code></li>
+                                <li><code>Read</code></li>
+                                <li><code>Write</code></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span5">
+                    <form action="#" class="form-horizontal well">
+                    <div class="control-group">
+                        <label class="control-label" for="webAppFolderTxt">
+                            WebAppFolder:</label>
+                        <div class="controls">
+                            <input type="text" id="Text2" data-replace-target="WebAppFolder">
+                            <p class="help-block">
+                                Folder used to hold web application files</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="logFolderTxt">
+                            LogFolder:</label>
+                        <div class="controls">
+                            <input type="text" id="Text3" data-replace-target="LogFolder">
+                            <p class="help-block">
+                                Folder used to hold log files</p>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <h3>
+                        Generate an encryption key</h3>
+                    <p>
+                        Reflex encrypts some information in the database, and needs a unique entrypted key
+                        to do so. To generate a random key, use the <b>Commands</b> tool:
+                        <ul>
+                            <li>
+                                <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                                Launch the <code>CGI.Reflex.Commands.exe</code> from the Commands folder of the
+                                package</li>
+                            <li>
+                                <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                                Enter the following command and press &lt;Enter&gt;:
+                                <pre>generate-key</pre>
+                            </li>
+                            <li>
+                                <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                                You can them paste the generated key in the box at the right </li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="span5">
+                    <form action="#" class="form-horizontal well">
+                    <div class="control-group">
+                        <label class="control-label" for="encryptionKeyTxt">
+                            EncryptionKey:</label>
+                        <div class="controls">
+                            <input type="text" id="encryptionKeyTxt" data-replace-target="EncryptionKey">
+                            <p class="help-block">
+                                Generated encryption key</p>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <div class="alert alert-block alert-error">
+                        <h4 class="alert-heading">
+                            Make sure to keep the key in a secure and safe location!</h4>
+                        You <b>must</b> make a copy of the key and keep it in a secure and safe location.
+                        In case the key could not be retrieved, some information could be lost.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="database">
+            <div class="page-header">
+                <h1>
+                    Database</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a database (referenced as <code data-replace="ReflexDB">ReflexDB</code>);
+                            default parameters can be left untouched (but remember to check the collation)
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a new login (either using the <code data-replace="ReflexAppUser">ReflexAppUser</code>
+                            with Windows authentication or a new login with SQL Authentication) with the specified
+                            parameters:
+                            <ul>
+                                <li><b>Default database</b>: <code data-replace="ReflexDB">ReflexDB</code></li>
+                                <li><b>Server roles</b>: public</li>
+                                <li><b>User mapping</b>: check <em>Map</em> in front of <code data-replace="ReflexDB">
+                                    ReflexDB</code> with the default schema <code>dbo</code></li>
+                                <li><b>User mapping database role</b>: check <code>db_datareader</code> and <code>db_datawriter</code>
+                                    for the section <em>Database role membership for <code data-replace="ReflexDB">ReflexDB</code></em></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span5">
+                    <div class="alert alert-block">
+                        <h4 class="alert-heading">
+                            Which collation?</h4>
+                        Since Reflex is targeted for use in english and french, it is recommanded to use
+                        the <code>Latin1_General_CI_AI</code> collation.
+                    </div>
+                    <form action="#" class="form-horizontal well">
+                    <div class="control-group">
+                        <label class="control-label" for="databaseServerTxt">
+                            DatabaseServer:</label>
+                        <div class="controls">
+                            <input type="text" id="databaseServerTxt" data-replace-target="DatabaseServer">
+                            <p class="help-block">
+                                Name of the database server</p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reflexDBTxt">
+                            ReflexDB:</label>
+                        <div class="controls">
+                            <input type="text" id="reflexDBTxt" data-replace-target="ReflexDB">
+                            <p class="help-block">
+                                Name of the database</p>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Determine the connection string for the database using the <b>Commands</b> tool:
+                            <ul>
+                                <li>Launch the <code>CGI.Reflex.Commands.exe</code> from the Commands folder of the
+                                    package</li>
+                                <li>Enter the following command and press &lt;Enter&gt;:
+                                    <pre>create-connection-string -s "<span data-replace="DatabaseServer">DatabaseServer</span>" -d "<span data-replace="ReflexDB">ReflexDB</span>"</pre>
+                                    <em>
+                                        Or use the following if using SQL authentication:
+                                        <pre>create-connection-string -s "<span data-replace="DatabaseServer">DatabaseServer</span>" -d "<span data-replace="ReflexDB">ReflexDB</span>" -u "$username" -p "$password" </pre>
+                                    </em>
+                                </li>
+                                <li>You can them paste the generated connection string in the box at the right </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span5">
+                    <form action="#" class="form-horizontal well">
+                    <div class="control-group">
+                        <label class="control-label" for="connectionStringTxt">
+                            ConnectionString:</label>
+                        <div class="controls">
+                            <input type="text" id="connectionStringTxt" data-replace-target="ConnectionString">
+                            <p class="help-block">
+                                Connection string</p>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span7">
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Export the database schema using the <b>Commands</b> tool:
+                            <ul>
+                                <li>Launch the <code>CGI.Reflex.Commands.exe</code> from the Commands folder of the
+                                    package</li>
+                                <li>Enter the following command and press &lt;Enter&gt;:
+                                    <pre>export-schema -c "<span data-replace="ConnectionString">ConnectionString</span>"</pre>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create the first time user:
+                            <ul>
+                                <li>Launch the <code>CGI.Reflex.Commands.exe</code> from the Commands folder of the
+                                    package</li>
+                                <li>Enter the following command and press &lt;Enter&gt;:
+                                    <pre>create-user -c "<span data-replace="ConnectionString">ConnectionString</span>" -e "admin@reflex.com" -p "Reflex2012" -k "<span data-replace="EncryptionKey">EncryptionKey</span>" -r "Admin"</pre>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="website">
+            <div class="page-header">
+                <h1>
+                    Website</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <ul>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Check that the following role services for IIS are installed (or install them if
+                            they are missing) using the Server Manager console, Roles section:
+                            <ul>
+                                <li>Common HTTP Features
+                                    <ul>
+                                        <li>Static Content</li>
+                                        <li>HTTP Errors</li>
+                                        <li>HTTP Redirection</li>
+                                    </ul>
+                                </li>
+                                <li>Application Development
+                                    <ul>
+                                        <li>ASP.NET</li>
+                                        <li>.NET Extensibility</li>
+                                    </ul>
+                                </li>
+                                <li>Performance
+                                    <ul>
+                                        <li>Static Content Compression</li>
+                                        <li>Dynamic Content Compression</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a new Application Pool with the following parameters:
+                            <ul>
+                                <li><b>Name</b>: <em>choose an explicit name</em></li>
+                                <li><b>.NET Framework version</b>: .NET Framework v4.0.30319 (even though it's a 4.5 application, the framework version in IIS is 4.0)</li>
+                                <li><b>Managed pipeline mode</b>: Integrated</li>
+                                <li><b>Advanced Settings &gt; Process Model &gt; Identity </b>: <code data-replace="ReflexAppUser">ReflexAppUser</code></li>
+                                <li><b>Advanced Settings &gt; Process Model &gt; Idle Time-out (minutes) </b>: 0</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Create a new Web Site with the following parameters:
+                            <ul>
+                                <li><b>Site name</b>: <em>choose an explicit name</em></li>
+                                <li><b>Application pool</b>: <em>the one created before</em></li>
+                                <li><b>Content Directory &gt; Physical path</b>: <code data-replace="WebAppFolder">WebAppFolder</code></li>
+                                <li><b>Content Directory &gt; Connect as...</b>: <code data-replace="ReflexAppUser">ReflexAppUser</code></li>
+                                <li><b>Binding</b>: <em>choose an appropriate binding</em></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Copy the content of the Web folder in the package to <code data-replace="WebAppFolder">WebAppFolder</code>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Edit the <code><span data-replace="WebAppFolder">WebAppFolder</span>\Web.config</code> file, replacing the following values:
+                            <ul>
+                                <li><b>[ConnectionString]</b>: <code data-replace="ConnectionString">ConnectionString</code></li>
+                                <li><b>[EncryptionKey]</b>: <code data-replace="EncryptionKey">EncryptionKey</code></li>
+                                <li><b>[MailFrom]</b>: The email address the application will presents itself as when sending emails</li>
+                                <li><b>[SmtpHost]</b>: The smtp server name for sending emails - can be completed by other authentication information if needed
+                                - see <a href="http://msdn.microsoft.com/en-us/library/ms164242.aspx">http://msdn.microsoft.com/en-us/library/ms164242.aspx</a> for complete configuration reference</li>
+                                <li><b>[LogFolder]</b>: <code data-replace="LogFolder">LogFolder</code></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Test that the application is running correctly by connecting to the web site using the first user created. If using the default use:
+                            <ul>
+                                <li>Username: admin@reflex.com</li>
+                                <li>Password: Reflex2012</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            If everything goes well, encrypt the Web.config file using the <b>Commands</b> tool:
+                            <pre>encrypt-config -f "<code data-replace="WebAppFolder">WebAppFolder</code>\Web.config"</pre>
+                        </li>
+                        <li>
+                            <input type="checkbox" style="margin-bottom: 7px;" data-strike />
+                            Re-connect to the application, create a real admin user (System > Users) and <b>block the default user</b> (in its profile) (admin@reflex.com) to avoid unwanted connections
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <footer style='background: transparent url("assets/img/logo_cgi.png") no-repeat 10px 11px;
+            margin: -20px -10px 0; padding: 10px 20px 0; text-align: right;'>
+            <p>
+                Copyright © CGI 2012</p>
+            <p>
+                &nbsp;</p>
+        </footer>
+    </div>
+    <script src="assets/js/jquery-1.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('input[data-replace-target]').on('keyup', function (e) {
+                if ($(this).val() !== '') {
+                    $('[data-replace="' + $(this).data('replace-target') + '"]').text($(this).val());
+                } else {
+                    $('[data-replace="' + $(this).data('replace-target') + '"]').text($(this).data('replace-target'));
+                }
+            });
+
+            $('input:checkbox[data-strike]').on('change', function (e) {
+                if ($(this).is(':checked')) {
+                    $(this).parent().css('text-decoration', 'line-through');
+                } else {
+                    $(this).parent().css('text-decoration', '');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

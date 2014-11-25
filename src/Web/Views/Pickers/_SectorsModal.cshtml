@@ -1,0 +1,90 @@
+﻿@model CGI.Reflex.Web.Models.Pickers.SectorHierarchy
+
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Sélectionner un secteur</h3>
+</div>
+
+<div class="modal-body">
+    <div id="sectorTree">
+    </div>
+</div>
+
+<div class="modal-footer">
+    <a id="sectorModalBtnOk" class="btn btn-primary">OK</a>
+    <a class="btn" data-dismiss="modal">Annuler</a>
+</div>
+
+<script type="text/javascript">
+     $("#sectorTree").jstree({
+        "plugins" : ["themes", "json_data", "ui", "crrm", "sort"],
+        "themes" : {
+            "url": "@Url.Content("~/Content/css/jstree.css")"
+        },
+        "ui" : {
+            "select_limit" : 1
+        },
+        "json_data" : {
+            "data" : [
+                {
+                    "attr" : { "id" : "sector-0" },
+                    "data" : "Organisation",
+                    "metadata" : { "id" : "0" },
+                    "state" : "open",
+                    "children" : [
+                        @foreach(var sector in Model.RootSectors)
+                        {
+                            <text>
+                            {
+                                "attr" : { "id" : "sector-@sector.Id" },
+                                "data" : { "title" : "@Html.Raw(sector.Name)" },
+                                "metadata" : { "id" : "@sector.Id" },
+                                "state" : "@(sector.HasChildren() ? "closed" : "")"
+                            }
+                            @if (sector != Model.RootSectors.Last())
+                            {
+                                @:,
+                            }
+                            </text>
+                        }
+                    ]
+                }
+            ],
+            "ajax" : {
+                "url" : "@Url.Action("SectorsTreeData")",
+                "data" : function(n) {
+                    return { rootId : n.data("id") };
+                }
+            }
+        }
+    })
+    .bind("loaded.jstree", function (event, data) {
+        var currentTargetvalue = $("#@Model.TargetUpdateId").val();
+        if(currentTargetvalue != null)
+        {
+            data.inst.select_node('#sector-' + currentTargetvalue, true);
+        }
+        else
+        {
+            data.inst.select_node('#sector-0', true);
+        }
+        $('#sectorTree').show();
+    });
+
+    $("#sectorModalBtnOk").on('click', function() {
+        var selected = $("#sectorTree").jstree('get_selected');
+        if(selected != null)
+        {
+            var selectedSectorId = selected.data('id');
+            if(selectedSectorId != 0)
+            {
+                $("#@Model.TargetUpdateId").val(selectedSectorId);
+                $("#sector-text-@Model.TargetUpdateId").val($("#sectorTree").jstree('get_text', selected));
+            } else {
+                $("#@Model.TargetUpdateId").val('');
+                $("#sector-text-@Model.TargetUpdateId").val('');
+            }
+            $("#defaultModal").modal('hide');
+        }
+    });
+</script>

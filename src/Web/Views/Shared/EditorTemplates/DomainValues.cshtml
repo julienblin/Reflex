@@ -1,0 +1,11 @@
+﻿@model IEnumerable<int>
+ @{
+    var descriptionTarget = String.Empty;
+    
+    if (ViewData["descriptionTarget"] != null)
+    {
+        descriptionTarget = ViewData["descriptionTarget"].ToString();
+    }
+ }
+
+@Html.DomainValuesListFor(m => m, descriptionTarget, allowMultiples: true)

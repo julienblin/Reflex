@@ -1,0 +1,115 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Servers.ServerEdit
+           
+<div class="row">
+    <div class="span10">
+       @using (@Html.BeginForm("Edit", "Servers", new { serverId = Model.Id }, FormMethod.Post))
+        {
+            @Html.EditorFor(m => m.Id)
+            @Html.EditorFor(m => m.ConcurrencyVersion)
+            <section>
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Name)
+                            @Html.EditorFor(m => m.Name)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Alias)
+                            @Html.EditorFor(m => m.Alias)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Alias)</span>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.EnvironmentId)
+                            @Html.EditorFor(m => m.EnvironmentId)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.EnvironmentId)</span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.RoleId)
+                            @Html.EditorFor(m => m.RoleId)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.RoleId)</span>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.StatusId)
+                            @Html.EditorFor(m => m.StatusId)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.StatusId)</span>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.TypeId)
+                            @Html.EditorFor(m => m.TypeId)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.TypeId)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.EvergreenDate)
+                            @Html.EditorFor(m => m.EvergreenDate)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.EvergreenDate)</span>
+                        </div>
+                    </div>
+                     <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.LandscapeId, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.LandscapeId, new SelectList(ViewBag.LandscapeList, "Id", "Name"), "")
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.LandscapeId)</span>
+                        </div>
+                     </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Comments)
+                            @Html.TextAreaFor(m => m.Comments, new { @class="span9", rows = 7 })
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Comments)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <a class="btn btn-primary" data-submit-form="true">OK</a> 
+                        <a class="btn btn-small" href="@Url.Action("Details", "Servers", new { serverId = Model.Id })">Annuler</a>
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+@*<script type="text/javascript">
+    var addTechno = function (checkedIds) {
+        $('#technoContainers input').each(function () {
+            checkedIds.push($(this).val());
+        });
+        $.ajax({
+            url: '@Url.Action("RenderTechno")',
+            data: { ids: checkedIds },
+            type: 'GET',
+            success: function (data) {
+                $('#technoContainers').html(data);
+            }
+        });
+    };
+
+    $("#technoContainers").on('click', 'a[data-delete-techno]', function (event) {
+        $(this).closest("tr").remove();
+        event.preventDefault();
+    });
+</script>*@

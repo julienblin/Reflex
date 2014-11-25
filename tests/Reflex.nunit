@@ -1,0 +1,7 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" domainUsage="Multiple" />
+  <Config name="Debug" binpathtype="Auto" runtimeFramework="net-4.0">
+    <assembly path="..\bin\Debug\Core.Tests\CGI.Reflex.Core.Tests.dll" />
+    <assembly path="..\bin\Debug\Web.Tests\CGI.Reflex.Web.Tests.dll" />
+  </Config>
+</NUnitProject>

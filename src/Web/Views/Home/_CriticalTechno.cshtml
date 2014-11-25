@@ -1,0 +1,18 @@
+﻿@model IEnumerable<CGI.Reflex.Core.Entities.Technology>
+
+@if (Model.Any())
+{
+    <section style="margin-top: 10px">
+        <div class="page-header">
+            <h2>Technologies critiques</h2>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="span12">
+                @Html.Partial("_Technologies")
+            </div>
+        </div>
+    </section>
+}

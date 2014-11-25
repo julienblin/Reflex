@@ -1,0 +1,110 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.DomainValues.DomainValuesIndex
+<div id="results">    
+    <section>
+        <div class="page-header">
+            <h2>
+                Domaines de valeurs
+                @if (IsActionAllowed("Create"))
+                {
+                    <a href="@Url.Action("Create", "DomainValues", new { Model.Category })" class="btn btn-success btn-mini" rel="tooltip" title="Créer une valeur"><i class="icon-plus-sign icon-white"></i></a>
+                }
+            </h2>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="span12">
+                <div id="searchForm">
+
+                        @using (Ajax.BeginForm("Index", null, new AjaxOptions { HttpMethod = "Get", UpdateTargetId = "results", InsertionMode = InsertionMode.Replace }, new { data_update_history = "true", style="margin-bottom:0px" }))
+                        {
+                            @Html.DropDownListFor(m => m.Category, new SelectList(@Model.CategoryList, "Category", "Name"), new { data_submit_form = "true" })
+                        }
+           
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="span12">
+                @if (Model.Items.Count > 0)
+                {
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                @if (IsActionAllowed("Edit"))
+                                { 
+                                    <th></th>
+                                }
+                                <th>Nom</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Items.Count; ++i)
+                            {
+                                var dv = Model.Items[i];
+                                var isFirst = (i == 0);
+                                var isLast = (i == Model.Items.Count - 1);
+                            
+                                <tr>
+                                    @if (IsActionAllowed("Edit"))
+                                    {
+                                        <td style="width:71px;">
+                                            @if (!isFirst)
+                                            {
+                                                using (Ajax.BeginForm("Reorder", new { id = dv.Id, direction = "up" }, new AjaxOptions { UpdateTargetId = "results", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }, new { style = "margin: 0; display: inline;" }))
+                                                {
+                                                    <a class="btn btn-mini" data-submit-form="true"><i class="icon-chevron-up"></i></a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-mini" style="visibility: hidden; cursor: default;"><i class="icon-ban-circle"></i></a>
+                                            }
+
+                                            @if (!isLast)
+                                            {
+                                                using (Ajax.BeginForm("Reorder", new { id = dv.Id, direction = "down" }, new AjaxOptions { UpdateTargetId = "results", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }, new { style = "margin: 0; display: inline;" }))
+                                                {
+                                                    <a class="btn btn-mini" data-submit-form="true"><i class="icon-chevron-down"></i></a>
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                    <td class="span3">
+                                        @Html.ColorSpan(dv.Color)
+                                        @dv.Name
+                                    </td>
+                                    <td>@dv.Description</td>
+                                    <td class="span2" style="text-align:right;">
+                                        @if (IsActionAllowed("Edit"))
+                                        {
+                                            <a href="@Url.Action("Edit", new { id = dv.Id })" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+                                        }
+                                        
+                                        @Html.HistoryLink("DomainValue", dv.Id, "btn-mini", "Voir l'historique", @Url.Action("Index", "DomainValues", new { category = Request.QueryString["Category"] ?? ViewData["Category"] }))
+
+                                        @if (IsActionAllowed("Delete"))
+                                        {
+                                             @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "Delete", "DomainValues", new { id = dv.Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Supprimer" })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <blockquote>
+                        <p>Aucune valeur.</p>
+                    </blockquote>
+                }
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,63 @@
+﻿@model CGI.Reflex.Web.Models.Pickers.ServerDetails
+
+<div class="row-fluid">
+    <div class="span12">
+        <h2>@Model.Name</h2>
+    </div>
+    @if (!String.IsNullOrEmpty(Model.Alias))
+    {
+        <p>
+            <strong>Alias</strong>
+            @Model.Alias
+        </p>
+    }
+    @if (!String.IsNullOrEmpty(Model.Environment))
+    {
+        <p>
+            <strong>Environnement</strong>
+            @Model.Environment
+        </p>
+    }
+    @if (!String.IsNullOrEmpty(Model.Alias))
+    {
+    <p>
+        <strong>Rôle</strong>
+        @Model.Role
+    </p>
+    }
+    @if (!String.IsNullOrEmpty(Model.Status))
+    {
+        <p>
+            <strong>Statut</strong>
+            @Model.Status
+        </p>
+    }
+    @if (!String.IsNullOrEmpty(Model.Type))
+    {
+        <p>
+            <strong>Type</strong>
+            @Model.Type
+        </p>
+    }
+    @if (!String.IsNullOrEmpty(Model.EvergreenDate))
+    {
+        <p>
+            <strong>Date limite de vie du serveur</strong>
+            @Model.EvergreenDate
+        </p>
+    }
+    @if (!String.IsNullOrEmpty(Model.Landscape))
+    {
+        <p>
+            <strong>Landscape</strong>
+            @Model.Landscape
+        </p>
+     }
+    @if (!String.IsNullOrEmpty(Model.Comments))
+    {
+        <p>
+            <strong>Commentaires</strong>
+            @Model.Comments
+        </p>
+    }
+</div>

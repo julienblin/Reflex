@@ -1,0 +1,7 @@
+﻿@model int?
+
+@{
+    var application = CGI.Reflex.Core.References.NHSession.Load<CGI.Reflex.Core.Entities.Application>(Model);
+}
+
+@application.Name

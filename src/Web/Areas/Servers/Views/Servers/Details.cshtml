@@ -1,0 +1,102 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Servers.ServerEdit
+@{
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+    ViewBag.Title = ViewBag.ServerName + " - Info";
+}
+
+
+<div class="page-header">
+    <h2>
+        Informations générales
+        @if (IsActionAllowed("Edit"))
+        {
+           <a href="@Url.Action("Edit", new { serverId = Model.Id })" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+        }
+        @Html.HistoryLink("Server", Model.Id, "btn-mini", "Voir l'historique")
+    </h2>
+</div>
+
+<div class="row">
+    <div class="span10 infoEdit">
+        <fieldset>
+        <div class="row">
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Name)
+                    <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.Name)">
+                </div>
+            </div>
+
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Alias)
+                    <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.Alias)">
+                </div>
+            </div>
+
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.EnvironmentId)
+                    <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.EnvironmentId)">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.RoleId)
+                    <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.RoleId)">
+                </div>
+            </div>
+
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.StatusId)
+                    <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.StatusId)">
+                </div>
+            </div>
+
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.TypeId)
+                    <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.TypeId)">
+                </div>
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.EvergreenDate)
+                    <input type="text" readonly="readonly" value="@(Model.EvergreenDate.HasValue ? Model.EvergreenDate.Value.ToShortDateString() : "" )">
+                    
+                </div>
+            </div>
+
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.LandscapeId)
+                    <input type="text" readonly="readonly" value="@Model.LandscapeName">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span9">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Comments)
+                    <div class="gris-form gris-form-textarea">
+                        @Html.FormattedText(Model.Comments)
+                    </div>
+                </div>
+            </div>
+        </div>
+       </fieldset>
+    </div>
+</div>
+        
+
+
+

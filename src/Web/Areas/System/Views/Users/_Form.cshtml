@@ -1,0 +1,87 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Users.UserEdit
+<section>
+    <div class="row">
+        <div class="span12">
+            @using (Html.BeginForm(Model.FormAction, "Users", FormMethod.Post))
+            {
+                @Html.EditorFor(m => m.Id)
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.UserName)
+                            @Html.EditorFor(m => m.UserName)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.UserName)</span>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Email)
+                            @Html.EditorFor(m => m.Email)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Email)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Company)
+                            @Html.EditorFor(m => m.Company)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Company)</span>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.RoleId)
+                            @Html.DropDownListFor(m => m.RoleId, new SelectList(Model.Roles, "Id", "Name"), "")
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.RoleId)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                if (Model.FormAction == "Edit")
+                {
+                    <div class="row">
+                        <div class="span3">
+                            <label class="checkbox">
+                                @Html.EditorFor(m => m.IsLockedOut)
+                                @Html.PropertyDisplayNameFor(m => m.IsLockedOut)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <div class="row" style="margin-top: 15px;">
+                    <div class="span10">
+                        <a class="btn btn-primary" data-submit-form="true">OK</a>
+                        <a class="btn btn-small" href="@Url.Action("Index", "Users")">Annuler</a>
+
+                        @if ((Model.FormAction == "Edit") && (ViewBag.Config.AuthenticationMode == System.Web.Configuration.AuthenticationMode.Forms))
+                        {
+                            <a data-toggle="modal" href="#reinitModal" class="btn btn-warning" style="margin-left: 20px">Réinitiliaser le mot de passe</a>
+                        }
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<div id="reinitModal" class="modal fade" data-backdrop="static">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Réinitilialiser le mot de passe</h3>
+        </div>
+        <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir réinitilialiser le mot de passe ?</p>
+        <p>Un courriel permettant la connexion va être envoyé à l'adresse @Model.Email</p>
+        </div>
+        <div class="modal-footer">
+        @using (Html.BeginForm("ReinitPassword", "Users"))
+        {
+            @Html.EditorFor(m => m.Id)
+            <a href="#" class="btn btn-warning" data-submit-form="true">Réinitilialiser</a>
+            <a class="btn" data-dismiss="modal">Annuler</a>
+        }
+    </div>
+</div>
+

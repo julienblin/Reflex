@@ -1,0 +1,75 @@
+﻿@model CGI.Reflex.Web.Models.MyProfile.MyProfileEdit
+           
+@{
+    ViewBag.Title = "Mon profil";
+}
+<section>
+    <div class="page-header">
+        <h2>Mon profil</h2>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="span12">
+            @using (Html.BeginForm("Edit", "MyProfile"))
+            {
+                @Html.EditorFor(m => m.Id)
+
+                <div class="row">
+                    <div class="span6">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.UserName)
+                            @Html.EditorFor(m => m.UserName)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.UserName)</span>
+                        </div>
+                
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Email)
+                            @Html.EditorFor(m => m.Email)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Email)</span>
+                        </div>
+                    </div>
+
+                    <div class="span6">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.CompanyId)
+                            @Html.EditorFor(m => m.CompanyId)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.CompanyId)</span>
+                        </div>
+                
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Role)
+                            <input type="text" readonly="readonly" value="@Model.Role.Name">
+                            <span class="help-inline"></span>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="row">
+                    <div class="span4 well">
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.Password)
+                            @Html.EditorFor(m => m.Password)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Password)</span>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.RLabelFor(m => m.PasswordConfirm)
+                            @Html.EditorFor(m => m.PasswordConfirm)
+                            <span class="help-inline">@Html.ValidationMessageFor(m => m.PasswordConfirm)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-top: 10px;">
+                    <div class="span10">
+                        <a class="btn btn-primary" data-submit-form="true">OK</a>
+                        <a class="btn btn-small" href="@Url.Action("Index", "Home")">Annuler</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

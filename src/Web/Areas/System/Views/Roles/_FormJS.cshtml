@@ -1,0 +1,42 @@
+﻿var sortListBox = function(listBoxId) {
+    var options = $('#' + listBoxId + ' option');
+
+    options.sort(function(a,b) {
+        if (a.text > b.text) return 1;
+        else if (a.text < b.text) return -1;
+        else return 0
+    });
+
+    $('#' + listBoxId).empty().append( options );
+};
+
+$(function(){
+    $('#availableFunctionsListBox :selected').removeAttr('selected');
+    $('#AllowedOperations :selected').removeAttr('selected');
+    $('#DeniedOperations :selected').removeAttr('selected');
+
+    $('#addToAllowed').on('click', function(event) {
+        $('#availableFunctionsListBox :selected').remove().appendTo('#AllowedOperations').removeAttr('selected');
+        sortListBox('AllowedOperations');
+    });
+
+    $('#removeFromAllowed').on('click', function(event) {
+        $('#AllowedOperations :selected').remove().appendTo('#availableFunctionsListBox').removeAttr('selected');
+        sortListBox('availableFunctionsListBox');
+    });
+
+    $('#addToDenied').on('click', function(event) {
+        $('#availableFunctionsListBox :selected').remove().appendTo('#DeniedOperations').removeAttr('selected');
+        sortListBox('DeniedOperations');
+    });
+
+    $('#removeFromDenied').on('click', function(event) {
+        $('#DeniedOperations :selected').remove().appendTo('#availableFunctionsListBox').removeAttr('selected');
+        sortListBox('availableFunctionsListBox');
+    });
+
+    $('#roleForm').on('submit', function(event) {
+        $('#AllowedOperations option').prop('selected', 'selected');
+        $('#DeniedOperations option').prop('selected', 'selected');
+    });
+});

@@ -1,0 +1,34 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.ServerHeader
+           
+<div class="modal-header">
+<a class="close" data-dismiss="modal">×</a>
+<h3>Ajout d'un serveur</h3>
+
+</div>
+<div id="appFormContent">
+    @using (Ajax.BeginModalForm("Create", "Servers", null))
+    {
+        <div class="modal-body">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Name)
+                @Html.EditorFor(m => m.Name)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+            </div>
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Alias)
+                @Html.EditorFor(m => m.Alias)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Alias)</span>
+            </div>
+
+            <div class="control-group">
+                    @Html.RLabelFor(m => m.EnvironmentId)
+                    @Html.EditorFor(m => m.EnvironmentId)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.EnvironmentId)</span>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+            <a class="btn" data-dismiss="modal">Annuler</a>
+        </div>
+    }
+</div>

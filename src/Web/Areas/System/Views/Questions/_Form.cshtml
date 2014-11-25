@@ -1,0 +1,74 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Questions.QuestionEdit
+
+<section>
+    <div class="row">
+        <div class="span12">
+            @using (Html.BeginForm(Model.FormAction, "Questions", FormMethod.Post, new { @id = "questionForm" }))
+            {
+                @Html.EditorFor(m => m.Id)
+                @Html.EditorFor(m => m.ConcurrencyVersion)
+                @Html.EditorFor(m => m.Type)
+
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Name)
+                    @Html.TextBoxFor(m => m.Name, new { @class = "span8" })
+                    <div class="help-inline">@Html.ValidationMessageFor(m => m.Name)</div>
+                </div>
+                
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new { @class = "span8", rows = "4" })
+                    <div class="help-inline">@Html.ValidationMessageFor(m => m.Description)</div>
+                </div>
+
+                <section>
+                    <div class="page-header">
+                        <h2>
+                            Réponses
+                            <a class="btn btn-success btn-mini" rel="tooltip" title="Ajouter une réponse" data-add-answer="true"><i class="icon-plus-sign icon-white"></i></a>
+                        </h2>
+                    </div>
+                </section>
+                
+                <div id="answers">
+                    @Html.Partial("_AnswerList", Model)
+                </div>
+                
+                <section style="margin-top:20px">
+                    <div class="row">
+                        <div class="span12">
+                            <a class="btn btn-primary" data-submit-form="true">OK</a>
+                            <a class="btn btn-small" href="@Url.Action("Index", "Questions", new { Model.Type })">Annuler</a>
+                        </div>
+                    </div>
+                </section>
+            }
+        </div>
+    </div>
+</section>
+
+
+<script language="javascript">
+    $("#container").on('click', 'a[data-add-answer]', function () {
+        $.ajax({
+            url: "@Url.Action("AddAnswer")",
+            data: $("#questionForm").serialize(),
+            type: 'POST',
+            success: function(data) {
+                $("#answers").html(data);
+            }
+        });
+    });
+
+    $("#container").on('click', 'a[data-remove-line]', function (event) {
+        $.ajax({
+            url: '@Url.Action("RemoveAnswer")',
+            data: $('#questionForm').serialize() + '&answerToRemove=' + $(this).attr('data-index'),
+            type: 'POST',
+            success: function (data) {
+                $('#answers').html(data);
+            }
+        });
+        event.preventDefault();
+    });
+</script>

@@ -1,0 +1,40 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Configuration.ReflexConfig
+           
+@{
+    ViewBag.Title = "Configuration";
+}
+
+<section>
+    <div class="page-header">
+        <h2>Configuration</h2>
+    </div>
+</section>
+
+<section>
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+            <div class="span4">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.ActiveAppStatusDVIds)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.ApplicationStatuses)</span>
+                </div>
+            </div>
+            <div class="span8">
+                    @foreach (var dvStatus in Model.ApplicationStatuses)
+                    {
+                        <label class="checkbox">
+                            <input type="checkbox" name="ActiveAppStatusDVIds" value="@dvStatus.Id" @(Model.ActiveAppStatusDVIds.Contains(dvStatus.Id) ? "checked" : "")> @dvStatus.Name
+                        </label>
+                    }
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="span12">
+                <a class="btn btn-primary" data-submit-form="true">OK</a>
+                <a class="btn btn-small" href="@Url.Action("Index")">Annuler</a>
+            </div>
+        </div>        
+    }
+</section>

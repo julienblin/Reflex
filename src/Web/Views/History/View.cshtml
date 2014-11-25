@@ -1,0 +1,115 @@
+﻿@model CGI.Reflex.Web.Models.History.AuditView
+@using CGI.Reflex.Core.Entities
+@{
+    ViewBag.Title = "Historique";
+}
+
+<section>
+    <div class="page-header">
+        <h1>
+            Historique : @Html.AuditableDisplayName(@Model.EntityType) @ViewBag.DisplayName
+        </h1>
+    </div>
+</section>
+
+<section id="results">
+    <div class="row">
+        <div class="span12">
+            @if (Model.HasResults)
+            {
+                @Html.Pager()
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>@Html.OrderLink("Date", "Timestamp")</th>
+                            <th>@Html.OrderLink("Action", "Action")</th>
+                            <th>@Html.OrderLink("Utilisateur", "User.UserName")</th>
+                            <th>Changements</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var auditInfo in Model.SearchResults.Items)
+                        {
+                            <tr>
+                                <td class="span2">@auditInfo.Timestamp</td>
+                                <td class="span1">@Html.EnumDisplayName(auditInfo.Action)</td>
+                                <td class="span2">@(auditInfo.User != null ? auditInfo.User.UserName : "")</td>
+                                <td class="span7">
+                                    <table class="table table-condensed">
+                                            @foreach (var auditProperty in auditInfo.Properties)
+                                            {
+                                                switch (auditInfo.Action)
+                                                {
+                                                    case AuditInfoAction.Create:
+                                                        <tr>
+                                                            <td class="span3" style="vertical-align:middle;">@Html.PropertyDisplayName(Model.EntityType, auditProperty.PropertyName)</td>
+                                                            <td style="vertical-align:middle;">@auditProperty.NewValue</td>
+                                                        </tr> 
+                                                        break;
+                                                    case AuditInfoAction.Update:
+                                                        <tr>
+                                                            <td class="span2" style="vertical-align:middle;">@Html.PropertyDisplayName(Model.EntityType, auditProperty.PropertyName)</td>
+                                                            <td class="span2" style="vertical-align:middle;">@auditProperty.OldValue</td>
+                                                            <td style="width: 20px;text-align: center; vertical-align:middle;"><i class="icon-arrow-right"></i></td>
+                                                            <td class="span2" style="vertical-align:middle;">@auditProperty.NewValue</td>
+                                                        </tr>
+                                                        break;
+                                                    case AuditInfoAction.Delete:
+                                                        <tr>
+                                                            <td class="span3" style="vertical-align:middle;">@Html.PropertyDisplayName(Model.EntityType, auditProperty.PropertyName)</td>
+                                                            <td style="vertical-align:middle;">@auditProperty.OldValue</td>
+                                                        </tr>
+                                                        break;
+
+                                                    case AuditInfoAction.AddAssociation:
+                                                        <tr>
+                                                            <td class="span3" style="vertical-align:middle;">@Html.PropertyDisplayName(Model.EntityType, auditProperty.PropertyName)</td>
+                                                            <td style="width: 20px;text-align: center; vertical-align:middle;"><i class="icon-plus"></i></td>
+                                                            <td style="vertical-align:middle;">@auditProperty.NewValue</td>
+                                                        </tr>
+                                                        break;
+                                                     case AuditInfoAction.UpdateAssociation:
+                                                        <tr>
+                                                            <td class="span3" style="vertical-align:middle;">@Html.PropertyDisplayName(Model.EntityType, auditProperty.PropertyName)</td>
+                                                            <td style="width: 20px;text-align: center; vertical-align:middle;"><i class="icon-arrow-right"></i></td>
+                                                            <td style="vertical-align:middle;">@auditProperty.NewValue</td>
+                                                        </tr>
+                                                        break;
+
+                                                    case AuditInfoAction.RemoveAssociation:
+                                                        <tr>
+                                                            <td class="span3" style="vertical-align:middle;">@Html.PropertyDisplayName(Model.EntityType, auditProperty.PropertyName)</td>
+                                                            <td style="width: 20px;text-align: center; vertical-align:middle;"><i class="icon-minus"></i></td>
+                                                            <td style="vertical-align:middle;">@auditProperty.OldValue</td>
+                                                        </tr>
+                                                        break;
+                                                }
+                                            }
+                                    </table>    
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @Html.Pager()
+            }
+            else
+            {
+                <blockquote>
+                    <p>
+                        Aucun résultat trouvé.</p>
+                </blockquote>
+            }
+        </div>
+    </div>
+    @if (!String.IsNullOrEmpty(ViewBag.ReturnUrl))
+    {
+        <div class="row">
+            <div class="span12">
+                <a href="@ViewBag.ReturnUrl" class="btn"><i class="icon-arrow-left"></i> Retour</a>
+            </div>
+        </div>
+    }
+</section>

@@ -1,0 +1,255 @@
+﻿@model CGI.Reflex.Web.Areas.Organizations.Models.Sectors.SectorHierarchy
+@{
+    ViewBag.Title = "Secteurs";
+}
+
+<section>
+    <div class="page-header">
+        <h2>
+            Secteurs
+            @if (IsActionAllowed("Create"))
+            {
+                <a id="btnCreate" href="#" class="btn btn-success btn-mini" rel="tooltip" title="Ajouter un secteur"><i class="icon-plus-sign icon-white"></i></a>
+            }
+
+            <a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+
+            @if (IsActionAllowed("Edit"))
+            {
+                <a id="btnEdit" disabled class="btn btn-mini" rel="tooltip" title="Renommer" style="margin-left: 10px;"><i class='icon-pencil'></i></a>
+            }
+            @if (IsActionAllowed("Delete"))
+            {
+                <a id="btnDelete" disabled class="btn btn-mini btn-danger" rel="tooltip" title="Supprimer" data-toggle="modal" data-target="#modalConfirmDelete" style="margin-right: 10px;"><i class='icon-remove icon-white'></i></a>
+            }
+        </h2>
+        <div class="row">
+            <div class="span12">
+                <div id="searchForm" class="collapse">
+                    <div class="well">
+                        <form>
+                            <div class="row-fluid">
+                                <div class="span5">
+                                    <div class="control-group">
+                                        @Html.RLabelFor(m => m.Name)
+                                        @Html.EditorFor(m => m.Name)
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+                            <a id="cancelSearchForm" href="#" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sectionSectorTree">
+    <div class="row">
+        <div id="sectorTreeContainer" class="span12">
+            <div id="sectorTree">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sectionNoResult" style="display:none;">
+    <blockquote>
+        <p>Aucun résultat trouvé.</p>
+    </blockquote>
+</section>
+
+<div class="modal fade" id="modalConfirmDelete">
+    <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Supprimer</h3>
+    </div>
+    <div class="modal-body">
+    <p>Êtes-vous sûr de vouloir supprimer le secteur <b><span id="selectedSectorName"></span></b> ?</p>
+    </div>
+    <div class="modal-footer">
+    <a id="btnDeleteConfirmed" class="btn btn-danger" data-submit-form="true"><i class="icon-remove icon-white"></i> Supprimer</a>
+    <a class="btn" data-dismiss="modal">Annuler</a>
+    </div>
+</div>
+
+@section javascript
+{
+    $(function() {
+        $("#sectorTree").jstree({
+            "plugins" : ["themes", "json_data", "ui", "search", "crrm", "sort"@(Html.Raw(IsActionAllowed("Edit") ? ", \"dnd\"" : ""))],
+            "themes" : {
+                "url": "@Url.Content("~/Content/css/jstree.css")"
+            },
+            "ui" : {
+                "select_limit" : 1
+            },
+            search : {
+			    show_only_matches: true,
+                ajax: {
+                    url : "@Url.Action("Search")",
+                    data : function(n) {  
+                        return { name: $('#Name').val() };
+                    },
+                    success: function(data) {
+                        if(data.length == 0) {
+                            $('#sectionSectorTree').hide();
+                            $('#sectionNoResult').show();
+                        } else {
+                            $('#sectionNoResult').hide();
+                            $('#sectionSectorTree').show();
+                        }
+                    }
+                }
+		    },
+            "json_data" : {
+                "data" : [
+                    {
+                        "attr" : { "id" : "sector-0" },
+                        "data" : "Organisation",
+                        "metadata" : { "id" : "0" }
+                        @if (Model.RootSectors.Any())
+                        {
+                            <text>
+                            ,"state" : "open"
+                            ,"children" : [
+                                @foreach(var sector in Model.RootSectors)
+                                {
+                                    <text>
+                                    {
+                                        "attr" : { "id" : "sector-@sector.Id" },
+                                        "data" : { "title" : "@Html.Raw(sector.Name)" },
+                                        "metadata" : { "id" : "@sector.Id" },
+                                        "state" : "@(sector.HasChildren() ? "closed" : "")"
+                                    }
+                                    @if (sector != Model.RootSectors.Last())
+                                    {
+                                        @:,
+                                    }
+                                    </text>
+                                }
+                                ]
+                            </text>
+                        }
+                    }
+                ],
+                "ajax" : {
+                    "url" : "@Url.Action("TreeData")",
+                    "data" : function(n) {
+                        return { rootId : n.data("id") };
+                    }
+                }
+            }
+        })
+        .bind("loaded.jstree", function (event, data) {
+            data.inst.select_node('#sector-0', true);
+        })
+        .bind("select_node.jstree", function (event, data) {
+            var targetId = data.rslt.obj.attr("id");
+            if(targetId === "sector-0") {
+                $("#btnEdit").attr("disabled", "disabled");
+                $("#btnDelete").attr("disabled", "disabled");
+            } else {
+                $("#btnEdit").removeAttr("disabled");
+                $("#btnDelete").removeAttr("disabled");
+            }
+            $('#selectedSectorName').text(data.inst.get_text(data.rslt.obj));
+            data.inst.open_node('#' + targetId);
+        })
+        .bind("create.jstree", function (event, data) {
+            var tree = data.inst;
+            var node = data.rslt;
+            var rollBack = data.rlbk;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Create")",
+                data: { parentId: node.parent.data('id'), name: node.name },
+                error: function(data) {
+                    $.jstree.rollback(rollBack);
+                },
+                success: function(data) {
+                    node.obj.attr('id', 'sector-' + data.id);
+                    node.obj.data('id', data.id);
+                }
+            });
+        })
+        .bind("rename.jstree", function (event, data) {
+            var tree = data.inst;
+            var node = data.rslt;
+            var rollBack = data.rlbk;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Edit")",
+                data: { id: node.obj.data('id'), name: node.new_name },
+                error: function(data) {
+                    $.jstree.rollback(rollBack);
+                }
+            });
+        })
+        .bind("remove.jstree", function (event, data) {
+            var tree = data.inst;
+            var node = data.rslt;
+            var rollBack = data.rlbk;
+            $('#modalConfirmDelete').modal('hide');
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Delete")",
+                data: { id: node.obj.data('id') },
+                error: function(data) {
+                    $.jstree.rollback(rollBack);
+                }
+            });
+        })
+        .bind("move_node.jstree", function (event, data) {
+            var tree = data.inst;
+            var node = data.rslt;
+            var rollBack = data.rlbk;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Move")",
+                data: { id: node.o.data('id'), parentId: tree._get_parent(node.o).data('id') },
+                error: function(data) {
+                    $.jstree.rollback(rollBack);
+                }
+            });
+        });
+
+        $('#btnCreate').on('click', function(event) {
+            $("#sectorTree").jstree("create");
+            event.preventDefault();
+        });
+
+        $('#searchForm form').on('submit', function(event) {
+            valText = $.trim($('#Name').val());
+            if( !valText) {
+                $("#sectorTree").jstree("clear_search");
+                $('#sectionNoResult').hide();
+                $('#sectionSectorTree').show();
+            } else {
+                $("#sectorTree").jstree("search", valText);
+            }
+            event.preventDefault();
+        });
+
+        $('#cancelSearchForm').on('click', function(event) {
+            $('#Name').val('');
+            $('#searchForm').collapse('hide');
+            $("#sectorTree").jstree("clear_search");
+            $('#sectionNoResult').hide();
+            $('#sectionSectorTree').show();
+            event.preventDefault();
+        });
+
+        $('#btnEdit').on('click', function(event) {
+            if($('#btnEdit').attr('disabled') != 'disabled') {
+                $("#sectorTree").jstree("rename");
+            }
+        });
+
+        $('#btnDeleteConfirmed').on('click', function(event) {
+            $("#sectorTree").jstree("remove");
+        });
+    });
+}

@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="AllowedOperations" xml:space="preserve">
+    <value>Operations autorisées</value>
+  </data>
+  <data name="AppDest" xml:space="preserve">
+    <value>Destination</value>
+  </data>
+  <data name="AppInfo" xml:space="preserve">
+    <value>Informations d'application</value>
+  </data>
+  <data name="Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="ApplicationType" xml:space="preserve">
+    <value>Type d'application</value>
+  </data>
+  <data name="AppSource" xml:space="preserve">
+    <value>Origine</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Certification" xml:space="preserve">
+    <value>Certification</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Commentaires</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Compagnie</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="Criticity" xml:space="preserve">
+    <value>Criticité</value>
+  </data>
+  <data name="DataDescription" xml:space="preserve">
+    <value>Description des données</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="DeniedOperations" xml:space="preserve">
+    <value>Opérations refusées</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DisplayOrder" xml:space="preserve">
+    <value>Ordre d'affichage</value>
+  </data>
+  <data name="DomainValue" xml:space="preserve">
+    <value>Valeur du domaine</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Courriel</value>
+  </data>
+  <data name="EntityId" xml:space="preserve">
+    <value>Id d'entité</value>
+  </data>
+  <data name="EntityType" xml:space="preserve">
+    <value>Type d'entité</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Évènement</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Évènements</value>
+  </data>
+  <data name="EventType" xml:space="preserve">
+    <value>Type d'évènement</value>
+  </data>
+  <data name="FailedPasswordAttemptCount" xml:space="preserve">
+    <value>Tentatives de mot de passe échouées</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="Frequency" xml:space="preserve">
+    <value>Fréquence</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Integration" xml:space="preserve">
+    <value>Intégration</value>
+  </data>
+  <data name="IsLockedOut" xml:space="preserve">
+    <value>Bloqué ?</value>
+  </data>
+  <data name="LastLoginDate" xml:space="preserve">
+    <value>Dernière connection</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="MaintenanceWindow" xml:space="preserve">
+    <value>Fenêtre de maintenance</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Nature" xml:space="preserve">
+    <value>Nature</value>
+  </data>
+  <data name="NewValue" xml:space="preserve">
+    <value>Nouvelle valeur</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="OldValue" xml:space="preserve">
+    <value>Ancienne valeur</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Propriétés</value>
+  </data>
+  <data name="PropertyName" xml:space="preserve">
+    <value>Nom de la propriété</value>
+  </data>
+  <data name="PropertyType" xml:space="preserve">
+    <value>Type de la propriété</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rôle</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="Timestamp" xml:space="preserve">
+    <value>Horodatage</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="UserRange" xml:space="preserve">
+    <value>Plage d'utilisateurs</value>
+  </data>
+  <data name="ApplicationCertification" xml:space="preserve">
+    <value>Certification de l'application</value>
+  </data>
+  <data name="ApplicationCriticity" xml:space="preserve">
+    <value>Criticité de l'application</value>
+  </data>
+  <data name="ApplicationStatus" xml:space="preserve">
+    <value>Statut de l'application</value>
+  </data>
+  <data name="ApplicationUserRange" xml:space="preserve">
+    <value>Plage d'utilisateurs de l'application</value>
+  </data>
+  <data name="ContactType" xml:space="preserve">
+    <value>Type de contact</value>
+  </data>
+  <data name="Creation" xml:space="preserve">
+    <value>Création</value>
+  </data>
+  <data name="Deletion" xml:space="preserve">
+    <value>Suppression</value>
+  </data>
+  <data name="IntegrationNature" xml:space="preserve">
+    <value>Nature de l'intégration</value>
+  </data>
+  <data name="Updation" xml:space="preserve">
+    <value>Mise à jour</value>
+  </data>
+  <data name="AuditInfo" xml:space="preserve">
+    <value>Information d'audit</value>
+  </data>
+  <data name="ApplicationCategory" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Nom à afficher</value>
+  </data>
+  <data name="Sector" xml:space="preserve">
+    <value>Secteur</value>
+  </data>
+  <data name="Parent" xml:space="preserve">
+    <value>Parent</value>
+  </data>
+  <data name="Children" xml:space="preserve">
+    <value>Enfants</value>
+  </data>
+  <data name="Technology" xml:space="preserve">
+    <value>Technologie</value>
+  </data>
+  <data name="EndOfSupport" xml:space="preserve">
+    <value>Fin de support</value>
+  </data>
+  <data name="UserCompany" xml:space="preserve">
+    <value>Compagnie de l'utilisateur</value>
+  </data>
+  <data name="Technologies" xml:space="preserve">
+    <value>Technologies</value>
+  </data>
+  <data name="TechnologyType" xml:space="preserve">
+    <value>Type de technologie</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Alias</value>
+  </data>
+  <data name="Environment" xml:space="preserve">
+    <value>Environnement</value>
+  </data>
+  <data name="EvergreenDate" xml:space="preserve">
+    <value>Date limite de vie du serveur</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Serveur</value>
+  </data>
+  <data name="ServerRole" xml:space="preserve">
+    <value>Rôle serveur</value>
+  </data>
+  <data name="ServerStatus" xml:space="preserve">
+    <value>Statut serveur</value>
+  </data>
+  <data name="ServerType" xml:space="preserve">
+    <value>Type de serveur</value>
+  </data>
+  <data name="Integrations" xml:space="preserve">
+    <value>Intégrations</value>
+  </data>
+  <data name="Landscape" xml:space="preserve">
+    <value>Landscape</value>
+  </data>
+  <data name="Servers" xml:space="preserve">
+    <value>Serveurs</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Base de données</value>
+  </data>
+  <data name="DatabaseName" xml:space="preserve">
+    <value>Nom de la bd</value>
+  </data>
+  <data name="DbInstanceName" xml:space="preserve">
+    <value>Nom de l'instance du serveur de bd</value>
+  </data>
+  <data name="Databases" xml:space="preserve">
+    <value>Bases de données</value>
+  </data>
+  <data name="ContactRoleInApp" xml:space="preserve">
+    <value>Rôle du contact</value>
+  </data>
+  <data name="AddAssociation" xml:space="preserve">
+    <value>Association</value>
+  </data>
+  <data name="RemoveAssociation" xml:space="preserve">
+    <value>Association</value>
+  </data>
+  <data name="AppTechnoLink" xml:space="preserve">
+    <value>Lien Application &lt;-&gt; Technologie</value>
+  </data>
+  <data name="AppContactLink" xml:space="preserve">
+    <value>Lien Application &lt;-&gt; Contacts</value>
+  </data>
+  <data name="AppDatabaseLink" xml:space="preserve">
+    <value>Lien Application &lt;-&gt; Base de données</value>
+  </data>
+  <data name="ServerTechnoLink" xml:space="preserve">
+    <value>Lien Server &lt;-&gt; Technologie</value>
+  </data>
+  <data name="RolesInApp" xml:space="preserve">
+    <value>Rôle du contact dans une application</value>
+  </data>
+  <data name="IntegrationTechnoLink" xml:space="preserve">
+    <value>Lien Integration &lt;-&gt; Technologie</value>
+  </data>
+  <data name="Answer" xml:space="preserve">
+    <value>Réponse</value>
+  </data>
+  <data name="Answers" xml:space="preserve">
+    <value>Réponses</value>
+  </data>
+  <data name="BusinessValue" xml:space="preserve">
+    <value>Affaires</value>
+  </data>
+  <data name="Explanation" xml:space="preserve">
+    <value>Explication</value>
+  </data>
+  <data name="Question" xml:space="preserve">
+    <value>Question</value>
+  </data>
+  <data name="QuestionType" xml:space="preserve">
+    <value>Type de question</value>
+  </data>
+  <data name="TechnologyValue" xml:space="preserve">
+    <value>Technologique</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Poids</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Couleur</value>
+  </data>
+  <data name="EmptyResEntry" xml:space="preserve">
+    <value />
+  </data>
+  <data name="AppServerTechnoCalculation" xml:space="preserve">
+    <value>Technologies des serveurs de l'application</value>
+  </data>
+  <data name="ActiveAppStatusDVIds" xml:space="preserve">
+    <value>Statuts de l'application considérés actifs</value>
+  </data>
+  <data name="AppTechnoCalculation" xml:space="preserve">
+    <value>Technologies de l'application</value>
+  </data>
+  <data name="ColumnCriteria" xml:space="preserve">
+    <value>Critère de colonnes</value>
+  </data>
+  <data name="DbInstance" xml:space="preserve">
+    <value>Instances de base de données</value>
+  </data>
+  <data name="AppReviews" xml:space="preserve">
+    <value>Bilan applicatif</value>
+  </data>
+  <data name="LineCriteria" xml:space="preserve">
+    <value>Critère de lignes</value>
+  </data>
+  <data name="Calculation" xml:space="preserve">
+    <value>Calcul automatique</value>
+  </data>
+  <data name="OnlyActiveApplications" xml:space="preserve">
+    <value>Seulement les applications actives</value>
+  </data>
+  <data name="AlmostOutdated" xml:space="preserve">
+    <value>Presque passé date</value>
+  </data>
+  <data name="Outdated" xml:space="preserve">
+    <value>Passé date</value>
+  </data>
+  <data name="UpToDate" xml:space="preserve">
+    <value>À jour</value>
+  </data>
+  <data name="AppIntegrationTechnoCalculation" xml:space="preserve">
+    <value>Technologies des intégrations de l'application</value>
+  </data>
+  <data name="EndOfSupportUnknown" xml:space="preserve">
+    <value>Date de fin de support inconnu</value>
+  </data>
+  <data name="MaxAnswerValue" xml:space="preserve">
+    <value>Réponse maximal</value>
+  </data>
+  <data name="ReviewAnswers" xml:space="preserve">
+    <value>Réponses</value>
+  </data>
+  <data name="SectorsAndContacts" xml:space="preserve">
+    <value>Secteurs et contacts</value>
+  </data>
+  <data name="LandscapesAndServers" xml:space="preserve">
+    <value>Lanscapes et serveurs</value>
+  </data>
+  <data name="AppServerLink" xml:space="preserve">
+    <value>Lien Application &lt;-&gt; Serveur</value>
+  </data>
+  <data name="ShortEvergreenDate" xml:space="preserve">
+    <value>Date limite de vie</value>
+  </data>
+  <data name="AppDbInstanceLink" xml:space="preserve">
+    <value>Instances de l'application</value>
+  </data>
+  <data name="AppDbInstancesCalculation" xml:space="preserve">
+    <value>Technologies des instances de BD de l'application</value>
+  </data>
+  <data name="DbInstanceTechnoLink" xml:space="preserve">
+    <value>Lien Instance &lt;-&gt; Technologies</value>
+  </data>
+  <data name="QuestionAnswer" xml:space="preserve">
+    <value>Réponse</value>
+  </data>
+  <data name="ApplicationReview" xml:space="preserve">
+    <value>Réponse du bilan</value>
+  </data>
+  <data name="UpdateAssociation" xml:space="preserve">
+    <value>Association</value>
+  </data>
+  <data name="AppDbInstanceLinks" xml:space="preserve">
+    <value>Application &lt;-&gt; Instances DB</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Le champ {0} n'est pas un courriel valide</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Le champ {0} est obligatoire</value>
+  </data>
+  <data name="StringLength" xml:space="preserve">
+    <value>Le champ {0} doit avoir une longueur maximum de {1}</value>
+  </data>
+  <data name="Unique" xml:space="preserve">
+    <value>La valeur du champ {0} doit être unique</value>
+  </data>
+  <data name="DomainValues" xml:space="preserve">
+    <value>Domaines de valeurs</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Créé</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Merged" xml:space="preserve">
+    <value>Modifié</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>Rejeté</value>
+  </data>
+  <data name="AllowedOperation" xml:space="preserve">
+    <value>Operation autorisée</value>
+  </data>
+  <data name="ApplicationDescription" xml:space="preserve">
+    <value>Description de l'application</value>
+  </data>
+  <data name="CategoryDescription" xml:space="preserve">
+    <value>Description de la catégorie</value>
+  </data>
+</root>

@@ -1,0 +1,14 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Users.UserEdit
+@{
+    ViewBag.Title = "Editer l'utilisateur " + Model.UserName;
+}
+
+<section>
+    <div class="page-header">
+        <h1>Editer l'utilisateur @Model.UserName
+        </h1>
+    </div>
+</section>
+
+@Html.Partial("_Form")
+

@@ -1,0 +1,84 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Landscapes.LandscapesEdit
+
+@using (Html.BeginForm(Model.FormAction, "Landscapes", FormMethod.Post, new { id = "dbForm" }))
+{
+    @Html.EditorFor(m => m.Id)
+    @Html.EditorFor(m => m.ConcurrencyVersion)
+    <section>
+    <div class="row">
+        <div class="span3">
+            <div class="control-group">
+                    @Html.RLabelFor(m => m.Name)
+                    @Html.EditorFor(m => m.Name)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description, new { style = "width:510px", rows = 5 })
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Description)</span>
+            </div>
+        </div>
+    </div>
+    </section>
+                
+         <section>
+        <div class="page-header">
+            <h2>
+                Serveurs
+               @Ajax.LargeModalActionLinkRaw("<i class=\"icon-plus-sign icon-white\"></i>", "ServersModal", "Pickers", new { area = "", AddFunctionName = "addServer", HideWithLandscape = true, CurLandscapeId = Model.Id, HideServersFromTarget = "#serverContainers" }, new { @class = "btn btn-success btn-mini", rel = "tooltip", title = "Ajouter des serveurs" })
+            </h2>
+        </div>
+        <div class="row">
+            <div id="serverContainers" class="span12">
+                @Html.Partial("_LandscapesServersDisplay", Model.LandscapeServers)
+            </div>
+        </div>
+    </section>
+                
+        <section style="margin-top: 20px">
+    <div class="row">
+        <div class="span10">
+            <a class="btn btn-primary" data-submit-form="true">OK</a>
+            <a class="btn btn-small" href="@Url.Action("Index", "Landscapes")">Annuler</a>
+        </div>
+    </div>
+    </section>
+}
+                    
+<script type="text/javascript">
+    var addServer = function(checkedIds) {
+        $('#serverContainers input').each(function() {
+            checkedIds.push($(this).val());
+        });
+        $.ajax({
+            url: '@Url.Action("GetServers")',
+            data: { selectedIds: checkedIds },
+            type: 'GET',
+            success: function(data) {
+                $('#serverContainers').html(data);
+            }
+        });
+    };
+
+    $("#serverContainers").on('click', 'a[data-remove-server]', function () {
+        var checkedIds = new Array();
+        checkedIds.push(0);
+        var toRemove = $(this).attr("data-remove-server");
+        $('#serverContainers input').each(function () {
+            if ($(this).val() != toRemove)
+                checkedIds.push($(this).val());
+        });
+        $.ajax({
+            url: '@Url.Action("GetServers")',
+            data: { selectedIds: checkedIds },
+            type: 'GET',
+            success: function (data) {
+                $('#serverContainers').html(data);
+            }
+        });
+    });
+</script>

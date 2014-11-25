@@ -1,0 +1,83 @@
+﻿@model CGI.Reflex.Web.Areas.Organizations.Models.Contacts.ContactEdit
+
+@using (Html.BeginForm(Model.FormAction, "Contacts", FormMethod.Post))
+{
+    @Html.EditorFor(m => m.Id)
+    @Html.EditorFor(m => m.ConcurrencyVersion)
+    @Html.EditorFor(m => m.ReturnUrl)
+    @Html.EditorFor(m => m.AssociateWithApplicationId)
+    <div class="row">
+        <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.LastName)
+                @Html.EditorFor(m => m.LastName)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.LastName)</span>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.FirstName)
+                @Html.EditorFor(m => m.FirstName)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.FirstName)</span>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Company)
+                @Html.EditorFor(m => m.Company)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Company)</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.TypeId)
+                @Html.EditorFor(m => m.TypeId)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.TypeId)</span>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Email)
+                @Html.EditorFor(m => m.Email)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Email)</span>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.PhoneNumber)
+                @Html.EditorFor(m => m.PhoneNumber)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.PhoneNumber)</span>
+            </div>
+        </div>
+         <div class="span3">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.SectorId, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.EditorFor(m => m.SectorId)
+                </div>
+            </div>
+         </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            @Html.RLabelFor(m => m.Notes)
+            @Html.TextAreaFor(m => m.Notes, new { @class = "span9", rows = 10 })
+            <span class="help-inline">@Html.ValidationMessageFor(m => m.Notes)</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <a class="btn btn-primary" data-submit-form="true">OK</a>
+            <a class="btn btn-small" href="@(string.IsNullOrEmpty(Model.ReturnUrl) ? Url.Action("Index", "Contacts") : Model.ReturnUrl)">Annuler</a>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#Company").attr('autocomplete', 'off');
+    $("#Company").typeahead({
+        source : [@Html.Raw(string.Join(", ", Model.Compagnies.Select(c => "'" + c + "'")))]
+    });
+</script>

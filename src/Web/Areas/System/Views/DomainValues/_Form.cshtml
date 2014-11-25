@@ -1,0 +1,47 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.DomainValues.DomainValueEdit
+@using CGI.Reflex.Core.Entities
+
+<section>
+    <div class="row">
+        <div class="span12">
+            @using (Html.BeginForm(Model.FormAction, "DomainValues", FormMethod.Post))
+            {
+                if (Model.Id != 0)
+                {
+                    @Html.EditorFor(m => m.Id)
+                    @Html.EditorFor(m => m.ConcurrencyVersion)
+                }
+                
+                @Html.EditorFor(m => m.Category)
+                
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Name)
+                    @Html.EditorFor(m => m.Name)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+                </div>
+                
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Color)
+                    <div class="btn-group" data-toggle="buttons-radio">
+                        @Html.HiddenFor(m => m.Color)
+                        @Html.EditorFor(m => m.Color)
+                    </div>
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Color)</span>
+                </div>
+                
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new { @class = "span6", rows = 5 })
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Description)</span>
+                </div>
+                
+                <div class="row">
+                    <div class="span10">
+                        <a class="btn btn-primary" data-submit-form="true">OK</a>
+                        <a class="btn btn-small" href="@Url.Action("Index", "DomainValues", new { Model.Category })">Annuler</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

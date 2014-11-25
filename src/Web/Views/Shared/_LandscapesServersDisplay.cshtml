@@ -1,0 +1,168 @@
+﻿@model CGI.Reflex.Web.Models.LandscapesServersDisplay
+@*@{var addInfoId = String.Concat("addInfo", landscape.Landscape.Id);}*@
+<div class="row-fluid">
+    <div class="span12" style="overflow: auto;">
+        @if (Model.Landscapes.Any())
+        {
+            
+            <table class="table table-bordered no-hover">
+                <thead>
+                    <tr>
+                        @foreach (var env in Model.OrderedEnvironments)
+                        {
+                            <th style="text-align: center; background-color: #E6E6E6">@env.Name
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var landscape in Model.OrderedLandscapes)
+                {
+                    var landscapeUID = Guid.NewGuid();
+                    <tr>
+                        <th colspan="@Model.OrderedEnvironments.Count()" style="text-align: left; background-color: #666; padding: 4px; color: White;font-weight: bold">
+                            @if (Model.AllowRemoveLandscape && landscape.Landscape != null)
+                            {
+                                <div style="float: right">
+                                    <a class="btn btn-danger btn-mini" data-remove-landscape="@landscape.Landscape.Id" rel="tooltip" title="Retirer le landscape">
+                                        <i class="icon-remove icon-white"></i></a>
+                                </div>
+                            }
+                            <a class="btn btn-mini" data-toggle-target="div[data-landscape-uid='@landscapeUID']" rel="tooltip" title="Détails">
+                                <i class="icon-info-sign"></i></a>
+                            @(landscape.Landscape != null && Model.ShowLandscape ? landscape.Landscape.Name : "")
+                        </th>
+                    </tr>
+                            var numberOfRows = landscape.GetNumberOfRenderedRows(Model.OrderedEnvironments);
+                            for (var rowIndex = 0; rowIndex < numberOfRows; ++rowIndex)
+                            {
+                        <tr>
+                            @foreach (var env in Model.OrderedEnvironments)
+                            {
+                                var envServers = landscape.GetEnvServerList(env).ToList();
+                                if (!envServers.Any() && rowIndex == 0)
+                                {
+                                    <td rowspan="@numberOfRows"></td>
+                                }
+                                else
+                                {
+                                    if (!envServers.Any())
+                                    {
+                                        continue;
+                                    }
+                                    
+                                    var rowSpan = numberOfRows / envServers.Count();
+                                    if ((rowIndex % rowSpan) == 0)
+                                    {
+                                        var curServer = envServers[rowIndex / rowSpan];
+                                        bool inUse = Model.SelectedServer.Contains(curServer);
+                                        <td class="@(inUse ? "" : "well")" rowspan="@rowSpan" style="text-align: left;vertical-align: top;" data-hover-icon>
+                                            @if (inUse)
+                                            {
+                                                <input type="hidden" name="serverIds" value="@curServer.Id" />
+                                            }
+                                            
+                                            @if (IsActionAllowed("Details", "Servers"))
+                                            {
+                                                if (inUse)
+                                                {
+                                                    <a href="@Url.Action("Details", "Servers", new { area = "Servers", serverId = curServer.Id })"style="font-weight:bold">@curServer.Name</a>
+                                                                                 
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("Details", "Servers", new { area = "Servers", serverId = curServer.Id })" style="color:#555;font-weight:bold">
+                                                        <i>@curServer.Name</i></a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <strong>@curServer.Name</strong>
+
+                                            }
+                                            <div style="float: right">
+                                                @if (Model.AllowRemoveServer && inUse)
+                                                {
+                                                    <a data-remove-server="@curServer.Id" style="cursor:pointer;"><i class="icon-remove">
+                                                                                                                  </i></a>
+                                                                     
+                                                }
+                                                @if (Model.AllowAddServer && !inUse)
+                                                {
+                                                    <a data-add-server="@curServer.Id" style="cursor:pointer;"><i class="icon-plus-sign">
+                                                                                                               </i></a>
+                                                }
+                                            </div>
+                                            <br />
+                                            <div data-landscape-uid="@landscapeUID" style="display:none;">
+                                                @{bool haveInfo = false;}
+                                                @if (!String.IsNullOrEmpty(curServer.Alias))
+                                                {
+                                                    haveInfo = true;
+                                                    <b>Alias : </b>@curServer.Alias<br />
+                                                }
+                                                @if (curServer.Role != null)
+                                                {
+                                                    haveInfo = true;
+                                                    <b>Rôle : </b>@curServer.Role.Name<br />
+                                                }
+                                                @if (curServer.Status != null)
+                                                {
+                                                    haveInfo = true;
+                                                    <b>Statut : </b>@curServer.Status.Name<br />
+                                                }
+                                                @if (curServer.Type != null)
+                                                {
+                                                    haveInfo = true;
+                                                    <b>Type : </b>@curServer.Type.Name<br />
+                                                }
+                                                @if (curServer.EvergreenDate.HasValue)
+                                                {
+                                                    haveInfo = true;
+                                                    <b>Date limite : </b>@curServer.EvergreenDate.Value.ToShortDateString()<br />
+                                                }
+                                                @if (!haveInfo)
+                                                {
+                                                    <blockquote>Aucun détails</blockquote>
+                                                }
+                                            </div>
+                                        </td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <blockquote>
+                <p>Il n'y a pas de serveur pour cette application.</p>
+            </blockquote>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('td[data-hover-icon]').hover(
+            function () {
+                $(this).find("span").css("display", "inline");
+            },
+            function () {
+                $(this).find("span").css("display", "none");
+            }
+        );
+
+        $('a[rel="popover"]').popover({ placement: 'top', trigger: 'manual' });
+        $('a[rel="popover"]').off('click');
+        $('a[rel="popover"]').click(function () {
+            $(this).popover('toggle');
+        });
+
+        $("#container").bind("ajaxSend", function () {
+            $('a[rel="popover"]').popover('hide');
+        });
+    });
+</script>

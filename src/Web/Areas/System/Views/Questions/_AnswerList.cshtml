@@ -1,0 +1,69 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Questions.QuestionEdit
+           
+<section>
+    <div class="row">
+        <div class="span12">
+            @if (Model.Answers.Any())
+            {
+                <table class="table table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Valeur</th>
+                            <th>Réponse</th>
+                            <th>Explication</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Answers.Count(); i++)
+                        {
+                            <tr>
+                                <td class="span1">
+                                    @Html.HiddenFor(m => m.Answers[i].Id)
+                                    <div class="control-group">
+                                        @Html.TextBoxFor(m => m.Answers[i].Value, new { @class = "span1", style = "margin-bottom:0px" })
+                                    </div>
+                                </td>
+                                <td class="span2">
+                                    <div class="control-group">
+                                        @Html.TextBoxFor(m => m.Answers[i].Answer, new { @class = "span2", style = "margin-bottom:0px" })
+                                    </div>
+                                </td>
+                                <td class="span9">
+                                    <div class="control-group">
+                                        @Html.TextBoxFor(m => m.Answers[i].Explanation, new { @class = "span9", style = "margin-bottom:0px" })
+                                    </div>
+                                </td>
+                                <td style="text-align:right;">
+                                    <a class="btn btn-danger btn-mini" data-remove-line="true" data-index="@i"><i class="icon-remove icon-white"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <blockquote>
+                    <p>Il n'y a pas de réponses pour cette question.</p>
+                </blockquote>
+                if (((IDictionary<string, string>)ViewBag.AutoCalculations).Any())
+                {
+                    <div class="row">
+                        <div class="span8">
+                            <div class="alert alert-info">
+                                <p>
+                                    Ajouter une réponse ou sélectionner un calcul automatique pour cette question
+                                </p>
+                                <div class="control-group">
+                                    @Html.RLabelFor(m => m.Calculation)
+                                    @Html.DropDownListFor(m => m.Calculation, new SelectList((IDictionary<string, string>)ViewBag.AutoCalculations, "Value", "Key"), "")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>

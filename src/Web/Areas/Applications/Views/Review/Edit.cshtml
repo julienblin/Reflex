@@ -1,0 +1,173 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Review.ReviewEdit
+@{
+    ViewBag.Title = @Model.AppName + " - Bilan";
+}
+<div class="page-header">
+    <h2>Édition du bilan</h2>
+</div>
+
+@using (Html.BeginForm("Edit", "Review", new { appId = Model.AppId }, FormMethod.Post, new { id = "AppReviewForm" }))
+{
+    <div class="row">
+        <div class="span7">
+            <div class="row">
+                <div class="span7">
+                    <h3>Affaires</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span7">
+                    <table class="table table-striped table-condensed">
+                        <tbody>
+                            @for (int i = 0; i < Model.BusinessQuestions.Count(); i++)
+                            {
+                                var expandId = string.Concat("details-", Model.BusinessQuestions[i].Id); 
+                                var explanationId = "bExplanation" + @i;
+                                <tr>
+                                    <td class="span12" colspan="2">
+                                        <div style="float:right;">
+                                            @if (Model.BusinessQuestions[i].IsCalculation)
+                                            {
+                                                <select class="span2" disabled="disabled" style="margin-bottom:0px;">
+                                                    <option value="">@(String.IsNullOrEmpty(Model.BusinessQuestions[i].CurAnswer) ? "N/A" : Model.BusinessQuestions[i].CurAnswer)</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => m.BusinessQuestions[i].SelectedAnswer, new SelectList(Model.BusinessQuestions[i].Answers, "Key", "Value", Model.BusinessQuestions[i].SelectedAnswer), "", new { @class = "span2", data_update_graph = "true", data_explanation_target_id = "#" + explanationId, style = "margin-bottom:0px;" })
+                                            }
+                                        </div>
+                                        @Html.EditorFor(m => m.BusinessQuestions[i].Id)
+                                        <strong>
+                                            <a class="btn btn-mini" data-toggle-target-row="#@expandId" rel="tooltip" title="Détails"><i class="icon-info-sign"></i></a>                               
+                                            @Model.BusinessQuestions[i].Question [@Model.BusinessQuestions[i].Weight]
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr style="display:none"></tr>
+                                <tr id="@expandId" style="display:none">
+                                    <td class="span7" style="border-top:none;">
+                                        <div class="gris-form gris-form-textarea" style="height:36px;overflow:auto;margin-bottom:10px;">@Model.BusinessQuestions[i].Description</div>
+                                    </td>
+                                    <td class="span5" style="border-top:none;">
+                                        <div id="@explanationId" class="gris-form gris-form-textarea" style="height:36px;overflow:auto;margin-bottom:10px;">@Model.BusinessQuestions[i].CurAnswerExplanation</div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-top:40px;">
+                <div class="span7">
+                    <h3>Technologique</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span7">
+                    <table class="table table-striped table-condensed">
+                        <tbody>
+                            @for (int i = 0; i < Model.TechnoQuestions.Count(); i++)
+                            {
+                                var expandId = string.Concat("details-", Model.TechnoQuestions[i].Id);
+                                var explanationId = "bExplanation" + @i;
+                                <tr>
+                                    <td class="span12" colspan="2">
+                                        <div style="float:right;">
+                                            @if (Model.TechnoQuestions[i].IsCalculation)
+                                            {
+                                                <select class="span2" disabled="disabled" style="margin-bottom:0px;">
+                                                    <option value="">@(String.IsNullOrEmpty(Model.TechnoQuestions[i].CurAnswer) ? "N/A" : Model.TechnoQuestions[i].CurAnswer)</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => m.TechnoQuestions[i].SelectedAnswer, new SelectList(Model.TechnoQuestions[i].Answers, "Key", "Value", Model.TechnoQuestions[i].SelectedAnswer), "", new { @class = "span2", data_update_graph = "true", data_explanation_target_id = "#" + explanationId, style = "margin-bottom:0px;" })
+                                            }
+                                        </div>
+                                        @Html.EditorFor(m => m.TechnoQuestions[i].Id)
+                                        <strong>
+                                            <a class="btn btn-mini" data-toggle-target-row="#@expandId" rel="tooltip" title="Détails"><i class="icon-info-sign"></i></a>                               
+                                            @Model.TechnoQuestions[i].Question [@Model.TechnoQuestions[i].Weight]
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr style="display:none"></tr>
+                                <tr id="@expandId" style="display:none">
+                                    <td class="span7" style="border-top:none;">
+                                        <div class="gris-form gris-form-textarea" style="height:36px;overflow:auto;margin-bottom:10px;">@Model.TechnoQuestions[i].Description</div>
+                                    </td>
+                                    <td class="span5" style="border-top:none;">
+                                        <div id="@explanationId" class="gris-form gris-form-textarea" style="height:36px;overflow:auto;margin-bottom:10px;">@Model.TechnoQuestions[i].CurAnswerExplanation</div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="span3">&nbsp;
+            <div id="imgGraph" style="position:relative;">
+                <img id="graph" style="border:1px solid #B7B7B7;box-shadow:0 0 3px #B7B7B7;" src="@Url.Action("ApplicationsReviewChart", "Home", new { area = "", width = 200, height = 200, appId = Model.AppId })" />
+            </div>
+        </div>
+    </div>
+    
+    <section style="margin-top: 20px">
+        <div class="row">
+            <div class="span10">
+                <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+                <a class="btn" href="@Url.Action("Details")">Annuler</a>
+            </div>
+        </div>
+    </section>
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#container").on('change', 'select[data-update-graph]', function () {
+            $("#graph").attr("src", "@Html.Raw(Url.Action("GetGraph"))?" + $("#AppReviewForm").serialize());
+        });
+
+
+        $("#container").on('change', 'select[data-explanation-target-id]', function () {
+            var selectedAnswer = $(this).val();
+            var target = $(this).attr("data-explanation-target-id");
+            if (selectedAnswer == "")
+            {
+                $(target).text("");
+            }
+            else
+            {
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("GetAnswerExplanation"))",
+                    data: { answerId: selectedAnswer },
+                    type: 'GET',
+                    success: function (data) {
+                        if (data != undefined) {
+                            $(target).text(data);
+                        } else {
+                            $(target).text("");
+                        }
+
+                    }
+                });
+            }
+        });
+
+        window.mapYInitLoc = $("#imgGraph").position().top;
+
+        $(window).scroll(function () {
+		    var windowTop = $(document).scrollTop();
+		    var offset = 0;
+		    if(windowTop > window.mapYInitLoc - 60) {
+			    offset = windowTop - window.mapYInitLoc + 60;
+		    }
+		    $("#imgGraph").animate({top:offset},{duration:500,queue:false});
+	    });
+    });
+</script>

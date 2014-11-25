@@ -1,0 +1,63 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Servers.ServersIndex
+
+<section id="results">
+    <div class="row">
+        <div class="span12">
+            @if (Model.HasResults)
+            {
+                @Html.Pager("#results")
+
+                <table class="table table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@Html.OrderLink("Nom", "Name")</th>  
+                            <th>@Html.OrderLink("Alias", "Alias")</th>   
+                            <th>@Html.OrderLink("Landscape", "Landscape")</th> 
+                            <th>@Html.OrderLink("Rôle", "Role")</th>  
+                            <th>@Html.OrderLink("Statut", "Status")</th> 
+                            <th></th>       
+                        </tr>
+                    </thead>
+
+                        @foreach (var server in Model.SearchResults.Items)
+                        {
+                            <tr>
+
+                                <td width="15px"></td>
+                                <td class="span3">@Html.ActionLink(server.Name, "Details", "Servers", new { serverId = server.Id }, new { data_link_bubble = "td" })</td>
+                                @if (!string.IsNullOrEmpty(server.Alias))
+                                {
+                                    <td class="span3">@Html.ActionLink(server.Alias, "Details", "Servers", new { serverId = server.Id }, new { data_link_bubble = "td" })</td>
+                                }
+                                else
+                                {
+                                    <td class="span3">&nbsp;</td>
+                                }
+                                <td class="span3">@(server.Landscape == null ? "" : server.Landscape.Name)</td>
+                                <td class="span3">@server.Role</td>
+                                <td class="span3">@server.Status</td>
+
+                                 <td class="span2" style="text-align:right">
+                                  @if (IsActionAllowed("Delete"))
+                                  {
+                                        @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "Delete", "Servers", new { serverId = server.Id, id = server.Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Supprimer" })
+                                  }
+                                </td>
+                            </tr>
+ 
+                        }
+
+                </table>
+
+                @Html.Pager("#results")
+            }
+            else
+            {
+                <blockquote>
+                    <p>Aucun résultat trouvé.</p>
+                </blockquote>
+            }
+        </div>
+    </div>
+</section>

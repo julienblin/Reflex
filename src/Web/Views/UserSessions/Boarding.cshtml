@@ -1,0 +1,43 @@
+﻿@model CGI.Reflex.Web.Models.UserSessions.Boarding
+@{
+    ViewBag.Title = "Embarquement";
+    ViewBag.FlashPosition = "offset4 span4";
+}
+<div class="row">
+    <div class="span4 offset4">
+        @using (Html.BeginForm("Boarding", "UserSessions", FormMethod.Post, new { @class = "well" }))
+        {
+            @Html.EditorFor(m => m.SingleAccessToken)
+
+            <fieldset style="margin-bottom: 0">
+                <legend>Connexion à @ViewBag.AppName</legend>
+                
+                <div style="font-weight: bold;">
+                    <p>Bienvenue, @Model.UserName</p>
+                    <p>Veuillez créer un mot de passe pour vous connecter.</p>
+                </div>
+
+                <div class="control-group">
+                    @Html.LabelFor(m => m.Password)
+                    @Html.EditorFor(m => m.Password)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Password)</span>
+                </div>
+
+                <div class="control-group">
+                    @Html.LabelFor(m => m.PasswordConfirm)
+                    @Html.EditorFor(m => m.PasswordConfirm)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.PasswordConfirm)</span>
+                </div>
+            </fieldset>
+            
+            <input type="submit" value="OK" class="btn btn-primary" />
+        }
+    </div>
+</div>
+
+@section javascript
+{
+    $(function() {
+        $("#Password").focus();
+    });
+}

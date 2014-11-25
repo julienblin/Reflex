@@ -1,0 +1,29 @@
+﻿@model int?
+@using CGI.Reflex.Core.Entities;
+@using CGI.Reflex.Web.Models.Pickers;
+
+
+@{
+    Technology currentTechno = null;
+    if(Model.HasValue) {
+        currentTechno = CGI.Reflex.Core.References.NHSession.Load<Technology>(Model.Value);
+    }
+
+    var selectionMode = SelectionMode.Single;
+    if (ViewData["SelectionMode"] != null)
+    {
+        selectionMode = (SelectionMode)ViewData["SelectionMode"];
+    }
+}
+
+<div class="input-append">
+    @Html.HiddenFor(m => m)
+    <input id="textbox-@ViewData.TemplateInfo.HtmlFieldPrefix" class="span2" style="width: 176px;" type="text" value="@(currentTechno != null ? currentTechno.FullName : "")" disabled>
+    @Ajax.LargeModalActionLinkRaw("...", "TechnologiesModal", "Pickers", new { area = "", selectionMode, addFunctionName = "selectTechno_" + ViewData.TemplateInfo.HtmlFieldPrefix }, new { @class = "btn", rel = "tooltip", title = "Sélectionner une technologie", style = "margin-top: 0; margin-left: -4px; margin-bottom: 9px;" })
+</div>
+<script type="text/javascript">
+    var selectTechno_@(ViewData.TemplateInfo.HtmlFieldPrefix) = function(technoId, technoName) {
+        $("#@(ViewData.TemplateInfo.HtmlFieldPrefix)").val(technoId);
+        $("#textbox-@(ViewData.TemplateInfo.HtmlFieldPrefix)").val(technoName);
+    };
+</script>

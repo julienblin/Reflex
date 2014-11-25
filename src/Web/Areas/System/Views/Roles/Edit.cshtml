@@ -1,0 +1,17 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Roles.RoleEdit
+@{
+    ViewBag.Title = "Édition du rôle " + Model.Name;
+}
+
+<section>
+    <div class="page-header">
+        <h2>Édition du rôle @Model.Name</h2>
+    </div>
+</section>
+
+@Html.Partial("_Form")
+
+@section javascript
+{
+    @Html.Partial("_FormJS")
+}

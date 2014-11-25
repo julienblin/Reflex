@@ -1,0 +1,32 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.AppHeader
+
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Ajout d'une application</h3>
+</div>
+<div id="appFormContent">
+    @using (Ajax.BeginModalForm("Create", "Applications", new { id = "appHeaderForm" }))
+    {
+        <div class="modal-body">
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Code)
+                @Html.EditorFor(m => m.Code)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Code)</span>
+            </div>
+            <div class="control-group">
+                @Html.RLabelFor(m => m.Name)
+                @Html.EditorFor(m => m.Name)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+            </div>
+            <div class="control-group">
+                @Html.RLabelFor(m => m.ApplicationTypeId)
+                @Html.EditorFor(m => m.ApplicationTypeId)
+                <span class="help-inline">@Html.ValidationMessageFor(m => m.ApplicationTypeId)</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+            <a class="btn" data-dismiss="modal">Annuler</a>
+        </div>
+    }
+</div>

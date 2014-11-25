@@ -1,0 +1,3 @@
+﻿@model DateTime?
+
+@Html.TextBox("", (Model.HasValue ? Model.Value.ToShortDateString() : string.Empty), new { data_date_format = "yyyy-mm-dd", data_date = (Model.HasValue ? Model.Value.ToShortDateString() : string.Empty) })

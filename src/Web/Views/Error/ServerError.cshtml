@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Error - CGI Reflex</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="CGI">
+        <link href="@Url.Content("~/Content/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            body
+            {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+        </style>
+        <link href="@Url.Content("~/Content/css/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/css/reflex.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/css/reflex-style.css")" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                        class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </a><a href="/" class="brand">CGI Reflex</a>
+                </div>
+            </div>
+        </div>
+        @{
+            var correlationId = ViewBag.ErrorCorrelationId;
+            var supportEmail = "supportreflex.qc@cgi.com";
+            try
+            {
+                supportEmail = CGI.Reflex.Web.Configuration.ReflexConfigurationSection.GetConfigurationSection().SupportEmail;
+            }
+            catch
+            {
+            }
+        }
+        <div id="container" class="container">
+            <div class="row">
+                <div class="span6 offset3">
+                    <div class="alert alert-error">
+                        <h4 class="alert-heading">Erreur !</h4>
+                        <p>
+                            @if(!string.IsNullOrEmpty(correlationId))
+                            {
+                                <text>
+                                Une erreur inattendue s'est produite. Veuillez contacter le support (<a href="mailto:@supportEmail?subject=Reflex%3A%20Erreur%20@(correlationId)">@supportEmail</a>) avec la référence suivante :
+                                <b>@correlationId</b>.
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                Veuillez contacter le support (<a href="mailto:@supportEmail">@supportEmail</a>).
+                                </text>
+                            }
+                        </p>
+                        <a href="/" class="btn"><i class="icon-home"></i> Accueil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

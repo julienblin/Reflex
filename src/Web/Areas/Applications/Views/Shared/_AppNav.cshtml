@@ -1,0 +1,57 @@
+﻿@using CGI.Reflex.Web.Areas.Applications.Controllers
+
+<ul class="nav nav-tabs span2">
+
+    <li class="@(ViewContext.Controller is InfoController ? "active" : "")">
+        <a href="@Url.Action("Details", "Info")">Info Générales</a>
+    </li>
+
+    @if (IsActionAllowed("Details", "Contacts"))
+    {
+        <li class="@(ViewContext.Controller is ContactsController ? "active" : "")">
+            <a href="@Url.Action("Details", "Contacts")">Contacts</a>
+        </li>
+    }
+    
+    @if (IsActionAllowed("Details", "Events"))
+    {
+        <li class="@(ViewContext.Controller is EventsController ? "active" : "")">
+            <a href="@Url.Action("Details", "Events")">Événements</a>
+        </li>
+    }
+    
+    @if (IsActionAllowed("Details", "Integrations"))
+    {
+        <li class="@(ViewContext.Controller is IntegrationsController ? "active" : "")">
+            <a href="@Url.Action("Details", "Integrations")">Intégrations</a>
+        </li>
+    }
+    
+    @if (IsActionAllowed("Details", "Servers"))
+    {
+        <li class="@(ViewContext.Controller is ServersController ? "active" : "")">
+            <a href="@Url.Action("Details", "Servers")">Serveurs</a>
+        </li>
+    }
+    
+     @if (IsActionAllowed("Details", "DbInstances"))
+    {
+        <li class="@(ViewContext.Controller is DbInstancesController ? "active" : "")">
+            <a href="@Url.Action("Details", "DbInstances")">Instances BD</a>
+        </li>
+    }
+
+    @if (IsActionAllowed("Details", "Technologies"))
+    {
+        <li class="@(ViewContext.Controller is TechnologiesController ? "active" : "")">
+            <a href="@Url.Action("Details", "Technologies")">Technologies</a>
+        </li>
+    }
+
+    @if (IsActionAllowed("Details", "Review"))
+    {
+        <li class="@(ViewContext.Controller is ReviewController ? "active" : "")">
+            <a href="@Url.Action("Details", "Review")">Bilan</a>
+        </li>
+    }
+</ul>

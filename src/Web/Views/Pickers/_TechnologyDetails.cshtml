@@ -1,0 +1,39 @@
+﻿@model CGI.Reflex.Web.Models.Pickers.TechnologyDetails
+
+<div class="row-fluid">
+    <div class="span12" style="padding-left: 15px;">
+        <div class="control-group">
+            <h3>@Model.ParentFullName @Model.Name</h3>
+        </div>
+
+        @if (!Model.HasChildren)
+        {   
+            <div class="control-group">
+                @Html.LabelFor(m => m.EndOfSupport)
+                @if (Model.EndOfSupport.HasValue)
+                {
+                    <input type="text" readonly="readonly" value="@Model.EndOfSupport.Value.ToShortDateString()" />
+                }
+                else
+                {
+                    <input type="text" readonly="readonly" value="Non définie" />
+                }
+             </div>
+    
+            <div class="control-group">
+                @Html.LabelFor(m => m.TechnologyTypeId)
+                <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.TechnologyTypeId)" />
+            </div>
+             <div class="control-group" style="margin-bottom: 10px">
+                @Html.LabelFor(m => m.ContactId)
+                @Html.DisplayFor(m => m.ContactId)
+            </div>
+            
+             <div class="control-group" style="margin-bottom: 10px">
+                @Html.LabelFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description, new { @class = "span4", rows = 3, @readonly="readonly" })
+            </div>
+            
+        }
+   </div>
+</div>

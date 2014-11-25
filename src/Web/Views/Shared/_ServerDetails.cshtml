@@ -1,0 +1,39 @@
+﻿@model CGI.Reflex.Core.Entities.Server
+           
+@*NE PAS METTRE DE " DANS CETTE PAGE*@
+@{bool haveInfo = false;}
+@if (!String.IsNullOrEmpty(Model.Alias))
+{
+    haveInfo = true;
+    <b>Alias : </b>@Model.Alias<br />
+}
+@if (Model.Role != null)
+{
+    haveInfo = true;
+    <b>Rôle : </b>@Model.Role.Name<br />
+}
+@if (Model.Status != null)
+{
+    haveInfo = true;
+    <b>Statut : </b>@Model.Status.Name<br />
+}
+@if (Model.Type != null)
+{
+    haveInfo = true;
+    <b>Type : </b>@Model.Type.Name<br />
+}
+@if (Model.EvergreenDate.HasValue)
+{
+    haveInfo = true;
+    <b>Date limite : </b>@Model.EvergreenDate.Value.ToShortDateString()<br />
+}
+@if (!String.IsNullOrEmpty(Model.Comments))
+{
+    haveInfo = true;
+    <b>Commentaires : </b>@Model.Comments<br />
+}
+
+@if (!haveInfo)
+{
+    @:Aucun détails
+}

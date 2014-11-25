@@ -1,0 +1,11 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Integrations.IntegrationEdit
+@{
+    ViewBag.Title = "Modification de l'intégration " + @Model.Name;
+}
+
+<div class="page-header">
+    <h2>
+        Modification de l'intégration @Model.Name
+    </h2>
+</div>
+@Html.Partial("_Form", Model)

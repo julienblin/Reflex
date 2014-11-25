@@ -1,0 +1,792 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Reflex - Development guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Reflex deployment guide" />
+    <meta name="author" content="CGI" />
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body
+        {
+            padding-top: 60px;
+        }
+        .page-header
+        {
+            margin-top: 60px;
+        }
+        input
+        {
+            margin-top: 5px;
+        }
+    </style>
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="assets/img/favicon.ico" />
+</head>
+<body data-spy="scroll">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="#" style='background: transparent url("assets/img/REFLEX_logo.png") no-repeat 20px 5px;
+                    text-indent: -1000px; width: 105px;'>Reflex</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="#introduction">Introduction</a></li>
+                        <li><a href="#environment">Environment</a></li>
+                        <li><a href="#getting-started">Getting started</a></li>
+                        <li><a href="#project-org">Project organization</a></li>
+                        <li><a href="#core">Core</a></li>
+                        <li><a href="#web">Web</a></li>
+                        <li><a href="#unit-tests">Unit tests</a></li>
+                        <li><a href="#misc">Misc</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href="../nhibernate/index.html" target="_blank">NHibernate</a></li>
+                        <li><a href="../bootstrap/index.html" target="_blank">Bootstrap</a></li>
+                        <li><a href="../stylecop/index.html" target="_blank">StyleCop</a></li>
+						<li><a href="../jmeter/index.html" target="_blank">JMeter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <h1>
+            Reflex Development guide</h1>
+        <h3>
+            This document is a guide to develop and maintain the CGI Reflex application.</h3>
+        <section id="introduction">
+            <div class="page-header">
+                <h1>
+                    Introduction</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <p>
+                        This guide is intended for software developers who wish to develop and maintain the CGI Reflex
+                        application.</p>
+                    <p>
+                        It assumes prior knowledge of .Net 4.5 development, including ASP.NET MVC 4.0.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="environment">
+            <div class="page-header">
+                <h1>
+                    Environment</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>Software requirements for development</h3>
+                    <ul>
+                        <li>Windows 7 or Windows 8, x86 or x64</li>
+                        <li>Microsoft Visual Studio 2012</li>
+                        <li>A SVN Client (<a href="http://tortoisesvn.net/">TortoiseSVN</a> is a good one) - <em>to enable SVN revision number in builds, don't forget to install the command-line tools</em></li>
+                    </ul>
+
+                    <h3>Development environment</h3>
+                    <ul>
+                        <li><b>Sources</b>: <a href="https://svn-cgi.cgiquebec.ca/svn/intcgi/Reflex/">https://svn-cgi.cgiquebec.ca/svn/intcgi/Reflex/</a></li>
+                        <li><b>Development server</b>: reflex.cgiquebec.ca</li>
+                        <li><b>Continous Integration Server</b>: <a href="https://ci.reflex.cgiquebec.ca">https://ci.reflex.cgiquebec.ca</a></li>
+						<li><b>Issue tracker</b>: <a href="https://issues.reflex.cgiquebec.ca">https://issues.reflex.cgiquebec.ca</a></li>
+                        <li><b>Test environment</b>: <a href="https://test.reflex.cgiquebec.ca">https://test.reflex.cgiquebec.ca</a> (Configured with auto-login, just choose a name and use "Admin" as a password)</li>
+						<li><b>UAT environment</b>: <a href="https://uat.reflex.cgiquebec.ca">https://uat.reflex.cgiquebec.ca</a></li>
+                        <li><b>Online documentation</b>: <a href="https://docs.reflex.cgiquebec.ca">https://docs.reflex.cgiquebec.ca</a> (you must have a windows account on reflex.cgiquebec.ca)</li>
+                    </ul>
+
+                    <h3>Third party librairies</h3>
+                    <p>Reflex also uses the following third-party librairies, mainly managed through <a href="http://nuget.org/">NuGet</a> (and checked in with the sources):</p>
+                    <ul>
+                        <li><a href="http://nuget.org/packages/Microsoft.AspNet.Mvc/4.0.20710.0">ASP.NET MVC 4</a></li>
+						<li><a href="http://logging.apache.org/log4net/">log4net</a></li>
+                        <li><a href="http://nhforge.org/">NHibernate</a> (documentation for the version used in Reflex <a href="..\nhibernate\index.html">here</a>)</li>
+                        <li><a href="http://www.fluentnhibernate.org/">Fluent NHibernate</a></li>
+                        <li><a href="http://closedxml.codeplex.com/">ClosedXML</a></li>
+                        <li><a href="http://aboutcode.net/postal/">Postal</a></li>
+                        <li><a href="http://www.nunit.org/">NUnit</a></li>
+                        <li><a href="http://fluentassertions.codeplex.com/">Fluent Assertions</a></li>
+                        <li><a href="http://ayende.com/wiki/Rhino+Mocks.ashx">Rhino Mocks</a></li>
+                        <li><a href="http://getglimpse.com/">Glimpse</a></li>
+                        <li><a href="http://stylecop.codeplex.com/">StyleCop</a></li>
+						<li><a href="http://jmeter.apache.org/">JMeter</a> (documentation for the version used in Reflex <a href="..\jmeter\index.html">here</a>)</li>
+                    </ul>
+
+                    <p>
+                        The web application heavily uses a HTML, CSS and Javascript framework called <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>.<br />
+                        A complete documentation of the version used in Reflex is located at <code>docs\bootstrap</code> in the source tree.
+                    </p>
+
+                    <h3>Supported databases</h3>
+                    <p>Reflex supports both <a href="http://www.sqlite.org/">SQLite</a> and <a href="http://www.microsoft.com/sqlserver">Sql Server 2008</a>:</p>
+                    <ul>
+                        <li>SQLite is supported only for development purposes (<b>do not use in production!</b>). The database engine is included as a NuGet package (<a href="http://sqlite.phxsoftware.com/">System.Data.SQLite</a>)</li>
+                        <li>Sql Server 2008 is the target database for production, preferably in x64 (but should be fine in x86)</li>
+                    </ul>
+
+                    <h3>Coding guidelines</h3>
+                    <p>
+                        Reflex broadly adheres to <a href="http://msdn.microsoft.com/en-us/library/ff926074.aspx">Microsoft C# Coding Conventions</a>. <br />
+                        Those conventions are checked using <a href="http://stylecop.codeplex.com/">StyleCop</a>, which is integrated into the build process.
+                        Portions of the code that break rules will appear in the &quot;Error List&quot; panel as warnings, along with the rule code (e.g. SA1302). <br />
+                        The <a href="../stylecop/index.html">StyleCop documentation</a> is included in the project and you can refer to it to better understand the errors.
+                    </p>
+                    <p>
+                        StyleCop rules can be modified using the <code>tools\edit stylecop rules.cmd</code> command.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="getting-started">
+            <div class="page-header">
+                <h1>
+                    Getting started</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <ul>
+                        <li>Checkout the sources at <a href="https://svn-cgi.cgiquebec.ca/svn/intcgi/Reflex/trunk">https://svn-cgi.cgiquebec.ca/svn/intcgi/Reflex/trunk</a> (the trunk should represent the latest version)</li>
+                        <li>Double-click the <code>build.cmd</code> to compile the code once (and initialize version files)</li>
+                        <li>Open the VS solution <code>src\CGI.Reflex.sln</code></li>
+                        <li>
+                            Check the following values in the <code>Web\Web.config</code> file configuration, in the <code>reflex</code> section:
+                            <ul>
+                                <li><code>environment="Development"</code></li>
+                                <li><code>recreateDatabase="<b>true</b>"</code>: this will create a local database using SQLite</li>
+                                <li><code>autoCreateUsers="<b>true</b>"</code>: this will allow the auto creation of users when logging (just use "Admin" as a password)</li>
+                            </ul>
+                        </li>
+                        <li>
+                            There should also exist a connection string named <code>reflex</code> with the following value: <code>data source=|DataDirectory|reflex.db;Version=3;</code>
+                            and a providerName of <code>System.Data.SQLite</code>
+                        </li>
+                        <li>Set the <code>Web</code> project as Startup project and hit F5: the web application should launch and the login screen should pop. The application has been initialized with sample data.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="project-org">
+            <div class="page-header">
+                <h1>Project organization</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>Root organization of the project</h3>
+                    <ul>
+						<li><b>artifacts</b>: Destination of the deployment packages - <em>ignored by SVN</em></li>
+                        <li><b>bin</b>: Destination of the compiled binaries, except for the web - <em>ignored by SVN</em></li>
+                        <li><b>build</b>: Contains the msbuild definition file</li>
+                        <li><b>docs</b>: Guides to develop and deploy Reflex</li>
+                        <li><b>logs</b>: Log files in development (and emails) - <em>ignored by SVN</em></li>
+                        <li><b>src</b>: Source projects</li>
+                        <li><b>tests</b>: NUnit test project</li>
+                        <li><b>tools</b>: Various development tools (like a SQLite db viewer)</li>
+                        <li>
+                            The root of the project also contains various scripts, that all points to a target in msbuild:
+                            <ul>
+                                <li><b>build.cmd</b>: Build all the projects</li>
+								<li><b>create-artifacts.cmd</b>: Build and package Reflex</li>
+                                <li><b>jmeter.cmd</b>: Launch JMeter load test tool</li>
+								<li><b>nunit.cmd</b>: Build and launch the NUnit GUI</li>
+                                <li><b>view dev db.cmd</b>: Once a development database is created, open a GUI to visualise data in SQLite</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>ProductInfo.xml</b>: Contains high-level information about the product (like name and versionning) (Major and Minor version are managed
+                            through this file, while revisions are picked-up by the msbuild file from the SVN revision number)
+                        </li>
+                    </ul>
+                </div>
+                <div class="span3">
+                    <img alt="Project organization" src="assets/img/project-org.png" />
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>Visual Studio solution</h3>
+                    <ul>
+                        <li><b>Core</b>: The Core of Reflex - includes business & data access code, exposed as an assembly</li>
+                        <li><b>Web</b>: The MVC Web application, uses Core to perform its tasks</li>
+                        <li><b>Commands</b>: A command-line utility that exposes various Core functionality as an executable (like database operations, for example)</li>
+                        <li><b>Core.Tests</b>: Unit tests for the Core project</li>
+                        <li><b>Web.Tests</b>: Unit tests for the Web project</li>
+                    </ul>
+                </div>
+                <div class="span3">
+                    <img alt="Sources" src="assets/img/sources-org.png" />
+                </div>
+            </div>
+        </section>
+
+        <section id="core">
+            <div class="page-header">
+                <h1>The Core project</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>Scope and responsibilities</h3>
+                    <p>The Core project is <em>mainly</em> responsible for:</p>
+                    <ul>
+                        <li>Defining the entity model</li>
+                        <li>Persisting the entity model to the database (including auditing the changes and checking concurrent updates)</li>
+                        <li>Querying the entity model</li>
+                        <li>Ensuring business rules</li>
+                        <li>Providing import/export functionality for streams of excel files</li>
+                        <li>Providing facilities for user authentication and managing authorization (without <em>enforcing</em> them)</li>
+                    </ul>
+                    
+                    <p>It is <b>not</b> responsible for:</p>
+                    <ul>
+                        <li>Providing an execution shell (it has to be hosted in another process)</li>
+                        <li>Managing units of work and transactions</li>
+                        <li>Managing the context (like which user is connected)</li>
+                        <li>Managing user authentication and enforcing authorization</li>
+                        <li>Rendering GUI to final users</li>
+                    </ul>
+
+                    <h3>Bootstrapping the Core: configure static references</h3>
+                    <p>
+                        The <code>References</code> class is the most important piece in the core project.
+                        It allows the configuration of the project (like database connections, etc.) and holds static references used through out the code base. <br />
+                        To initialize the Core, call the static method <code>References.Configure</code> with at least the following information:
+                    </p>
+                    <ul>
+                        <li>The database type (SQLite or Sql Server 2008)</li>
+                        <li>The connection string</li>
+                        <li>The <code>ICurrentSessionContext</code> implementation (see <a href="../nhibernate/index.html#architecture-current-session">this documentation</a>)</li>
+                        <li>A callback for providing information about the currently authenticated user</li>
+                    </ul>
+
+                    <p>The <code>References</code> class then provides utilities to retrieve the current NHibernate session or the current authenticated user, and also operations to manipulate the database.</p>
+
+                    <h3>Defining entities</h3>
+                    <p>
+                        The basis for Reflex is the domain model defined in the <code>CGI.Reflex.Core.Entities</code> namespace.
+                        Entities are the base unit to represent what Reflex does, and also the persistence unit.
+                        Entity classes must adhere to the following guidelines:
+                    </p>
+                    <ul>
+                        <li>They each must define a unique <code>Id</code> property, not tied to any particular business value.</li>
+                        <li>They preferably should derive from <code>BaseEntity</code> (which define the Id property correctly), although it is not mandatory</li>
+                        <li>All their public members (properties and methods) must be <code>virtual</code> (see <a href="../nhibernate/index.html#persistent-classes-poco-sealed">this</a> for an explanation)</li>
+                        <li>They must provide a custom <code>ToString()</code> implementation that provides a descriptive functional information</li>
+                        <li>Each public property must be tagged with a <code><a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.displayattribute.aspx">DisplayAttribute</a></code> that points to a resource in the <code>CoreResources.resx</code> files</li>
+                    </ul>
+                    <p>
+                        <em>Nota bene</em>: there exist other base classes for entities that provide complementary behaviors: <code>BaseConcurrentEntity</code> for concurrency checking
+                        or <code>BaseHierarchicalEntity</code> for entities that represent a hierarchy (such as <code>Technology</code> or <code>Sector</code>).
+                    </p>
+
+                    <h3>Mapping the entities to the database</h3>
+                    <p>
+                        Each entity (defined in the <code>CGI.Reflex.Core.Entities</code> namespace) is mapped with <a href="http://www.fluentnhibernate.org/">Fluent NHibernate</a>
+                        using a single class for each entity (defined in the <code>CGI.Reflex.Core.Mappings</code> namespace). <br />
+                        Various conventions are applied to ensure consistent database naming (all the conventions are defined in the <code>CGI.Reflex.Core.Mappings.Conventions</code> namespace).
+                        Conventions also use Data Validation attributes to define field length or null/not-null characteristics.<br />
+                        Mappings are picked-up via reflection during the configuration of the <code>References</code>.
+                    </p>
+                    <p>
+                        The mapping information is used to generate the database schema.
+                        It is used by the various operations defined in <code>References.DatabaseOperations</code> and also by the corresponding commands in the <code>Commands</code> project.
+                    </p>
+
+                    <h3>Validating business rules</h3>
+                    <p>
+                        Entities can use <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations(VS.100).aspx">Data annotations</a> to validate business rules
+                        (including the <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.ivalidatableobject.aspx">IValidatableObject</a> interface).
+                        The rules will be automatically enforced when trying to persist to the database (via a NHibernate listener) - but at this point they will raise an exception.
+                        It is highly recommanded to validate business rules before that step, using the <code>Validate()</code> method in <code>BaseEntity</code>.
+                    </p>
+                    <p>
+                        Various custom validations are already defined in the <code>CGI.Reflex.Core.Attributes</code> namespace.
+                    </p>
+
+                    <h3>Auditing changes</h3>
+                    <p>
+                        Changes to entities can be audited. To enable auditing an entity, you must apply the <code>AuditableAttribute</code> to the entity class. <br />
+                        Audit is then managed by the <code>AuditEventListener</code><br />
+                        Audit can be further customized using other attributes, notably:
+                    </p>
+                    <ul>
+                        <li><code>AuditableCollectionReferenceAttribute</code>: Allow the forwarding of audit events on many-to-many entities to their respective links</li>
+                        <li><code>ForwardAuditAttribute</code>: used instead of <code>AuditableAttribute</code> and pushes audit information to another class.</li>
+                        <li><code>NotAuditableAttribute</code>: disable audit information for a particular property</li>
+                    </ul>
+
+                    <h3>Detecting concurrent changes</h3>
+                    <p>
+                        Some entities require that concurrent changes must be detected. Reflex handle this case using <a href="../nhibernate/index.html#transactions-optimistic">optimistic concurrency</a>. <br />
+                        To enable concurrency check on an entities, derive its class from <code>BaseConcurrentEntity</code> (or implement manually the <code>IOptimisticConcurrency</code> interface) and
+                        derive its mapping class from <code>BaseConcurrentEntityMap</code> (or configure NHibernate Version control manually). <br />
+                        NHibernate will then manage a <code>ConcurrencyVersion</code> field automatically and raise exceptions when concurrent updates arise.
+                    </p>
+
+                    <h3>Querying the model</h3>
+                    <p>There are 3 different ways to query the model:</p>
+                    <ul>
+                        <li><b>retrieve a single entity by its id</b>: use the methods provided by the NHibernate <code>ISession</code> to retrieve an entity by id (<a href="../nhibernate/index.html#manipulatingdata-loading">either <code>Get()</code> or <code>Load()</code></a>)</li>
+                        <li>
+                            <b>get a list of entities using various criteria</b>: use a query class deriving from <code>BaseQueryOver&lt;T&gt;</code>
+                            <ul>
+                                <li>just override the abstract <code>OverImpl()</code> method and returned a <code>IQueryOver</code> built from the various criteria (using the <a href="../nhibernate/index.html#queryqueryover">NHibernate QueryOver API</a>)</li>
+                                <li>the base class then provides utilities method to paginate, count, or order the results for example</li>
+                                <li>you can also use the <code>BaseHierarchicalQueryOver&lt;T&gt;</code> for entities deriving from <code>BaseHierarchicalEntity&lt;T&gt;</code></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>get a specific result that represents a particular projection (not represented by an entity)</b>: use a query class deriving from <code>SingleResultQuery&lt;T&gt;</code>; 
+                            this is useful for example in the case of grouping queries
+                        </li>
+                    </ul>
+                    <p>No matter what method is used:</p>
+                    <ul>
+                        <li>always think about <a href="../nhibernate/index.html#performance-fetching">Fetching strategies</a> to avoid <a href="http://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem">Select N+1 problems</a></li>
+                        <li>place your queries in the <code>CGI.Reflex.Core.Queries</code> to allow code reuse (queries, especialy those derived from <code>BaseQueryOver&lt;T&gt;</code>, can be reused in many places)</li>
+                    </ul>
+
+                    <h3>Implementing more complex business logic</h3>
+                    <p>
+                        When there is a need for more complex business logic that doesn't fit into an entity, a query or a data annotation
+                        (such as a call to an external data source or more complex retrieving rules, for example), use a command:
+                    </p>
+                    <ul>
+                        <li>Create a class that derive from <code> AbstractCommand&lt;TResult&gt;</code></li>
+                        <li>Specify the parameters as properties of the class</li>
+                        <li>Implement the abstract <code>ExecuteImpl()</code> to provide a result</li>
+                    </ul>
+
+                    <h3>Creating sample data</h3>
+                    <p>
+                        Since the database can be reconstructed at any time during the development cycle, it is important, for each main entity, to provide sample data
+                        (that can be used when recreating the database). For that, create a class in the <code>CGI.Reflex.Core.Seed</code> namespace that derives from <code>BaseSeeder</code>
+                        and implements the abstract method <code>SeedImpl()</code>.
+                    </p>
+                    <p>
+                        Each seeder is executed inside its own transaction during the seed (see <code>References.DatabaseOperations.Seed()</code>),
+                        and seeders or ordered by they <code>Priority</code> property.
+                    </p>
+
+                    <h3>Miscellaneous topics</h3>
+                    <p>The following NHibernate listeners are defined (in the <code>CGI.Reflex.Core.Listeners</code> listeners):</p>
+                    <ul>
+                        <li><code>AuditEventListener</code> and <code>ForwardAuditEventListener</code>: handle the auditing mechanism</li>
+                        <li><code>DataAnnotationsEventListener</code>: handles the data annotation validation of the entities during the flush</li>
+                        <li><code>DomainValueCategoryEventListener</code>: validates that <code>DomainValue</code> references belong to the appropriate category (as marked by the <code>DomainValueAttribute</code>)</li>
+                        <li><code>TimestampedEventListener</code>: Sets the <code>LastUpdatedAtUTC</code> value for the entities marked with <code>ITimestamped</code></li>
+                    </ul>
+
+                    <p>Encryption utilities are available in the <code>Encryption</code> static class:</p>
+                    <ul>
+                        <li>Encrypt / Decrypt using <a href="http://msdn.microsoft.com/en-us/library/system.security.cryptography.aesmanaged.aspx">Aes</a></li>
+                        <li>Hash using <a href="http://msdn.microsoft.com/en-us/library/system.security.cryptography.hmacsha256.aspx">HMACSHA256</a></li>
+                        <li>Cryptographic random using <a href="http://msdn.microsoft.com/en-us/library/system.security.cryptography.rngcryptoserviceprovider.aspx">RNGCryptoServiceProvider</a></li>
+                    </ul>
+                    <p>They base their keys on the <code>ReferencesConfiguration.EncryptionKey</code> value.</p>
+                    <p>
+                        To encrypt a specific property of an entity in the database, just mark the property with <code>EncryptedAttribute</code>,
+                        and the user type <code>EncryptedUserType</code> applied by the conventions will encrypt/decrypt it transparently.
+                    </p>
+
+                    <p>Specific appenders for log4net are available in the <code>CGI.Reflex.Core.Log</code> namespace</p>
+                    <ul>
+                        <li>
+                            <code>DBLogAppender</code>: appender that writes log messages to the database (corresponding to the <code>LogEntry</code> entity)
+                            <ul>
+                                <li>this appender must be activated <b>after</b> the call to <code>References.Configure()</code> using <code>DBLogAppender.ApplyConfigurationFromReferences()</code></li>
+                                <li>it uses the following <a href="http://logging.apache.org/log4net/release/manual/contexts.html">properties</a>: <code>CorrelationId</code>, <code>User</code> and <code>Context</code></li>
+                            </ul>
+                        </li>
+                        <li><code>NHSQLAppender</code>: <a href="http://logging.apache.org/log4net/release/config-examples.html#forwardingappender">forwarding appender</a> that replaces parameters values in NHibernate SQL output</li>
+                    </ul>
+                </div>
+                <div class="span3">
+                    <img alt="Core" src="assets/img/core.png" />
+                </div>
+            </div>
+        </section>
+
+        <section id="web">
+            <div class="page-header">
+                <h1>The Web project</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>Scope and responsibilities</h3>
+                    <p>The Web project is <em>mainly</em> responsible for:</p>
+                    <ul>
+                        <li>Hosting the Core assembly into a web applications</li>
+                        <li>Managing unit of works and transactions</li>
+                        <li>Authenticating users and checking authorizations</li>
+                        <li>Presenting views to users and gathering input</li>
+                    </ul>
+                    <p>The web project is an ASP.NET MVC 3.0 application using a simplified <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel">MVVM</a> pattern.</p>
+
+                    <h3>Project organization</h3>
+                    <p>The project is organized using <a href="http://msdn.microsoft.com/en-us/library/ee671793.aspx">ASP.NET MVC Areas</a>. Each area is composed of:</p>
+                    <ul>
+                        <li><b>Controllers</b> specific to this area</li>
+                        <li><b>Views</b> used to render html (using the <a href="http://www.asp.net/mvc/overview/views">razor view engine</a>)</li>
+                        <li><b>Models</b> used to transfer information between Controllers and Views, organized by their respective controller</li>
+                    </ul>
+                    <p>The "root" area is not materialized (respecting the canonical ASP.NET MVC architecture) and its Controllers, Models and Views folder are at the root of the project.</p>
+                    
+                    <p>Other notable sections are:</p>
+                    <ul>
+                        <li><b>Charts</b>: contains code to render the various charts in the application (using the <a href="http://msdn.microsoft.com/en-us/library/system.web.ui.datavisualization.charting.aspx">built-in .Net framework classes</a>)</li>
+                        <li><b>Commands</b>: contains commands (see Core project for explanation) specific to the Web project</li>
+                        <li><b>Configuration</b>: contains the code to handle the configuration of the web application</li>
+                        <li><b>Content</b>: contains all the static files (css, images and javascripts)</li>
+                        <li><b>Helpers</b>: contains custom <a href="http://www.asp.net/mvc/tutorials/older-versions/views/creating-custom-html-helpers-cs">view helpers</a></li>
+                        <li><b>Infra</b>: infrastructure-related code, such as <a href="http://www.asp.net/mvc/tutorials/older-versions/controllers-and-routing/understanding-action-filters-cs">filters</a> or base classes</li>
+                    </ul>
+
+                    <h3>Starting the application</h3>
+                    <p>
+                        The application is started using <code>Global.asax / Application_Start()</code>.
+                        It configures the routes, register the areas and configure the static <code>References</code>.
+                    </p>
+
+                    <h3>Configuring the application</h3>
+                    <p>Important sections for the <code>Web.config</code> file:</p>
+                    <ul>
+                        <li><code>//connectionStrings</code>: the connection string to connect to the database. The database type is determined using the <code>providerName</code> attribute.</li>
+                        <li><code>//reflex</code>: various settings regarding the application</li>
+                        <li><code>//system.net/mailSettings</code>: settings for the mail delivery. Can be configured to point to a SMTP server or a local directory (for development). Complete reference <a href="http://msdn.microsoft.com/en-us/library/w355a94k">here</a>.</li>
+                        <li><code>//system.web/authentication</code>: authentication mode (Windows or Forms)</li>
+                        <li><code>//glimpse</code>: <a href="http://getglimpse.com/Help/Configuration">Glimpse configuration</a></li>
+                        <li><code>//log4net</code>: <a href="http://logging.apache.org/log4net/release/manual/configuration.html">log4net configuration</a></li>
+                    </ul>
+
+                    <h3>Managing NHibernate sessions and transactions</h3>
+                    <p>Reflex uses the session-per-request pattern to manage NHibernate sessions and transactions, which can be described as follow:</p>
+                    <ul>
+                        <li>When a page is requested, before invoking a controller, a NHibernate <code>ISession</code> is created and a transaction is started</li>
+                        <li>The session is stored in the current <code>HttpContext</code> associated with the HTTP request, using NHibernate built-in mechanism for <a href="../nhibernate/index.html#architecture-current-session">contextual sessions</a></li>
+                        <li>All the executing code then uses the session by retrieving it from <code>References.NHSession</code> (which uses NHibernate contextual session)</li>
+                        <li>
+                            After the controller and the view have been executed:
+                            <ul>
+                                <li>Either commit or rollback the transaction depending if their has been an error or not</li>
+                                <li>Dispose the current session</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>The implementation is mainly done in the <code>NHibernateSessionActionFilterAttribute</code> filter.</p>
+
+                    <h3>Authenticating users</h3>
+                    <p>Reflex supports two authentication mode:</p>
+                    <ul>
+                        <li>Windows authentication</li>
+                        <li>Forms authentication</li>
+                    </ul>
+                    <p>
+                        In either mode, users must exist as a <code>User</code> entity before the connection.
+                        Forms authentication makes use of the complementary <code>UserAuthentication</code> entity to store connection-related information.
+                    </p>
+                    <p>
+                        The current user is stored in the <code>HttpContext</code> as a <code>User</code> entity bound to the current <code>ISession</code>.
+                        It is set read-only, but can be used to attach other entities to it in the current session.
+                    </p>
+                    <p>
+                        The implementation is mainly done in the <code>CurrentUserActionFilterAttribute</code> filter. <br />
+                        Login / logout actions are managed by the <code>UserSessionsController</code>. <br />
+                        The <code>CurrentUserCallback</code> used by the <code>References</code> class is defined in <code>Global.asax</code>.
+                    </p>
+
+                    <h3>Managing authorizations</h3>
+                    <p>
+                        Authorizations are attached to the current user's role. Each role has a specific set of allowed and denied operations.
+                    </p>
+                    <p>
+                        Every action on every controller must be marked with the <code>IsAllowedAttribute</code>, specifying which operations must be allowed by the current user's role.
+                        The filter then make sure that a user is currently authenticated and that she has the right to execute the action.
+                        <em>A unit-test is there to verify that every action is correctly marked, except for the <code>UserSessionsController</code>.</em>
+                    </p>
+                    <p>
+                        For managing authorizations on the view (to hide / display links depending on user rights for example), two methods are available in the <code>ReflexWebViewPage</code> base page:
+                    </p>
+                    <ul>
+                        <li><code>IsActionAllowed</code> which uses the <code>IsAllowedAttribute</code> associated with the target action to confirm the authorization - <b>this is the recommanded method</b></li>
+                        <li><code>IsAllowed</code>, which can be used to check specific operations</li>
+                    </ul>
+                    <p>
+                        There is no central repository for operations in the application. Instead, the list of defined operations is collected based on the <code>IsAllowedAttribute</code>
+                        associated with controller actions. To retrieve the list, use the <code>GetAllOperationsCommand</code> command.
+                    </p>
+
+                    <h3>Executing asynchronous actions</h3>
+                    <p>
+                        ASP.NET MVC supports asynchronous actions, by deporting the actual execution to a different thread not managed by the web server.
+                        This is useful when an action takes more than a couple of seconds to execute (such as when processing large files for example), but it has a drawback: the <code>HttpContext</code> is unavailable during the execution,
+                        so the current NHibernate session and current user exposed by the <code>References</code> class are unavailable.
+                    </p>
+                    <p>
+                        To make them available again, it is recommanded to execute the asynchronous action by using the <code>AsyncTaskExecute</code> method defined in the <code>BaseController</code>. <br />
+                        By using a combination of <code>AsyncScope</code> and <code>AsyncWebSessionContext</code> (which temporarly copy references to the <a href="http://msdn.microsoft.com/en-us/library/system.threading.thread.setdata.aspx">asynchronous thread's data</a>),
+                        it makes those references available again. <br />
+                        It creates a <a href="http://msdn.microsoft.com/en-us/library/System.Threading.Tasks.Task.aspx">task</a> and also manages ASP.NET MVC <a href="http://msdn.microsoft.com/en-us/library/system.web.mvc.async.asyncmanager.aspx">AsyncManager</a>,
+                        passing the result of the action as the &quot;result&quot; parameter.
+                    </p>
+
+                    <h3>Displaying messages to users - the flash</h3>
+                    <p>
+                        Most of the time when an action is executed, there is a need to display a confirmation (or error) message back to the user.
+                        Those messages must be rendered either immediatly, or after a redirect (for example when using the <a href="http://en.wikipedia.org/wiki/Post/Redirect/Get">Post/Redirect/Get pattern</a>.
+                        Reflex has a standard mechanism to allow just that: the Flash.
+                    </p>
+                    <p>
+                        To display a message to the user, just use the <code>Flash</code> method defined in the <code>BaseController</code> (there are different levels available: Info, Success, Warning, Error).
+                        Those messages will be stored in the controller's <a href="http://msdn.microsoft.com/en-us/library/system.web.mvc.tempdatadictionary.aspx">TempDataDictionary</a> and will be rendered by the
+                        <code>Flashes</code> shared view when rendering the next action, even if there has been a redirect in-between. <br />
+                    </p>
+                    <p>
+                        <em>Nota bene</em>: the <code>Flashes</code> shared view is included by default in the <code>_Layout.cshtml</code> view, but can also safely be included into
+                        partial views to be rendered when an partial update is done through AJAX.
+                    </p>
+
+                    <h3>Sending emails</h3>
+                    <p>Reflex uses the <a href="http://aboutcode.net/postal/">Postal</a> package to send emails, which means that to send an email inside a controller you must:</p>
+                    <ul>
+                        <li>define a message template as a razor view in the <code>Views\Emails</code> directory</li>
+                        <li>use Postal's <code>Email</code> class to pass information and send the email</li>
+                    </ul>
+
+                    <h3>Using editors</h3>
+                    <p>
+                        Reflex uses ASP.NET MVC editor mechanism to handle common components for editing values.
+                        <em>Complete documentation for editors is out of the scope of this current document and is explained in details <a href="http://bradwilson.typepad.com/blog/2009/10/aspnet-mvc-2-templates-part-1-introduction.html">here</a>.</em>
+                    </p>
+                    <p>For example, to display a dropdown allowing the user to choose a value in a specific <code>DomainValue</code>:</p>
+                    <ul>
+                        <li>Define a property of type <code>int</code> (or <code>int?</code> if the choice is optionnal) in the view model; this property will convey the selected DomainValue id</li>
+                        <li>Apply the <code>DomainValueAttribute</code> to the property specifying the category associated with the choice</li>
+                        <li>Apply the <code>UIHintAttribute</code> with the value &quot;DomainValue&quot;</li>
+                        <li>In the view, use the <code>@Html.EditorFor()</code> helper to render the control - the dropdown list values and selection will be applied automatically</li>
+                    </ul>
+                    <p>This mechanism can be reused for many transversal values in the application (such as <code>Technology</code>, <code>Contact</code>, <code>Sector</code>, etc.)</p>
+
+                    <h3>Content bundling and minification</h3>
+                    <p>
+                        In order to improve the performance of the web application, static content files (such as css and javascript files) are bundled together and minified
+                        (see <a href="http://developer.yahoo.com/performance/rules.html#num_http">here</a> and <a href="http://developer.yahoo.com/performance/rules.html#minify">here</a> for an explanation).
+                    </p>
+                    <p>
+						The bundling is done using <a href="http://nuget.org/packages/microsoft.aspnet.web.optimization">Microsoft ASP.Net Web Optimization framework</a>,
+						and configured in the <code>MvcApplication.RegisterBundles()</code> method.
+                        The files are not bundled in development (to enable a better debugging experience), only on the other environmnents (the actual bundling is configured via the
+                        <code>system.web/compilation/debug</code> attribute in the <code>Web.config</code>.
+                    </p>
+
+                    <h3>Miscellaneous topics</h3>
+                    <p>
+                        Log properties: the <code>LoggingContextActionFilterAttribute</code> filter and the various providers in the <code>CGI.Reflex.Web.Infra.Log</code> namespace
+                        (configured in the <code>Global.asax / ConfigureLogging()</code> method) are responsible for injecting various <a href="http://logging.apache.org/log4net/release/manual/contexts.html">properties</a>
+                        into the log4net context.
+                    </p>
+
+                    <p>
+                        Default parameters in ViewBag: the <code>ViewBagDataActionFilterAttribute</code> filter is responsible for injecting common values in the ViewBag of every view, such as the name
+                        of the application, the version, the configuration, the current user, etc.
+                    </p>
+
+                </div>
+                <div class="span3">
+                    <img alt="Web project" src="assets/img/web.png" />
+                    <div class="well">
+                        <h4>Details of an area</h4>
+                        <img alt="Area" src="assets/img/area.png" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="unit-tests">
+            <div class="page-header">
+                <h1>Unit tests</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>About testing in Reflex</h3>
+                    <p>
+                        Reflex is architected such as the majority of its code base can be unit tested.
+                        Those unit tests includes the database, since the majority of the actions in Reflex involves reading and writing to the database.
+                    </p>
+                    <p>
+                        Unit tests involving the database runs in a in-memory SQLite database, that is destroyed and recreated for <b>each</b> unit-tests.
+                        Tests that need database access must derive from the base <code>BaseDbTest</code> class. This class takes care of setuping, creating and migrating the database
+                        every time.
+                    </p>
+                    <p>
+                        Test coverage can be measured using the <code>coverage.cmd</code> script (at the root of the project).
+                        It uses <a href="https://github.com/sawilde/opencover/wiki">Open Cover</a> and <a href="http://reportgenerator.codeplex.com/">Report Generator</a> to generate a HTML report. <br />
+                        Pieces of code that should be excluded from the coverage can be marked with <code>ExcludeFromCoverageAttribute</code>.
+                    </p>
+
+                    <h3>Organizing unit tests</h3>
+                    <p>
+                        In the majority of the cases, unit tests should be structured to mimick the code under test:
+                    </p>
+                    <ul>
+                        <li>The namespace of the unit test should be <em>similar</em> to the namespace of the class under test
+                            <ul>
+                                <li><em>e.g.</em> <code>CGI.Reflex.Core.Something</code>&nbsp;<i class=" icon-arrow-right"></i>&nbsp;<code>CGI.Reflex.Core.<em>Tests</em>.Something</code></li>
+                            </ul>
+                        </li>
+                        <li>The name of the test class should be <em>similar</em> to the name of the class under test
+                            <ul>
+                                <li><em>e.g.</em> <code>MyClass</code> <i class=" icon-arrow-right"></i> <code>MyClass<em>Test</em></code></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Individual unit tests should follow the <a href="http://c2.com/cgi/wiki?ArrangeActAssert">Arrange Act Assert</a> pattern (see also <a href="http://www.arrangeactassert.com/why-and-what-is-arrange-act-assert/">here</a>).
+                    </p>
+
+                    <h3>Generic tests</h3>
+                    <p>
+                        There are &quot;generic&quot; tests defined in the tests projects that checks expected properties of certain type of objects, such as:
+                    </p>
+                    <ul>
+                        <li>checking that entities are defined appropriately</li>
+                        <li>checking that referenced resources are present in the resources files</li>
+                        <li>checking that controllers actions are marked with specific attributes</li>
+                        <li>etc.</li>
+                    </ul>
+                    <p>
+                        So it is entirely possible that the modification of a class can impact negatively the result of unit tests if it breaks those existing &quot;generic&quot; tests.
+                        The error messages should be sufficiently explicit to be able to fix those errors quickly.
+                    </p>
+
+                    <h3>Creating Factories to efficiently build entities in unit tests</h3>
+                    <p>
+                        Since the database is cleaned entirely between each test, there is often a need to create data prior to performing the test (in the <em>Arrange</em> phase). <br />
+                        To facilitate re-using the code and creating more robust unit tests, it is recommanded to create a factory for each main entity. In particular, factories should create
+                        <b>valid</b> entities (with regard to mandatory values and references).
+                    </p>
+                    <p>
+                        To create a factory:
+                    </p>
+                    <ul>
+                        <li>create a class named <code><em>TheEntity</em>Factory</code> in the <code>CGI.Reflex.Core.Tests.Factories</code> namespace</li>
+                        <li>
+                            derive from the <code>BaseFactory&lt;T&gt;</code> and implement the abstract <code>CreateImpl()</code> method by returning a valid entity
+                            <ul>
+                                <li>the <code>CGI.Reflex.Core.Tests.Rand</code> static class contains useful methods to generate random values for different types</li>
+                            </ul>
+                        </li>
+                        <li>register the factory as per the others in the <code>AllFactories</code> class</li>
+                    </ul>
+                    <p>
+                        Factories can then be used in all <code>BaseDbTests</code> classes (and other factories too...). <br />
+                        The <code>Create()</code> method allow the creation of an entity, whereas the <code>Save()</code> method creates <b>and Save()</b> the entity in the current session. <br />
+                        Overrides in each methods allow the passing of specific values, e.g. <code>Factories.Application.Save(a => { a.Name = "Foo"; a.Code = "Bar"; });</code>.
+                    </p>
+
+                    <h3>Testing the mappings</h3>
+                    <p>
+                        Each entity that has a corresponding mapping class should be tested to ensure that its field and the schema generation works as expected. <br />
+                        Thoses tests should be placed in the <code>CGI.Reflex.Core.Tests.Entities</code> namespace and can use Fluent NHibernate's
+                        <a href="https://github.com/jagregory/fluent-nhibernate/wiki/Persistence-specification-testing">Persistence specification testing</a> functionalities.
+                    </p>
+
+                    <h3>Testing the queries</h3>
+                    <p>
+                        It is really important to test the queries, because they are a big part of the application. <br />
+                        Queries are tested using the <code>BaseDbTest</code> class. They should focus on the entity selection, not the mapping of specific columns values. <br />
+                        <em>For the queries inheriting from <code>BaseQueryOver&lt;T&gt;</code>, it is not necessary to test all the functionality of the base class,
+                        but it is important to test the combinatorial of search criterias.</em>
+                    </p>
+
+                    <h3>Testing the controllers</h3>
+                    <p>
+                        Controller tests should derive from <code>BaseControllerTest&lt;T&gt;</code>.
+                        This base class takes care of setuping the database and provides additional functionality to mock HTTP requests:
+                    </p>
+                    <ul>
+                        <li><code>StubStandardRequest()</code>: mocks a standard HTTP request</li>
+                        <li><code>StubAjaxRequest()</code>: mocks a HTTP request that would have been received via an AJAX call</li>
+                    </ul>
+                    <p>Mocking requests is important when the <code>Request</code> property of the controller is accessed in the controller action. Otherwise, it can be ignored.</p>
+                    <p>
+                        Additional assertions related to <code>ActionResult</code> are defined in the <code>ViewResultAssertions</code> class. <br />
+                        Example usage: <code>Controller.Index().Should().BeDefaultView();</code> or <code>Controller.Edit(1).Should().BeHttpNotFound();</code>.
+                    </p>
+
+                    <h3>Testing the views</h3>
+                    <p>At this point, unit tests don't cover the views.</p>
+                    <p>
+                        The only test that can be performed is a compilation test, to verify that all objects manipulated in the views are &quot;spelled&quot; correctly. <br />
+                        To perform a compilation of the views, the simplest is to execute the <code>package.cmd</code> command at the root of the project.
+                    </p>
+                </div>
+                <div class="span3">
+                    <img alt="Tests" src="assets/img/tests.png" />
+                </div>
+            </div>
+        </section>
+
+        <section id="misc">
+            <div class="page-header">
+                <h1>
+                    Miscellaneous topics</h1>
+            </div>
+            <div class="row-fluid">
+                <div class="span9">
+                    <h3>How does the auto-create user works?</h3>
+                    <p>
+                        The auto-create user is configured in the <code>reflex</code> configuration section of the <code>Web.config</code>.
+                        It allows the creation of users when they log in (which is useful in development and test, when the database is erased frequently).
+                    </p>
+                    <p>
+                        When it is activated, just log in with whatever username, and use an existing role as a password. For example, the default database seed has a role named &quot;Admin&quot;.
+                        So just use &quot;Admin&quot; as a password, and a user will be created with the username entered and the Admin role!
+                    </p>
+                    <p>
+                        This functionality cannot be activated when the environment is set to <code>Production</code>.
+                    </p>
+
+                    <h3>When an error is encountered, the user gives a strange code (e.g. <code>boy4decqh5l</code>) as a reference.</h3>
+                    <p>
+                        This reference number has been given as a result of an error in the application.
+                        It represents a unique HTTP request reference (generated by the <code>LoggingContextActionFilterAttribute</code>) and is displayed by the error page (<code>Views\Shared\Error.cshtml</code>).
+                        It is also included in the logging context as the <code>CorrelationId</code> property.
+                    </p>
+                    <p>
+                        If the default log configuration has not been modified, there are three places where the real error can be found, along with the <code>CorrelationId</code>:
+                    </p>
+                    <ul>
+                        <li>In the application itself, go to System > Log, and search by CorrelationId</li>
+                        <li>In the error log files (in a text editor you can search the CorrelationId)</li>
+                        <li>Errors are also redirected to the Application event log. The CorrelationId is in the event message</li>
+                    </ul>
+
+                    <h3>Take a Glimpse: advanced tracing in development mode</h3>
+                    <p>
+                        Reflex is configured to use <a href="http://getglimpse.com/">Glimpse</a> in development mode.
+                        To activate it, just visit <code>http://&lt;your-application&gt;/Glimpse.axd</code>, turn it on, and then click on the <img alt="Glimpse icon" src="assets/img/glimpse.png" /> icon at the bottom of the page.
+                    </p>
+                    <p>
+                        The <code>Trace</code> tab is particularly interesting because it shows the requests that are being made to the database (in the <code>NHibernate.SQL</code> category).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <footer style='background: transparent url("assets/img/logo_cgi.png") no-repeat 10px 11px;
+            margin: 0 -10px 0; padding: 10px 20px 0; text-align: right;'>
+            <p>
+                Copyright © CGI 2012</p>
+            <p>
+                &nbsp;</p>
+        </footer>
+    </div>
+    <script type="text/javascript" src="assets/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

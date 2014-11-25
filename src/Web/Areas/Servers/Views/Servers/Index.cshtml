@@ -1,0 +1,134 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Servers.ServersIndex
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = "Serveurs";
+}
+<section>
+	<div class="page-header">
+		<div id="quickSearchForm" class="@(Model.SearchDefined ? "collapse" : "collapse in")" style="float:right; overflow: visible; @(Model.SearchDefined ? "display: none;" : "")">
+			@using (Html.BeginForm("Index", "Servers", FormMethod.Get, new { @class = "form-horizontal" }))
+			{
+		   
+				<div class="control-group">
+				 <div class="controls">
+				     <label class="control-label" for="QuickNameOrCode">
+				         @Html.PropertyDisplayNameFor(m => m.QuickNameOrAlias) :&nbsp;
+				     </label>
+                     @Html.TextBoxFor(m => m.QuickNameOrAlias, new { data_autocomplete_source = Url.Action("ServerNamesAndAliases", "Autocomplete", new { area = "" }) })
+					</div>
+				</div>
+				
+			}
+		</div>
+		<h2>
+			Serveurs
+			@if (IsActionAllowed("Create", "Servers"))
+			{
+				 @Ajax.ModalActionLinkRaw("<i class='icon-plus-sign icon-white'></i>", "Create", "Servers", null, new { @class = "btn btn-mini btn-success", rel = "tooltip", title = "Ajouter un serveur" }) 
+			}
+			<a id="displaySearchForm" class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+		</h2>
+		<section>
+			<div class="row">
+				<div class="span12">
+					@{ var formClass = Model.SearchDefined ? "collapse in" : "collapse"; }
+					<div id="searchForm" class="@formClass">
+						<div class="well">
+							@using (Html.BeginForm("Index", "Servers", FormMethod.Get))
+							{
+								<div class="row">
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.Name)
+                                            @Html.TextBoxFor(m => m.Name, new { data_autocomplete_source = Url.Action("ServerNames", "Autocomplete", new { area = "" }) })
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+										</div>
+									</div>								
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.Alias)
+                                            @Html.TextBoxFor(m => m.Alias, new { data_autocomplete_source = Url.Action("ServerAliases", "Autocomplete", new { area = "" }) })
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.Alias)</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.EvergreenDate)
+											@Html.EditorFor(m => m.EvergreenDate)
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.EvergreenDate)</span>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.Environments)
+											@Html.EditorFor(m => m.Environments)
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.Environments)</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.Roles)
+											@Html.EditorFor(m => m.Roles)
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.Roles)</span>
+										</div>
+									</div>
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.Statuses)
+											@Html.EditorFor(m => m.Statuses)
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.Statuses)</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span4">
+										<div class="control-group">
+											@Html.RLabelFor(m => m.Types)
+											@Html.EditorFor(m => m.Types)
+											<span class="help-inline">@Html.ValidationMessageFor(m => m.Types)</span>
+										</div>
+									</div>
+                                    <div class="span4">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Technology)
+                                            @Html.EditorFor(m => m.Technology)
+                                        </div>
+                                    </div>
+								</div>
+								<a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+								<a href="@Url.Action("Index")" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>
+								<div style="float:right;">
+									<b>@Model.SearchResults.TotalItems</b> serveur(s)
+								</div>        
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</section>
+
+@Html.Partial("_List")
+
+
+@section javascript {
+    
+    $(function() {
+        $('#displaySearchForm').on('click', function() {
+            $('#quickSearchForm').toggle();
+        });
+
+        @if (!Model.SearchDefined)
+        {
+            <text>
+                $('#QuickNameOrAlias').focus();
+            </text>
+        }
+    });
+}

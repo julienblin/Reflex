@@ -1,0 +1,34 @@
+﻿@using CGI.Reflex.Web.Areas.Servers.Controllers
+
+
+<ul class="nav nav-tabs span2">
+
+    @if (IsActionAllowed("Details", "Servers"))
+    {
+        <li class="@(ViewContext.Controller is ServersController ? "active" : "")">
+            <a href="@Url.Action("Details", "Servers", new { serverId = ViewBag.ServerHeader.Id })">Info Générales</a>
+        </li>
+    }
+
+    @if (IsActionAllowed("Details", "Technologies"))
+    {
+        <li class="@(ViewContext.Controller is TechnologiesController ? "active" : "")">
+            <a href="@Url.Action("Details", "Technologies", new { serverId = ViewBag.ServerHeader.Id })">Technologies</a>
+        </li>
+    }
+
+    @if (IsActionAllowed("Details", "Applications"))
+    {
+        <li class="@(ViewContext.Controller is ApplicationsController ? "active" : "")">
+            <a href="@Url.Action("Details", "Applications", new { serverId = ViewBag.ServerHeader.Id })">Applications</a>
+        </li>
+    }
+
+    @if (IsActionAllowed("Details", "DbInstances"))
+    {
+        <li class="@(ViewContext.Controller is DbInstancesController ? "active" : "")">
+            <a href="@Url.Action("Details", "DbInstances", new { serverId = ViewBag.ServerHeader.Id })">Instances BD</a>
+        </li>
+    }
+
+</ul>

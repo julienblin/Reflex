@@ -1,0 +1,85 @@
+﻿@model CGI.Reflex.Web.Areas.Technologies.Models.TechnologyEdit
+
+@{
+    ViewBag.FlashPosition = "span5";
+}
+
+@Html.Partial("Flashes")
+
+@using (Ajax.BeginForm(Model.FormAction, new AjaxOptions { HttpMethod = "POST", UpdateTargetId="technoDetail" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ParentId)
+
+    <div class="control-group">
+        @Html.RLabelFor(m => m.Name)
+        <div class="controls">
+            <div class="input-prepend">
+                @if (!string.IsNullOrEmpty(Model.ParentFullName))
+                {
+                    <span class="add-on">@Model.ParentFullName</span>
+                }
+                @Html.TextBoxFor(m => m.Name, new { @class = "span2", style = "margin-left: -4px; margin-bottom: 0;" })
+            </div>
+            <p class="help-block">@Html.ValidationMessageFor(m => m.Name)</p>
+        </div>
+    </div>
+    
+    if (!Model.HasChildren)
+    { 
+        <div class="control-group">
+            @Html.RLabelFor(m => m.EndOfSupport)
+            <div class="controls">
+                @Html.EditorFor(m => m.EndOfSupport)
+            </div>
+            <span class="help-inline">@Html.ValidationMessageFor(m => m.EndOfSupport)</span>
+        </div>
+        
+        <div class="control-group">
+            @Html.RLabelFor(m => m.TechnologyTypeId)
+            <div class="controls">
+                @Html.EditorFor(m => m.TechnologyTypeId)
+            </div>
+            <span class="help-inline">@Html.ValidationMessageFor(m => m.TechnologyTypeId)</span>
+        </div>
+    
+        <div class="control-group">
+            @Html.RLabelFor(m => m.ContactId)
+            <div class="controls">
+                @Html.EditorFor(m => m.ContactId)
+            </div>
+            <span class="help-inline">@Html.ValidationMessageFor(m => m.ContactId)</span>
+        </div>
+    
+         <div class="control-group">
+            @Html.RLabelFor(m => m.Description)
+            @Html.TextAreaFor(m => m.Description, new { @class = "span6", rows = 5 })
+            <span class="help-inline">@Html.ValidationMessageFor(m => m.Description)</span>
+        </div>
+    }  
+    <a class="btn btn-primary" data-submit-form="true">OK</a>
+    if (Model.FormAction == "Edit")
+    {
+        @Ajax.ActionLink("Annuler", "Details", new { id = Model.Id }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "technoDetail" }, new { @class = "btn" })
+    }
+    else
+    {
+        if (Model.ParentId != 0)
+        {
+            @Ajax.ActionLink("Annuler", "Details", new { id = Model.ParentId }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "technoDetail" }, new { @class = "btn" })
+        }
+        else
+        { 
+            <a class="btn" id="btnCancelCreate">Annuler</a>
+            <script type="text/javascript">
+                $("#btnCancelCreate").on('click', function () {
+                    $("#technoDetail").html('');
+                });
+            </script>
+        }
+    }
+}
+
+<script type="text/javascript">
+    $('#Name').focus();
+</script>

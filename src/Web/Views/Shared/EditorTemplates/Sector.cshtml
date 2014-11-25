@@ -1,0 +1,16 @@
+﻿@model int?
+@using CGI.Reflex.Core.Entities;
+
+
+@{
+    Sector currentSector = null;
+    if(Model.HasValue) {
+        currentSector = CGI.Reflex.Core.References.NHSession.Load<Sector>(Model.Value);
+    }
+}
+
+@Html.HiddenFor(m => m)
+<div class="input-append">
+    <input id="sector-text-@ViewData.TemplateInfo.HtmlFieldPrefix" style="width: 176px;" class="span2" type="text" value="@(currentSector != null ? currentSector.Name : "")" disabled>
+    @Ajax.ModalActionLinkRaw("...", "SectorsModal", "Pickers", new { area = "", targetUpdateId = ViewData.TemplateInfo.HtmlFieldPrefix }, new { @class = "btn", rel = "tooltip", title = "Sélectionner un secteur", style = "margin-top: 0; margin-left: -4px; margin-bottom: 9px;" })
+</div>

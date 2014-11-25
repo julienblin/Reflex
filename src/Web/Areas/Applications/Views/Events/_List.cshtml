@@ -1,0 +1,19 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Events.EventsDetails
+
+@if (Model.HasResults)
+{                   
+    @Html.Pager("#eventList")
+
+    foreach (var theEvent in Model.SearchResults.Items)
+    {
+        @Html.Partial("_ListItem", theEvent)
+    }
+                
+    @Html.Pager("#eventList")
+}
+else
+{
+    <blockquote>
+        <p>Aucun résultat trouvé.</p>
+    </blockquote>
+}

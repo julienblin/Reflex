@@ -1,0 +1,160 @@
+﻿@model CGI.Reflex.Web.Areas.System.Models.Questions.QuestionsIndex
+
+<section>
+    <div class="page-header">
+        <h2>
+            Configuration du questionnaire
+            @if (IsActionAllowed("Create"))
+            {
+                <a href="@Url.Action("Create", new { type = Model.Type })" class="btn btn-success btn-mini" rel="tooltip" title="Ajouter une question"><i class="icon-plus-sign icon-white"></i></a>
+            }
+        </h2>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="span12">
+            <div id="searchForm">
+                @using (Ajax.BeginForm("Index", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "results", InsertionMode = InsertionMode.Replace }, new { data_update_history = "true", style = "margin-bottom:0px" }))
+                {
+                    @Html.DropDownListFor(m => m.Type, new SelectList(@Model.QuestionTypeList, "QuestionType", "Name"), new { data_submit_form = "true" })
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="span12">
+            @if (Model.Items.Count > 0)
+            {
+                using (@Html.BeginForm("UpdateWeight", "Questions", new { type = Model.Type }, FormMethod.Post, new { id = "questionListForm" }))
+                {
+                    <table class="table table-striped table-condensed" id="questionList">
+                        <thead>
+                            <tr>
+                                <th style="text-align:right;padding-right:8px;">%</th>
+                                <th>Question</th>
+                                <th>Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Items.Count; i++)
+                            {
+                                <tr data-question-id="@Model.Items[i].Id">
+                                    <td class="span1">
+                                        @Html.HiddenFor(m => m.Items[i].ToDelete)
+                                        @Html.HiddenFor(m => m.Items[i].Id)
+                                        @Html.HiddenFor(m => m.Items[i].Name)
+                                        @Html.HiddenFor(m => m.Items[i].Description)
+
+                                        @if (IsActionAllowed("Edit"))
+                                        {
+                                            <div class="control-group">
+                                                @if(Model.Items[i].ToDelete)
+                                                {   
+                                                    @Html.TextBoxFor(m => m.Items[i].Weight, new { style = "width:30px;margin-bottom:0px;text-align:right;", tabindex = i + 1, disabled="disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(m => m.Items[i].Weight, new { style = "width:30px;margin-bottom:0px;text-align:right;", tabindex = i + 1, data_update_total="#total" })
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @Model.Items[i].Weight
+                                        }
+                                    </td>
+                                    <td class="span6" style="vertical-align:middle;">
+                                        @if(Model.Items[i].ToDelete)
+                                        {   
+                                            <span style="text-decoration:line-through;">@Model.Items[i].Name</span>
+                                        } 
+                                        else
+                                        {
+                                            @Model.Items[i].Name
+                                        }
+                                    </td>
+                                    <td class="span4" style="vertical-align:middle;">
+                                        @if(Model.Items[i].ToDelete)
+                                        {   
+                                            <span style="text-decoration:line-through;">@Model.Items[i].Description</span>
+                                        } 
+                                        else
+                                        {
+                                            @Model.Items[i].Description
+                                        }
+                                    </td>
+                                    <td style="text-align:right;vertical-align:middle;">
+                                        @if (IsActionAllowed("Edit"))
+                                        {
+                                            <a href="@Url.Action("Edit", new { id = Model.Items[i].Id })" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+                                        }
+                                        
+                                        @Html.HistoryLink("Question", Model.Items[i].Id, "btn-mini", "Voir l'historique", Url.Action("Index", "Questions", new { type = Model.Type }))
+
+                                        @if (IsActionAllowed("Delete"))
+                                        {
+                                            @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "Delete", "Questions", new { id = Model.Items[i].Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Supprimer" })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div>Total : <strong><span id="total">0</span>%</strong></div>
+                    <br />
+                    if (IsActionAllowed("Edit"))
+                    {
+                        <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+                    }
+                }
+            }
+            else
+            {
+                <blockquote>
+                    <p>Aucune question.</p>
+                </blockquote>
+            }
+        </div>
+    </div>
+</section>
+
+
+
+<script type="text/javascript">
+    $("#container").on('click', 'a[data-delete-question-id]', function () {
+        var questionId = $(this).attr("data-delete-question-id");
+
+        $("#questionList tr[data-question-id]").each(function () {
+            if (questionId == $(this).attr("data-question-id")) {
+                $(this).find("input:first").val("True");
+            }
+        });
+
+        $("#questionListForm").submit();
+    });
+
+    var calculateTotal = function () {
+        var total = 0;
+        $("input[data-update-total]").each(function () {
+            if (!isNaN($(this).val())) {
+                total = total + ($(this).val() * 1);
+            }
+        });
+        if (total == 100) {
+            $("#total").css("color", "green");
+        } else {
+            $("#total").css("color", "red");
+        }
+        $("#total").html(total);
+    };
+
+    $("#container").on("keyup", "input[data-update-total]", calculateTotal);
+
+    calculateTotal();
+</script>

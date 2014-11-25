@@ -1,0 +1,16 @@
+﻿@if (ViewBag.AppHeader == null)
+{
+    throw new Exception("No ViewBag.AppHeader has been defined. You're probably missing [AppHeader] attribute on the controller action.");
+}
+<section id="appHeader">
+    <div class="well">
+        <div class="row">
+            <div class="span4 applicationCode">
+                <h2>@ViewBag.AppHeader.Code</h2>
+            </div>
+            <div class="span6 applicationName">
+                <h2>@ViewBag.AppHeader.Name</h2>
+            </div>
+        </div>
+    </div>
+</section>

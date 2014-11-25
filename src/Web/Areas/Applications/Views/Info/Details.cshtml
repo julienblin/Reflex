@@ -1,0 +1,124 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Info.InfoEdit
+@{
+    ViewBag.Title = @Model.Name + " - Info";
+}
+
+<div class="page-header">
+    <h2>
+        Informations générales
+        @if (IsActionAllowed("Edit"))
+        {
+            <a href="@Url.Action("Edit")" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+        }
+                        
+        @Html.HistoryLink("AppInfo", Model.Id, "btn-mini", "Voir l'historique")
+    </h2>
+</div>
+
+<div class="row">
+    <div class="span10 infoEdit">
+        <fieldset>
+            <div class="row">
+                <div class="span3">
+                    <div class="control-group">
+                        <label class="control-label" for="AppTypeId">
+                            @Html.LabelFor(m => m.TypeId)
+                        </label>
+                        <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.TypeId)">
+                    </div>
+                </div>
+					
+				<div class="span3">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.StatusId, new { @class = "control-label" })
+                        <div class="controls">
+                            <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.StatusId)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span3">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.CriticityId, new { @class = "control-label" })
+                        <div class="controls">
+                            <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.CriticityId)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			<div class="row">
+                <div class="span3">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.Certification)
+                        <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.Certification)">
+                    </div>
+                </div>
+					
+				<div class="span3">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.UserRange, new { @class = "control-label nowrap" })
+                        <div class="controls">
+                            <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.UserRange)">
+                        </div>
+                    </div>
+                </div>
+					
+				<div class="span4">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.SectorId, new { @class = "control-label" })
+                        <div class="controls">
+                            <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.SectorId)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+				
+			<div class="row">
+                <div class="span3">
+                            <div class="control-group">
+                                @Html.RLabelFor(m => m.Category)
+                                <input type="text" readonly="readonly" value="@Html.DisplayFor(m => m.Category)">
+                            </div>
+                </div>
+                <div class="span6">
+                    <div class="control-group">
+                        @if(!string.IsNullOrEmpty(Model.CategoryDescription))
+                        {
+                            @Html.RLabelFor(m => m.CategoryDescription)
+                            @Html.FormattedText(Model.CategoryDescription)
+                        }
+                    </div>
+                </div>
+            </div>
+				
+            <div class="row">
+                <div class="span9">
+           
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.Description)
+                        <div class="gris-form gris-form-textarea"> @Html.FormattedText(Model.Description)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="span9">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.MaintenanceWindow)
+                        <div class="gris-form gris-form-textarea"> @Html.FormattedText(Model.MaintenanceWindow)</div>
+                    </div>
+                </div>
+			</div>
+
+			<div class="row">
+                <div class="span9">
+                    <div class="control-group">
+                        @Html.RLabelFor(m => m.Notes)
+                        <div class="gris-form gris-form-textarea"> @Html.FormattedText(Model.Notes)</div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

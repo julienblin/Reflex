@@ -1,0 +1,35 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Servers.ServerRemove
+
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Retrait d'un serveur</h3>
+</div>
+<div class="modal-body">
+    <p>Êtes-vous sûr de vouloir retirer le server <strong>@Model.ServerName</strong> de l'application <strong>@Model.ApplicationName</strong> ?</p>
+    @if (Model.DbInstancesToRemove.Count > 0)
+    {
+         if (Model.DbInstancesToRemove.Count == 1)
+         {
+            <p>L'instance <strong>@Model.DbInstancesToRemove.First().Name</strong> sera également retirée de l'application.</p>
+         }
+         else
+         {
+            <p>Les instances suivantes seront également retirées de l'application : </p>
+         
+            <ul>
+                @foreach (var instance in Model.DbInstancesToRemove.OrderBy(i => i.Name))
+                {
+                    <li><strong>@instance.Name</strong></li>
+                }
+            </ul>
+        }
+    }
+</div>
+<div class="modal-footer">
+    @using (Ajax.BeginForm("RemoveServer", "Servers", new { appId = Model.ApplicationId }, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ServersLandscapesDisplay", HttpMethod = "post", OnComplete = "$('#confirmModal').modal('hide')" }))
+    {
+        @Html.EditorFor(m => m.Id)
+        <a class="btn btn-danger" data-submit-form="true"><i class="icon-remove icon-white"></i> Retirer</a>
+        <a class="btn" data-dismiss="modal">Annuler</a>
+    }
+</div>

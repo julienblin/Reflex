@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <Company>CGI</Company>
+        <ProductName>Reflex</ProductName>
+        <Major>2</Major>
+        <Minor>2</Minor>
+        <Revision>0</Revision>
+    </PropertyGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+﻿@model CGI.Reflex.Core.Queries.Review.ApplicationsReviewResult
+
+<table border="0" class="tableGraphic">
+    <tbody>
+        <tr>
+            <td class="tdTopLeft">
+                @Model.Resulsts.Count(l => l.TechnologyValue >= 50 && l.BusinessValue < 50)
+                <div class="assessmentAnnotation">Tolérer</div>
+            </td>
+            <td class="tdTopRight">
+                @Model.Resulsts.Count(l => l.TechnologyValue >= 50 && l.BusinessValue >= 50)
+                <div class="assessmentAnnotation">Investir</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="tdBottomLeft">
+                @Model.Resulsts.Count(l => l.TechnologyValue < 50 && l.BusinessValue < 50)
+                <div class="assessmentAnnotation">Éliminer</div>
+            </td>
+            <td class="tdBottomRight">
+                @Model.Resulsts.Count(l => l.TechnologyValue < 50 && l.BusinessValue >= 50)
+                <div class="assessmentAnnotation">Migrer</div>
+            </td>
+        </tr>
+    </tbody>
+</table>

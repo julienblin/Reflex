@@ -1,0 +1,142 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Integrations.IntegrationEdit
+
+
+@using (Html.BeginForm(@Model.FormAction, "Integrations"))
+{
+    @Html.EditorFor(m => m.Id)
+    @Html.EditorFor(m => m.ConcurrencyVersion)
+    <section>
+        <div class="row">
+            <div class="span10">
+                <div class="control-group error">
+                    <span class="help-block">
+                    </span> 
+                </div>
+            </div>
+        </div>
+           
+        <div class="row">
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.AppSourceId)
+                    @Html.EditorFor(m => m.AppSourceId)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.AppSourceId)</span>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.AppDestId)
+                    @Html.EditorFor(m => m.AppDestId)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.AppDestId)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span3">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.Name)
+                    @Html.EditorFor(m => m.Name)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="control-group">
+                    @Html.RLabelFor(m => m.NatureId)
+                    @Html.EditorFor(m => m.NatureId)
+                    <span class="help-inline">@Html.ValidationMessageFor(m => m.NatureId)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <div class="span5">
+                    @Html.RLabelFor(m => m.Description)
+                    @Html.TextAreaFor(m => m.Description, new { style="width:510px", rows = 3 })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <div class="span5">
+                    @Html.RLabelFor(m => m.DataDescription)
+                    @Html.TextAreaFor(m => m.DataDescription, new { style = "width:510px", rows = 3 })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <div class="span5">
+                    @Html.RLabelFor(m => m.Frequency)
+                    @Html.EditorFor(m => m.Frequency)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <div class="span5">
+                    @Html.RLabelFor(m => m.Comments)
+                    @Html.TextAreaFor(m => m.Comments, new { style = "width:510px", rows = 3 })
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section>
+        <div class="page-header">
+            <h2>
+                Technologies d'intégration
+                @Ajax.LargeModalActionLinkRaw("<i class='icon-plus-sign icon-white'></i>", "TechnologiesModal", "Pickers", new { area = "", AddFunctionName = "addTechno" }, new { @class = "btn btn-success btn-mini", rel = "tooltip", title = "Associer des technologies à l'intégration" })
+            </h2>
+        </div>
+        <div class="row">
+            <div id="technoContainers" class="span10">
+                @if (Model.Technologies.Any())
+                {
+                    @Html.Partial("_Technologies", Model.Technologies)
+                }
+                else
+                {
+                    <blockquote>
+                        <p>Pas de technologie associée à l'intégration.</p>
+                    </blockquote>
+                }
+            </div>
+        </div>
+    </section>
+    
+    <section style="margin-top: 20px">
+        <div class="row">
+            <div class="span10">
+                <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+                <a class="btn" href="@Url.Action("Details")">Annuler</a>
+            </div>
+        </div>
+    </section>
+}
+
+<script type="text/javascript">
+    var addTechno = function (checkedIds) {
+        $('#technoContainers input').each(function () {
+            checkedIds.push($(this).val());
+        });
+        $.ajax({
+            url: "@Html.Raw(Url.Action("RenderTechno"))",
+            data: { ids: checkedIds },
+            type: 'GET',
+            success: function (data) {
+                $('#technoContainers').html(data);
+            }
+        });
+    };
+
+    $("#technoContainers").on('click', 'a[data-delete-techno]', function (event) {
+        $(this).closest("tr").remove();
+        event.preventDefault();
+    });
+
+</script>

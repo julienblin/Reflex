@@ -1,0 +1,12 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.DbInstances.DbInstanceEdit
+@{
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+    ViewBag.Title = "Ajout d'une instance de base de donnés";
+}
+
+<div class="page-header">
+    <h2>
+        Ajout d'une instance de base de donnés
+    </h2>
+</div>
+@Html.Partial("_Form", Model)

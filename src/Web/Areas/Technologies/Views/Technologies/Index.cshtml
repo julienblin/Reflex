@@ -1,0 +1,307 @@
+﻿@model CGI.Reflex.Web.Areas.Technologies.Models.TechnologyHierarchy
+
+@using CGI.Reflex.Core.Entities
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Technologies";
+}
+
+<section>
+    <div class="page-header">
+        <h2>
+            Technologies
+            @if (IsActionAllowed("Create"))
+            {
+                <a id="btnCreate" class="btn btn-success btn-mini" rel="tooltip" title="Ajouter"><i class='icon-plus-sign icon-white'></i></a>
+            }
+            
+            <a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+
+            @if (IsActionAllowed("Delete"))
+            {
+                <a id="btnDelete" disabled class="btn btn-mini btn-danger" rel="tooltip" title="Supprimer" data-toggle="modal" data-target="#modalConfirmDelete" style="margin-left: 10px;"><i class='icon-remove icon-white'></i></a>
+            }
+        </h2>
+        <div class="row">
+            <div class="span12">
+                <div id="searchForm" class="collapse">
+                    <div class="well">
+                        <form>
+                            <div class="row">
+                                <div class="span5">
+                                    <div class="control-group">
+                                        @Html.RLabelFor(m => m.Name)
+                                        @Html.TextBoxFor(m => m.Name, new { data_autocomplete_source = Url.Action("TechnologyNames", "Autocomplete", new { area = "" }) })
+                                    </div>
+                                </div>
+                                <div class="span5">
+                                    <div class="control-group">
+                                        @Html.RLabelFor(m => m.TechnologyType)
+                                        @Html.EditorFor(m => m.TechnologyType)
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="span5">
+                                    <div class="control-group">
+                                        @Html.RLabelFor(m => m.DateFrom)
+                                        @Html.EditorFor(m => m.DateFrom)
+                                    </div>
+                                </div>
+                                <div class="span5">
+                                    <div class="control-group">
+                                        @Html.RLabelFor(m => m.DateTo)
+                                        @Html.EditorFor(m => m.DateTo)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="span5">
+                                    <div class="control-group">
+                                        @Html.RLabelFor(m => m.ContactId)
+                                        @Html.EditorFor(m => m.ContactId)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+                            <a id="cancelSearchForm" href="#" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sectionTechnoTree">
+    <div class="row">
+        <div id="technoTreeContainer" class="span5" style="border-right:1px solid #ddd; width:379px;">
+            <div id="technoTree">
+            </div>
+        </div>
+        <div id="technoDetail" class="span7">
+            
+        </div>
+    </div>
+</section>
+
+<section id="sectionNoResult" style="display:none;">
+    <blockquote>
+        <p>Aucun résultat trouvé.</p>
+    </blockquote>
+</section>
+
+<div class="modal fade" id="modalConfirmDelete">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Supprimer</h3>
+    </div>
+    <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir supprimer la technologie sélectionnée ?</p>
+    </div>
+    <div class="modal-footer">
+        <a id="btnDeleteConfirmed" class="btn btn-danger" data-submit-form="true"><i class="icon-remove icon-white"></i> Supprimer</a>
+        <a class="btn" data-dismiss="modal">Annuler</a>
+    </div>
+</div>
+
+@section javascript
+{
+    var parseDate = function parseDate(input) {
+      var parts = input.match(/(\d+)/g);
+      // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+      return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+    }
+
+	$.expr[':'].jstree_custom_search = function(a,i,m){
+	    var liNode = $(a).closest('li');
+        var result = false;
+
+        var valText = $.trim($('#Name').val());
+        if ((valText !== '') && (liNode.data("fullname").search(new RegExp(valText, "i")) != -1)) {
+            result = true;
+        }
+
+        var valType = $('#TechnologyType').val();
+        if ((valType !== '') && liNode.data('technoType') === valType) {
+            result = true;
+        }
+
+        var valDateFrom = $('#DateFrom').val();
+        if ((valDateFrom !== '') && liNode.data('endOfSupport') !== '') {
+            var dateFrom = parseDate(valDateFrom);
+            var liDate = parseDate(liNode.data('endOfSupport'));
+            if(liDate >= dateFrom) {
+                result = true;
+            }
+        }
+
+        var valDateTo = $('#DateTo').val();
+        if ((valDateTo !== '') && liNode.data('endOfSupport') !== '') {
+            var dateTo = parseDate(valDateTo);
+            var liDate = parseDate(liNode.data('endOfSupport'));
+            if(liDate <= dateTo) {
+                result = true;
+            }
+        }
+
+        var valContact = $('#ContactId').val();
+        if ((valContact !== '') && liNode.data('contactId') === valContact) {
+            result = true;
+        }
+
+        return result;
+	};
+
+    $(function() {
+        $("#technoTree").jstree({
+            "plugins" : ["themes", "json_data", "ui", "search", "crrm", "sort"],
+            "themes" : {
+                "url": "@Url.Content("~/Content/css/jstree.css")"
+            },
+            "ui" : {
+                "select_limit" : 1
+            },
+            search : {
+			    show_only_matches: true,
+			    search_method: "jstree_custom_search",
+                ajax: {
+                    url : "@Url.Action("Search")",
+                    data : function(n) {  
+                        return {
+                            name: $('#Name').val(),
+                            technoType: $('#TechnologyType').val(),
+                            dateFrom: $('#DateFrom').val(),
+                            dateTo: $('#DateTo').val(),
+                            contactId: $('#ContactId').val()
+                        };
+                    },
+                    success: function(data) {
+                        if(data.length == 0) {
+                            $('#sectionTechnoTree').hide();
+                            $('#sectionNoResult').show();
+                        } else {
+                            $('#sectionNoResult').hide();
+                            $('#sectionTechnoTree').show();
+                        }
+                    }
+                }
+		    },
+            "json_data" : {
+                "data" : [
+                    {
+                        "attr" : { "id" : "techno-0" },
+                        "data" : "Technologies",
+                        "metadata" : { "id" : "0", "fullname" : "", "technoType" : "", "endOfSupport" : "", "contactId" : "" }
+                        @if(Model.RootTechnologies.Any())
+                        {
+                            <text>
+                                ,"state" : "open"
+                                ,"children" : [
+                                @foreach (var techno in Model.RootTechnologies)
+                                {
+                                    <text>
+                                        {
+                                        "attr" : { "id" : "techno-@techno.Id" },
+                                        "data" : { "title" : "@Html.Raw(techno.Name)" },
+                                        "metadata" : { 
+                                        "id" : "@techno.Id",
+                                        "fullname" : "@techno.FullName",
+                                        "technoType" : "@(techno.TechnologyType != null ? techno.TechnologyType.Id.ToString(CultureInfo.InvariantCulture) : "")",
+                                        "endOfSupport" : "@(techno.EndOfSupport.HasValue ? techno.EndOfSupport.Value.ToString("yyyy-MM-dd") : "")",
+                                        "contactId" : "@techno.Contact.ToId()"
+                                        },
+                                        "state" : "@(techno.HasChildren() ? "closed" : "")"
+                                        }
+                                        @if (techno != Model.RootTechnologies.Last())
+                                        {
+                                            @:,
+                                        }
+                                    </text>
+                                }
+                                ]
+                            </text>
+                        }
+                    }
+                ],
+                "ajax" : {
+                    "url" : "@Url.Action("TreeData")",
+                    "data" : function(n) {
+                        return { rootId : n.data("id") };
+                    }
+                }
+            }
+        })
+        .bind("loaded.jstree", function (event, data) {
+            data.inst.select_node('#techno-0', true);
+        })
+        .bind("select_node.jstree", function (event, data) {
+            var targetId = data.rslt.obj.data('id');
+            if(targetId === '0') {
+                $("#technoDetail").html('');
+                $("#btnDelete").attr("disabled", "disabled");
+            } else {
+                $("#technoDetail").load('@Url.Action("Details")/' + targetId);
+                $("#btnDelete").removeAttr("disabled");
+            }
+            data.inst.open_node('#techno-' + targetId);
+        });
+
+        $('#btnCreate').on('click', function(event) {
+            var targetId = $.jstree._focused().get_selected().data('id');
+            $("#technoDetail").load('@Url.Action("Create")/?parentId=' + targetId);
+        });
+
+        $('#btnDeleteConfirmed').on('click', function(event) {
+            var targetId = $.jstree._focused().get_selected().data('id');
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Delete")",
+                data: { id: targetId },
+                success: function(data) {
+                    $('#modalConfirmDelete').modal('hide');
+                    $.jstree._focused().delete_node('#techno-' + targetId);
+                },
+                error: function(data) {
+                    $('#modalConfirmDelete').modal('hide');
+                    $.jstree._focused().deselect_all();
+                    $.jstree._focused().select_node('#techno-' + targetId);
+                }
+            });
+        });
+    });
+
+    $('#searchForm form').on('submit', function(event) {
+        if( !$('#Name').val()
+         && !$('#TechnologyType').val()
+         && !$('#DateFrom').val()
+         && !$('#DateTo').val()
+         && !$('#ContactId').val()
+          ) {
+             $("#technoTree").jstree("clear_search");
+             $('#sectionNoResult').hide();
+             $('#sectionTechnoTree').show();
+        } else {
+            $("#technoTree").jstree("search", "a"); // Dumb value to perform search
+        }
+        event.preventDefault();
+    });
+
+    $('#cancelSearchForm').on('click', function(event) {
+        $('#Name').val('');
+        $('#TechnologyType option:first').attr("selected", "selected");
+        $('#DateFrom').val('');
+        $('#DateTo').val('');
+        $('#ContactId').val('');
+        $('#textbox-ContactId').val('');
+        $('#searchForm').collapse('hide');
+        $("#technoTree").jstree("clear_search");
+        $('#sectionNoResult').hide();
+        $('#sectionTechnoTree').show();
+        event.preventDefault();
+    });
+}

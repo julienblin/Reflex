@@ -1,0 +1,60 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Servers.ServersDetails
+@{
+    ViewBag.Title = @Model.AppName + " - Serveurs";
+}
+
+<div class="page-header">
+    <h2>
+        Serveurs
+        @if (IsActionAllowed("AddServers"))
+        {
+            @Ajax.LargeModalActionLinkRaw("<i class=\"icon-plus-sign icon-white\"></i>", "ServersModal", "Pickers", new { area = "", postUrl = Url.Action("AddServers", new { appId = @Model.AppId }), HideServersFromTarget = "#ServersLandscapesDisplay" }, new { @class = "btn btn-success btn-mini", rel = "tooltip", title = "Ajouter des serveurs" })
+        }
+        @Html.HistoryLinkProperty("Application", Model.AppId, "btn-mini", "Voir l'historique", "ServerLinks")
+    </h2>
+</div>
+<div class="row">
+    <div class="span10" id="ServersLandscapesDisplay">
+        @Html.Partial("_LandscapesServersDisplay", Model.Results)
+    </div>
+</div>
+
+<div id="confirmModal" class="modal fade" data-backdrop="static"></div>
+<script type="text/javascript">
+    $(function () {
+        $("#ServersLandscapesDisplay").on('click', 'a[data-remove-server]', function () {
+            $.ajax({
+                url: '@Url.Action("RemoveServer")',
+                data: { serverId: $(this).attr('data-remove-server') },
+                success: function (data) {
+                    $('#confirmModal').html(data);
+                    $('#confirmModal').modal('show');
+                }
+            });
+            return false;
+        });
+        
+        $("#ServersLandscapesDisplay").on('click', 'a[data-add-server]', function () {
+            $.ajax({
+                url: '@Url.Action("AddServer")',
+                data: { serverId: $(this).attr('data-add-server') },
+                success: function (data) {
+                    $('#ServersLandscapesDisplay').html(data);
+                }
+            });
+            return false;
+        });
+
+        $("#ServersLandscapesDisplay").on('click', 'a[data-remove-landscape]', function () {
+            $.ajax({
+                url: '@Url.Action("RemoveServerByLandscape")',
+                data: { landscapeId: $(this).attr('data-remove-landscape') },
+                success: function (data) {
+                    $('#confirmModal').html(data);
+                    $('#confirmModal').modal('show');
+                }
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Events.EventsDetails
+@{
+    ViewBag.Title = @Model.AppName + " - Événements";
+}
+
+@using (Ajax.BeginForm("Details", null, new AjaxOptions { HttpMethod = "Get", UpdateTargetId = "eventList", InsertionMode = InsertionMode.Replace }, new { data_update_history = "true", style = "margin-bottom:0px" }))
+{
+    <div class="page-header">
+        <div class="row">
+            <div class="span10">
+                <div class="collapse in" style="overflow: visible; float: right;">
+                    Trier par :
+            @Html.DropDownListFor(m => m.OrderBy, new SelectList(Model.OrderList, "OrderBy", "Name"), new { data_submit_form = "true" })
+                </div>
+                <h2>Événements
+            @if (IsActionAllowed("Create"))
+            {
+                <a href="@Url.Action("Create", "Events")" class="btn btn-mini btn-success" rel="tooltip" title="Ajouter un événement"><i class="icon-plus-sign icon-white"></i></a>
+            }
+                    @Html.HistoryLinkProperty("Application", Model.AppId, "btn-mini", "Voir l'historique", "Events")
+                    <a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span10">
+                @{ var formClass = Model.SearchDefined ? "collapse in" : "collapse"; }
+                <div id="searchForm" class="@formClass">
+                    <div class="well">
+                        <div class="row-fluid">
+                            <div class="span5">
+                                <div class="control-group">
+                                    @Html.RLabelFor(m => m.DateFrom)
+                                    @Html.EditorFor(m => m.DateFrom)
+                                </div>
+                            </div>
+                            <div class="span5">
+                                <div class="control-group">
+                                    @Html.RLabelFor(m => m.DateTo)
+                                    @Html.EditorFor(m => m.DateTo)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span5">
+                                <div class="control-group">
+                                    @Html.RLabelFor(m => m.Type)
+                                    @Html.EditorFor(m => m.Type)
+                                </div>
+                            </div>
+                            <div class="span5">
+                                <div class="control-group">
+                                    @Html.RLabelFor(m => m.Source)
+                                    @Html.EditorFor(m => m.Source)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span5">
+                                <div class="control-group">
+                                    @Html.RLabelFor(m => m.Description)
+                                    @Html.EditorFor(m => m.Description)
+                                </div>
+                            </div>
+                        </div>
+                        <a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i>Rechercher</a>
+                        <a href="@Url.Action("Details")" class="btn btn-small"><i class="icon-remove"></i>Annuler les critères de recherche</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="span10">
+        <div id="eventList">
+            @Html.Partial("_List", Model)
+        </div>
+    </div>
+</div>

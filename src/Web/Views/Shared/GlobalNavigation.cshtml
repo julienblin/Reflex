@@ -1,0 +1,134 @@
+﻿@using CGI.Reflex.Web.Infra.Filters
+@if (ViewBag.CurrentUser != null)
+{
+    <div class="nav-collapse">
+        <ul class="nav">
+            @if (IsAllowed("/Applications"))
+            {
+                <li class="@(CurrentArea == "Applications" ? "active" : "")">
+                    <a href="@Url.Action("Index", "Applications", new { area = "Applications" })">Applications</a>
+                </li>
+            }
+            
+            @if (IsAllowed("/Servers"))
+            {
+                <li class="dropdown @(CurrentArea == "Servers" ? "active" : "")">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Serveurs<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        @if (IsAllowed("/Servers"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Servers", new { area = "Servers" })">Serveurs</a>
+                            </li>
+                        }
+                        @if (IsAllowed("/Servers/Landscapes"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Landscapes", new { area = "Servers" })">Landscapes</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+
+            @if (IsAllowed("/Technologies"))
+            {
+                 <li class="@(CurrentArea == "Technologies" ? "active" : "")">
+                    <a href="@Url.Action("Index", "Technologies", new { area = "Technologies" })">Technologies</a>
+                </li>
+            }
+        </ul>
+        <ul class="nav pull-right">
+            <li id="ajaxLoader" style="display: none;">
+                <a><img src="@Url.Content("~/Content/img/ajax-loader.gif")" /></a>
+            </li>
+
+            @if (IsAllowed("/Organizations"))
+            {
+                <li class="dropdown @(CurrentArea == "Organizations" ? "active" : "")">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt icon-white"></i> Organisations<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        @if (IsAllowed("/Organizations/Sectors"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Sectors", new { area = "Organizations" })">Secteurs</a>
+                            </li>
+                        }
+                        @if (IsAllowed("/Organizations/Contacts"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Contacts", new { area = "Organizations" })">Contacts</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            
+            @if (IsAllowed("/System"))
+            {
+                <li class="dropdown @(CurrentArea == "System" ? "active" : "")">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog icon-white"></i> Système<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        @if (IsAllowed("/System/DomainValues"))
+                        {
+                            <li><a href="@Url.Action("Index", "DomainValues", new { area = "System" })">Domaines de valeurs</a></li>
+                        }
+                        @if (IsAllowed("/System/Questions"))
+                        {
+                            <li><a href="@Url.Action("Index", "Questions", new { area = "System" })">Questionnaire</a></li>
+                        }
+                        @if (IsAllowed("/System/Users"))
+                        {
+                            <li><a href="@Url.Action("Index", "Users", new { area = "System" })">Utilisateurs</a></li>
+                        }
+                        @if (IsAllowed("/System/Roles"))
+                        {
+                            <li><a href="@Url.Action("Index", "Roles", new { area = "System" })">Rôles</a></li>
+                        }
+                        @if (IsAllowed("/System/Configuration"))
+                        {
+                            <li><a href="@Url.Action("Index", "Configuration", new { area = "System" })">Configuration</a></li>
+                        }
+                        @if (IsAllowed("/System/ImportExport"))
+                        {
+                            <li><a href="@Url.Action("Index", "ImportExport", new { area = "System" })">Import / Export</a></li>
+                        }
+                        
+                        @if (IsAllowed(new[] { "/System/Logs", "/System/DbConsole" }, IsAllowedOperator.Or))
+                        {
+                            <li class="divider"></li>
+                        }
+
+                        @if (IsAllowed("/System/Logs"))
+                        {
+                            <li><a href="@Url.Action("Index", "Logs", new { area = "System" })">Logs</a></li>
+                        }
+
+                        @if (IsAllowed("/System/DbConsole"))
+                        {
+                            <li><a href="@Url.Action("Index", "DbConsole", new { area = "System" })">Db Console</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+            <li class="divider-vertical"></li>
+            @if (ViewBag.Config.AuthenticationMode == System.Web.Configuration.AuthenticationMode.Forms)
+            {
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i> @ViewBag.CurrentUser.UserName<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="@Url.Action("Index", "MyProfile", new { area = "" })"><i class="icon-user"></i> Mon profil</a></li>
+                        <li><a href="@Url.RouteUrl("Logout")"><i class="icon-off"></i> Déconnexion</a></li>
+                    </ul>
+                </li>
+            }
+            
+            @if (ViewBag.Config.AuthenticationMode == System.Web.Configuration.AuthenticationMode.Windows)
+            {
+                <li>
+                    <a href="#"><i class="icon-user icon-white"></i> @ViewBag.CurrentUser.UserName</a>
+                </li>
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CGI.Reflex.Web.Areas.Applications.Models.Review.ReviewItem>
+
+@foreach (var question in Model)
+{
+    var expandId = string.Concat("details-", question.Id);     
+    <tr>
+        <td class="span12" colspan="2">
+            <div class="gris-form span2" style="margin-bottom:0px;float:right;padding:2px;">
+                @(String.IsNullOrEmpty(question.CurAnswer) ? "N/A" : question.CurAnswer)
+            </div>
+            <strong>
+                <a class="btn btn-mini" data-toggle-target-row="#@expandId" rel="tooltip" title="Détails"><i class="icon-info-sign"></i></a>
+                @question.Question [@question.Weight]
+            </strong>
+        </td>
+    </tr>
+    <tr style="display:none"></tr>
+    <tr id="@expandId" style="display:none">
+        <td class="span7" style="border-top:none;">
+            <div class="gris-form gris-form-textarea" style="height:36px;overflow:auto;margin-bottom:10px;">@question.Description</div>
+        </td>
+        <td class="span5" style="border-top:none;">
+            <div class="gris-form gris-form-textarea" style="height:36px;overflow:auto;margin-bottom:10px;">@question.CurAnswerExplanation</div>
+        </td>
+    </tr>
+}

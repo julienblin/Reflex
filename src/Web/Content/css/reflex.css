@@ -1,0 +1,122 @@
+﻿.ie-overflow-fix { }
+
+.modal form {
+    margin: 0;
+}
+
+.select2-container
+{
+    width:220px;
+    margin-bottom: 9px;
+}
+
+table.no-border td {
+    border-top: 0;
+}
+
+table.no-hover tbody tr:hover td,
+table.no-hover tbody tr:hover th {
+  background-color: transparent;
+}
+
+table.no-hover tbody tr:hover td.well,
+table.no-hover tbody tr:hover th.well {
+  background-color: whiteSmoke;
+}
+
+legend + .row {
+    /*margin-top: 18px;*/ margin-top: 5px;
+    -webkit-margin-top-collapse: separate;
+}
+
+.largeModal {
+    width:940px;
+    margin-left:-470px;
+}
+
+.well-mini {
+    padding:8px;
+}
+
+.input-append .add-on,
+.input-append .btn {
+  margin-left: -1px;
+  -webkit-border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.tab-content 
+{
+    width:auto; /* Bug fix pour bootstrap v2.0.2 dans lequel le contenu se retrouvait sous les onglets (lorsque les onglets sont à droite par exemple) */
+}
+
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]
+{
+    cursor:auto;
+}
+
+.label-danger {
+  background-color: #bd362f;
+}
+
+.btn-color {
+    background-image: none;
+}
+
+.btn-color.active {
+    border: 2px solid black;
+}
+
+.jstree-default td.tree-node {
+    background-repeat: no-repeat;
+    background-image: url("../img/treeview-table.png");
+    background-color: transparent;
+    position: relative;
+}
+
+.jstree-default td.tree-node-last {
+    background-repeat: no-repeat;
+    background-image: url("../img/treeview-table-last.png");
+    background-color: transparent;
+    position: relative;
+}
+
+.gris-form 
+{
+	background-color : #EEEEEE;
+	border-color : #DDDDDD;
+	border: 1px solid #DDDDDD;
+	width: auto;
+}
+
+.gris-form-textarea
+{
+    min-height:40px;
+    margin-bottom:9px;
+    font-size:13px;
+    line-height:18px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding:4px;
+}
+
+.home-box
+{
+    border: 1px solid #B7B7B7;
+    box-shadow: 0 0 3px #B7B7B7;
+}
+
+.well-bg
+{
+    background-color: #E7E7E7;
+}
+
+.assessmentAnnotation {
+    color: #000000;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: -30px;
+    font-weight: normal;
+}

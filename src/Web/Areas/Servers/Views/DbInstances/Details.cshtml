@@ -1,0 +1,91 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.DbInstances.DbInstanceDetails
+@{
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+    ViewBag.Title = @Model.ServerName + " - Instance de base de données";
+}
+
+<div class="page-header">
+    <h2>
+     Instances de base de données
+        @if (IsActionAllowed("Create"))
+        {
+            <a href="@Url.Action("Create", "DbInstances")" class="btn btn-success btn-mini" rel="tooltip" title="Ajouter une instance"><i class="icon-plus-sign icon-white"></i></a>
+        }
+
+    </h2>
+</div>
+
+<div class="row">
+    <div class="span10">
+        @if (Model.HasResults)
+        {
+            @Html.Pager()
+
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>@Html.OrderLink("Nom", "Name")</th>
+                        <th>Technologie</th>
+                        <th>Date de Fin de support</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dbInstance in Model.SearchResults.Items)
+                    {
+                        <tr>
+                            <td class="span1">@dbInstance.Name</td>
+           
+                            @{var techno = dbInstance.TechnologyLinks.FirstOrDefault(); }
+                            
+                                          <td class="span2">@(techno != null ? techno.Technology.FullName : "")</td>
+       
+                                <td class="span2">
+                                    @if (techno != null)
+                                    {
+                                        if (techno.Technology.EndOfSupport.HasValue)
+                                        {
+
+                                            if (@techno.Technology.GetEndOfSupportStatus() == CGI.Reflex.Core.Entities.Technology.EndOfSupportStatus.Outdated)
+                                            {
+                                                <span class="label label-danger" style="font-size:inherit;">@techno.Technology.EndOfSupport.Value.ToShortDateString() </span>
+                                            }
+                                            else if (@techno.Technology.GetEndOfSupportStatus() == CGI.Reflex.Core.Entities.Technology.EndOfSupportStatus.AlmostOutdated)
+                                            {
+                                                <span class="label label-warning" style="font-size:inherit;">@techno.Technology.EndOfSupport.Value.ToShortDateString() </span>
+                                            }
+                                            else if (@techno.Technology.GetEndOfSupportStatus() == CGI.Reflex.Core.Entities.Technology.EndOfSupportStatus.UpToDate)
+                                            {
+                                                <span class="label label-success" style="font-size:inherit;">@techno.Technology.EndOfSupport.Value.ToShortDateString() </span> 
+                                            }
+                                        }
+                                    }
+                                </td>
+                            <td class="span2" style="text-align:right">
+                                @if (IsActionAllowed("Edit"))
+                                {
+                                    <a href="@Url.Action("Edit", "DbInstances", new { id = dbInstance.Id })" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+                                }
+                                  @Html.HistoryLink("DbInstance", dbInstance.Id, "btn-mini", "Voir l'historique")
+
+                                @if (IsActionAllowed("Delete"))
+                                {
+                                    @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "Delete", "DbInstances", new { id = dbInstance.Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Supprimer" })
+                                }
+                            </td>
+                          
+                        </tr>   
+                    }
+                </tbody>
+            </table>
+                        
+            @Html.Pager()
+        }
+        else
+        {
+            <blockquote>
+                <p>Il n'y a pas d'instance de base de données pour ce serveur.</p>
+            </blockquote>
+        }
+    </div>
+</div>

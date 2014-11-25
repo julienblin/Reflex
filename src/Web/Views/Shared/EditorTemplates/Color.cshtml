@@ -1,0 +1,17 @@
+﻿@model string
+@using CGI.Reflex.Core.Entities
+
+@Html.HiddenFor(m => m)
+@Html.ColorButton(System.Drawing.Color.Empty, Model)
+@foreach (var paletteColor in ColorPalette.Palette)
+{
+    @Html.ColorButton(paletteColor, Model)
+}
+<script type="text/javascript">
+    $(function () {
+        $('.btn-color:button').on('click', function (event) {
+            $('#@(ViewData.TemplateInfo.HtmlFieldPrefix)').val($(this).attr('data-color-value'));
+            event.preventDefault();
+        });
+    });
+</script>

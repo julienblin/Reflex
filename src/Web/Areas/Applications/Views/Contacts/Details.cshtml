@@ -1,0 +1,128 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Contacts.ContactsDetails
+@{
+    ViewBag.Title = @Model.AppName + " - Contacts";
+}
+
+<div class="page-header">
+    <h2>
+        Contacts
+        @if (IsActionAllowed("AddContacts", "Contacts"))
+        {
+            @Ajax.LargeModalActionLinkRaw("<i class=\"icon-plus-sign icon-white\"></i>", "ContactsModal", "Pickers", new { area = "", postUrl = Url.Action("AddContacts", new { appId = @Model.AppId }), returnUrl = Url.RouteUrl(ViewContext.RouteData.Values), ApplicationId = Model.AppId }, new { @class = "btn btn-success btn-mini", rel = "tooltip", title = "Ajouter des contacts" })
+        }
+		@Html.HistoryLinkProperty("Application", Model.AppId, "btn-mini", "Voir l'historique", "ContactLinks")
+    </h2>
+</div>
+<section>
+    <div class="row">
+        <div class="span10">
+            @if(Model.SearchResults.Items.Any())
+            {
+                <table class="table table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@Html.OrderLink("Nom", "FullName")</th>
+                            <th>@Html.OrderLink("Type", "Type.Order")</th>
+                            <th>Rôle</th>
+                            <th>@Html.OrderLink("Secteur", "Sector.Name")</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var contactLink in Model.SearchResults.Items)
+                        {
+                            var addInfoId = String.Concat("addInfo", contactLink.Id);
+                            <tr>
+                                <td style="width:15px">
+                                    @if (string.IsNullOrEmpty(contactLink.Contact.Email) && string.IsNullOrEmpty(contactLink.Contact.PhoneNumber) && string.IsNullOrEmpty(contactLink.Contact.Notes))
+                                    {
+                                        <a class="btn btn-mini" disabled><i class="icon-info-sign"></i></a>
+                                    }
+                                    else
+                                    {
+                                        <a data-toggle-target-row="#@addInfoId" class="btn btn-mini" rel="tooltip" title="Détails"><i class="icon-info-sign"></i></a>
+                                    }
+                                </td>
+                                <td class="span2">@contactLink.Contact.FullName</td>
+                                <td class="span2">@contactLink.Contact.Type.Name</td>
+                                <td class="span2">
+                                    @if (contactLink.RolesInApp != null)
+                                    {
+                                        @contactLink.RolesInApp.ToString()
+                                    }
+                                </td>
+                                <td class="span2">
+                                    @if (contactLink.Contact.Sector != null)
+                                    {
+                                        @contactLink.Contact.Sector.Name
+                                    }
+                                </td>
+                                <td class="span2" style="text-align:right">
+                                    @if (IsActionAllowed("Edit"))
+                                    {
+                                        @Ajax.ModalActionLinkRaw("<i class='icon-pencil'></i>", "Edit", "Contacts", new { id = contactLink.Id, returnUrl = Model.ReturnUrl, associateWithApplicationId = Model.AppId  }, new { @class = "btn btn-mini", rel = "tooltip", title = "Éditer" })
+                                    }
+                                    
+                                    @if (IsActionAllowed("RemoveLink"))
+                                    {
+                                        @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "RemoveLink", "Contacts", new { linkId = contactLink.Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Retirer le contact" })
+                                    }
+                                </td>
+                            </tr>
+                            <tr style="display:none"></tr>
+                            <tr id="@addInfoId" style="display:none">
+                                <td style="border-top:none;"></td>
+                                <td colspan="5" style="border-top:none;">
+                                    <div class="details">
+										@if (!String.IsNullOrEmpty(contactLink.Contact.Email))
+										{
+											<span>
+												<label>
+													Courriel
+												</label>
+												<p>
+													<a href="mailto:@contactLink.Contact.Email">@contactLink.Contact.Email</a>
+												</p>
+											</span>
+										}
+										
+										@if (!String.IsNullOrEmpty(contactLink.Contact.PhoneNumber))
+										{
+											<span>
+												<label>
+													Téléphone
+												</label>
+												<p>
+													@contactLink.Contact.PhoneNumber
+												</p>
+											</span>
+										}
+										
+										@if (!String.IsNullOrEmpty(contactLink.Contact.Notes))
+										{
+											<span>
+												<label>
+													Notes
+												</label>
+												<div>
+													@Html.FormattedText(contactLink.Contact.Notes)
+												</div>
+											</span>
+										}
+									</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <blockquote>
+                    <p>Il n'y a pas de contact pour cette application.</p>
+                </blockquote>
+            }
+        </div>
+    </div>
+</section>

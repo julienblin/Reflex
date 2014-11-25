@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ImportOperationLineResult>
+@using CGI.Reflex.Core.Importers
+
+@{
+    ViewBag.Title = "Importation";
+}
+
+<section>
+    <div class="page-header">
+        <h2>Résultats de l'importation</h2>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="span12">
+            @if (Model.Count(l => l.Status == LineResultStatus.Created) > 0)
+            {
+                <p><span class="badge badge-success">@Model.Count(l => l.Status == LineResultStatus.Created)</span> élément(s) créé(s).</p>
+            }
+            @if (Model.Count(l => l.Status == LineResultStatus.Merged) > 0)
+            {
+                <p><span class="badge badge-info">@Model.Count(l => l.Status == LineResultStatus.Merged)</span> élément(s) modifié(s).</p>
+            }
+            @if (Model.Count(l => l.Status == LineResultStatus.Rejected) > 0)
+            {
+                <p><span class="badge badge-warning">@Model.Count(l => l.Status == LineResultStatus.Rejected)</span> élément(s) rejeté(s).</p>
+            }
+            @if (Model.Count(l => l.Status == LineResultStatus.Error) > 0)
+            {
+                <p><span class="badge badge-error">@Model.Count(l => l.Status == LineResultStatus.Error)</span> erreur(s).</p>
+            }
+        </div>
+    </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="span12">
+            <a href="@Url.Action("Index")" class="btn"><i class="icon-arrow-left"></i> Retour</a>
+        </div>
+    </div>
+</section>
+
+<section style="margin-top: 30px;">
+    <div class="row">
+        <div class="span12">
+            <table class="table table-condensed">
+                <thead>
+                    <th>Onglet</th>
+                    <th>Ligne</th>
+                    <th>Statut</th>
+                    <th>Message</th>
+                </thead>
+                <tbody>
+                    @foreach (var line in @Model)
+                    {
+                        var alertClass = "";
+                        switch (line.Status)
+                        {
+                            case LineResultStatus.Created:
+                                alertClass = "alert-success";
+                                break;
+                            case LineResultStatus.Merged:
+                                alertClass = "alert-info";
+                                break;
+                            case LineResultStatus.Rejected:
+                                alertClass = "badge-warning";
+                                break;
+                            case LineResultStatus.Error:
+                                alertClass = "alert-error";
+                                break;
+                        }
+                        
+                        <tr>
+                            <td class="span2">@line.Section</td>
+                            <td class="span1" style="text-align: right;">@line.LineNumber</td>
+                            <td class="span1 @alertClass">@Html.EnumDisplayName(line.Status)</td>
+                            <td>@line.Message</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

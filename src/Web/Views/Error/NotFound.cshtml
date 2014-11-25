@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Page non trouvée";
+}
+
+<div class="row">
+    <div class="span6 offset3">
+        <div class="alert alert-error">
+            <h4 class="alert-heading">Page non trouvée !</h4>
+            <p>
+                La page que vous désirez afficher est introuvable.
+            </p>
+            <p>
+                @if (!string.IsNullOrEmpty(ViewBag.UrlReferrer))
+                {
+                    <a href="@ViewBag.UrlReferrer" class="btn"><i class="icon-arrow-left"></i> Retour</a>
+                }
+                else
+                {
+                    <a href="/" class="btn"><i class="icon-home"></i> Accueil</a>
+                }
+            </p>
+        </div>
+    </div>
+</div>

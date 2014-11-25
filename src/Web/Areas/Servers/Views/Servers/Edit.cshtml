@@ -1,0 +1,19 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Servers.ServerEdit
+@{
+    ViewBag.Title = "Editer le Server " + Model.Name;
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+}
+
+<section>
+    <div class="page-header">
+        <h2>Editer le serveur @Model.Name
+        </h2>
+    </div>
+</section>
+
+<div class="row">
+    <div class="span10">
+        @Html.Partial("_Form")
+    </div>
+</div>
+

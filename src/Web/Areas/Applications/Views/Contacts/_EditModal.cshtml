@@ -1,0 +1,31 @@
+﻿@model CGI.Reflex.Web.Areas.Applications.Models.Contacts.ContactLinkEdit
+
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Rôle de @Model.FullContactName dans @Model.ApplicationName
+     <a href="@Url.Action("Edit", "Contacts", new { area = "Organizations", returnUrl = Model.ReturnUrl, associateWithApplicationId = Model.AssociateWithApplicationId, Id = Model.ContactId })" class="btn btn-mini" rel="tooltip" title="Éditer le contact"><i class="icon-pencil"></i></a>
+     </h3>
+   
+</div>
+<div id="appFormContent">
+    @using (Ajax.BeginModalForm("Edit", "Contacts", new { id = "contactEditForm" }))
+    {
+        @Html.EditorFor(m => m.Id)
+
+        <div class="modal-body">
+            <div class="control-group">
+                @foreach (var role in Model.AvailableRoles)
+                {
+                    <label class="checkbox">
+                        <input type="checkbox" name="roleInAppIds" value="@role.Id" @(Model.RoleInAppIds.Contains(role.Id) ? "checked=\"checked\"" : "") /> @role.Name
+                    </label>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" data-submit-form="true">Sauvegarder</a>
+            <a class="btn" data-dismiss="modal">Annuler</a>
+        </div>
+
+    }
+</div>

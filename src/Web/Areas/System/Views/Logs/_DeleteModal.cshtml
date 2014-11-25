@@ -1,0 +1,18 @@
+﻿@using CGI.Reflex.Core
+@model CGI.Reflex.Core.Entities.LogEntry
+
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Supprimer</h3>
+    </div>
+    <div class="modal-body">
+    <p>Êtes-vous sûr de vouloir supprimer le log @Model.Message.TruncateWords(100) ?</p>
+    </div>
+    <div class="modal-footer">
+    @using (Html.BeginForm("Delete", "Logs"))
+    {
+        @Html.HiddenFor(m => m.Id)
+        <a href="#" class="btn btn-danger" data-submit-form="true"><i class="icon-remove icon-white"></i> Supprimer</a>
+        <a class="btn" data-dismiss="modal">Annuler</a>
+    }
+</div>

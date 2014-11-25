@@ -1,0 +1,112 @@
+﻿@model CGI.Reflex.Web.Areas.Organizations.Models.Contacts.ContactsIndex
+@{
+	ViewBag.Title = "Contacts";
+}
+<section>
+	<div class="page-header">
+		<h2>
+			Contacts
+			@if (IsActionAllowed("Create"))
+			{
+				<a href="@Url.Action("Create")" class="btn btn-mini btn-success" rel="tooltip" title="Ajouter un contact"><i class="icon-plus-sign icon-white"></i></a>
+			}
+			<a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+		</h2>
+		<div class="row">
+			<div class="span12">
+				@{ var formClass = Model.SearchDefined ? "collapse in" : "collapse"; }
+				<div id="searchForm" class="@formClass">
+					<div class="well">
+						@using (Ajax.BeginForm("Index", "Contacts", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "results" }, new { data_update_history = "true", style = "margin-bottom:0px" }))
+						{
+							<div class="row">
+								<div class="span4">
+									<div class="control-group">
+										@Html.RLabelFor(m => m.LastName)
+										@Html.EditorFor(m => m.LastName)
+									</div>
+								</div>
+								<div class="span4">
+									<div class="control-group">
+										@Html.RLabelFor(m => m.FirstName)
+										@Html.EditorFor(m => m.FirstName)
+									</div>
+								</div>
+							</div>
+							<div class="row">
+				  
+								<div class="span4">
+									<div class="control-group">
+										@Html.RLabelFor(m => m.TypeId)
+										@Html.EditorFor(m => m.TypeId)
+									</div>
+								</div>
+								<div class="span4">
+									<div class="control-group">
+										@Html.RLabelFor(m => m.SectorId)
+										@Html.EditorFor(m => m.SectorId)
+									</div>
+								</div>
+							</div>
+							<a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+							<a href="@Url.Action("Index")" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="results">
+	@Html.Partial("_List")
+</section>
+
+<div class="modal hide fade" id="konami">
+    <div class="modal-header btn-inverse">
+        <div style="float: right;">
+            <img src="@Url.Content("~/Content/img/logo_CGI.png")" />
+        </div>
+	    <h3><img src="@Url.Content("~/Content/img/REFLEX_logo.png")" /></h3>
+    </div>
+    <div class="modal-body" style='background: #fff url("@Url.Content("~/Content/img/ninja.png")") no-repeat right top;'>
+	    <h3>Crédits - @ViewBag.AppVersion</h3>
+        @{
+            var rnd = new Random();
+            var names = new[] {
+                "Sylvain Robert",
+                "Cédric Poiré",
+                "Mélanie Potvin",
+                "Clode Bouchard",
+                "Vincent Paquet",
+                "Youness Outlou",
+                "Julien Blin"
+            }
+            .OrderBy(x => rnd.Next())
+            .ToArray();
+        }
+
+        <ul class="unstyled" style="margin: 10px;">
+        @foreach (var name in names)
+        {
+            <li>@name</li>
+        }
+        </ul>
+    </div>
+    <div class="modal-footer">
+	    <a href="#" class="btn btn-inverse" data-dismiss="modal">OK</a>
+    </div>
+</div>
+
+@section head {
+	<script src="@Url.Content("~/Content/js/konami.js")" type="text/javascript"></script>
+}
+
+@section javascript {
+	var konami = new Konami();
+	konami.code = function() {
+		$('#konami').modal('show');
+	}
+
+	konami.load();
+}

@@ -1,0 +1,91 @@
+﻿@model CGI.Reflex.Web.Models.Home.HomeParams
+
+@{
+    ViewBag.Title = "Sommaire";
+}
+
+@if (Model.NumberOfActiveApplications > 0)
+{
+    <section>
+        <div class="page-header">
+            <h2>Sommaire</h2>
+        </div>
+    </section>
+    <section style="margin-top: 15px">
+        <div class="row">
+        
+            <div class="span6">
+                <div class="row">
+                    <div class="span6 home-box well-bg">
+                        <div class="control-group" style="margin-left: 10px; margin-top: 10px;">
+                            @Html.DropDownListFor(m => m.LineCriteria, new SelectList(@Model.LineCriteriaList, "Key", "Value"), new { style = "height: auto;" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 300px; text-align: center;">
+                    <div class="span6 home-box" style="height: 300px">
+                        @if (IsActionAllowed("SummaryDetails"))
+                        {
+                            <a href="@Url.Action("SummaryDetails")">
+                                <img id="imgGraphApp" width="450px" height="300px" src="@Url.Action("ApplicationsChart", new { width = 450, height = 300, lineCriteria = Model.LineCriteria })" alt="applications" />
+                            </a>
+                        }
+                        else
+                        {
+                            <img id="imgGraphApp" width="450px" height="300px" src="@Url.Action("ApplicationsChart", new { width = 450, height = 300, lineCriteria = Model.LineCriteria })" alt="applications" />
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (IsActionAllowed("Assessment"))
+            {
+                <div class="span6">
+                    <div class="row">
+                        <div class="offset1 span5 home-box well-bg">
+                            <div class="control-group" style="margin: 9px;">
+                                <h3>Bilan des applications</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 300px; text-align: center;">
+                        <div id="assessment" class="offset1 span5 home-box" style="text-align: center;height: 300px;">
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}
+else
+{
+    <div class="hero-unit">
+        <h1>Bienvenue sur @ViewBag.AppName</h1>
+        <p>@ViewBag.AppName est une application de gestion d'inventaire applicatif</p>
+        
+        @if (IsActionAllowed("Index", typeof(CGI.Reflex.Web.Areas.System.Controllers.ImportExportController)))
+        {
+            <p>
+                <a class="btn btn-primary btn-large" href="@Url.Action("Index", "ImportExport", new { area = "System" })">Importer les données <i class="icon-chevron-right icon-white"></i></a>
+            </p>
+        }
+    </div>
+}
+
+@if (IsActionAllowed("CriticalTechno"))
+{
+    <section id="criticalTechno">
+    </section>
+}
+
+@section javascript {
+    $(function() {
+    $('#LineCriteria').on('change', function(event) {
+    $('#imgGraphApp').attr('src', '@Html.Raw(Url.Action("ApplicationsChart", new { width = 450, height = 300 }))&LineCriteria=' + $('#LineCriteria').val());
+    $('#imgGraphApp').closest('a').attr('href', '@Html.Raw(@Url.Action("SummaryDetails"))?LineCriteria=' + $('#LineCriteria').val());
+    });
+
+    $('#assessment').load('@Url.Action("Assessment")');
+    $('#criticalTechno').load('@Url.Action("CriticalTechno")');
+    });
+}

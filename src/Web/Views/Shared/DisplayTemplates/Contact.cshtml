@@ -1,0 +1,73 @@
+﻿@model int?
+
+@using CGI.Reflex.Core
+@using CGI.Reflex.Core.Entities
+
+@{
+    Contact contact = null;
+    if(Model.HasValue)
+    {
+        contact = References.NHSession.Load<Contact>(Model.Value);
+    }
+}
+
+@helper PopoverContent(Contact contact)
+{
+    <text>
+        @if(!string.IsNullOrEmpty(contact.Email))
+        {
+         <div class='control-group' style='margin-bottom: 10px'>
+                <b>@Html.PropertyDisplayName(contact, "Email")</b> :
+                @if(!string.IsNullOrEmpty(contact.Email))
+                {
+                    <a href="mailto:@contact.Email">@contact.Email</a>
+                }
+         </div>
+        }
+        @if (contact.Type != null)
+        {
+         <div class='control-group' style='margin-bottom: 10px'>
+                <b>@Html.PropertyDisplayName(contact, "Type")</b> : @contact.Type
+         </div>
+        }
+        @if (!string.IsNullOrEmpty(contact.Company))
+        {
+         <div class='control-group' style='margin-bottom: 10px'>
+                <b>@Html.PropertyDisplayName(contact, "Company")</b> : @contact.Company
+         </div>
+        }
+        @if (!string.IsNullOrEmpty(contact.PhoneNumber))
+        {
+         <div class='control-group' style='margin-bottom: 10px'>
+                <b>@Html.PropertyDisplayName(contact, "PhoneNumber")</b> : @contact.PhoneNumber
+         </div>
+        }
+        @if (contact.Sector != null)
+        {
+         <div class='control-group' style='margin-bottom: 10px'>
+                <b>@Html.PropertyDisplayName(contact, "Secteur")</b> : @contact.Sector.Name
+         </div>
+        }
+        @if (!string.IsNullOrEmpty(contact.Notes))
+        {
+         <div class='control-group' style='margin-bottom: 10px'>
+                <b>@Html.PropertyDisplayName(contact, "Notes")</b> : @Html.FormattedText(contact.Notes)
+         </div>
+        }
+    </text>
+}
+
+@if (contact == null)
+{
+    <i class="icon-user"></i> <em>Aucun</em>
+}
+else
+{
+    <a href="#" id="hover-contact-@ViewData.TemplateInfo.HtmlFieldPrefix" title="@contact.FullName" data-content="@PopoverContent(contact).ToHtmlString().Replace("\"", "\\\"")"><i class="icon-user"></i></a> @contact.FullName
+    <script type="text/javascript">
+        $('#hover-contact-@ViewData.TemplateInfo.HtmlFieldPrefix').popover({
+            placement: 'bottom',
+            delay: { show: 0, hide: 500 }
+        });
+    </script>
+}

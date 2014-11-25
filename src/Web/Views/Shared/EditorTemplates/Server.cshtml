@@ -1,0 +1,22 @@
+﻿@model int?
+@using CGI.Reflex.Core.Entities;
+
+
+@{
+    Server currentServer = null;
+    if(Model.HasValue) {
+        currentServer = CGI.Reflex.Core.References.NHSession.Load<Server>(Model.Value);
+    }
+}
+
+<div class="input-append">
+    @Html.HiddenFor(m => m)
+    <input id="textbox-@ViewData.TemplateInfo.HtmlFieldPrefix" class="span2" style="width: 176px;" type="text" value="@(currentServer != null ? currentServer.Name : "")" disabled>
+    @Ajax.LargeModalActionLinkRaw("...", "ServersModal", "Pickers", new { area = "", selectionMode = "single", addFunctionName = "selectServer_" + ViewData.TemplateInfo.HtmlFieldPrefix }, new { @class = "btn", rel = "tooltip", title = "Sélectionner un serveur", style = "margin-top: 0; margin-left: -4px; margin-bottom: 9px;" })
+</div>
+<script type="text/javascript">
+    var selectServer_@(ViewData.TemplateInfo.HtmlFieldPrefix) = function(serverId, serverName) {
+        $("#@(ViewData.TemplateInfo.HtmlFieldPrefix)").val(serverId);
+        $("#textbox-@(ViewData.TemplateInfo.HtmlFieldPrefix)").val(serverName);
+    };
+</script>

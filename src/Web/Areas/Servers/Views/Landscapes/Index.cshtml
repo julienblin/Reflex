@@ -1,0 +1,146 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Landscapes.LandscapesIndex
+
+@{
+    ViewBag.Title = "Landscapes";
+}
+
+<section>
+    <div class="page-header">
+            <h2>
+                Landscapes
+                @if (IsActionAllowed("Create"))
+                {
+                    <a href="@Url.Action("Create")" class="btn btn-success btn-mini" rel="tooltip" title="Ajouter un Landscape"><i class="icon-plus-sign icon-white"></i></a>
+                }
+                <a class="btn btn-mini" data-toggle="collapse" data-target="#searchForm" rel="tooltip" title="Rechercher"><i class="icon-search"></i></a>
+
+            </h2>
+
+              <section>
+              <div class="row">
+                  <div class="span12">
+                           @{ var formClass = Model.SearchDefined ? "collapse in" : "collapse"; }
+                            <div id="searchForm" class="@formClass">
+                                <div class="well">
+                            @using (Html.BeginForm("Index", "Landscapes", FormMethod.Get))
+                            {
+                                <div class="row">
+                                <div class="span4">
+                                        <div class="control-group">
+                                            @Html.RLabelFor(m => m.Name)
+                                            @Html.EditorFor(m => m.Name)
+                                            <span class="help-inline">@Html.ValidationMessageFor(m => m.Name)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="btn btn-primary" data-submit-form="true"><i class="icon-search icon-white"></i> Rechercher</a>
+                                <a href="@Url.Action("Index")" class="btn btn-small"><i class="icon-remove"></i> Annuler les critères de recherche</a>         
+                           
+                            }
+
+                                </div>
+                            </div>
+                  </div>
+              </div>
+              </section>
+
+    </div>
+</section>
+
+<section id="results">
+    <div class="row">
+        <div class="span12">
+         @if (Model.HasResults)
+         {
+
+             @Html.Pager()
+
+                <table class="table table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@Html.OrderLink("Nom", "Name")</th>  
+                            <th>@Html.OrderLink("Description", "Description")</th>   
+                            <th></th>       
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var landscape in Model.SearchResults.Items)
+                        {
+                            var addInfoId = String.Concat("addInfo", landscape.Id);
+                            <tr>
+                                <td width="15px">
+                                @if (landscape.Servers.Count() > 0)
+                                {
+                                    <a class="btn btn-mini" data-expand-landscape-id="@landscape.Id" rel="tooltip" title="Détails">
+                                        <i class="icon-info-sign"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-mini" disabled>
+                                        <i class="icon-info-sign"></i>
+                                    </a>
+                                }
+                                </td>
+                                <td class="span5">@landscape.Name</td>
+                                <td class="span5">@landscape.Description</td>
+                                <td class="span2" style="text-align:right;">
+                                    @if (IsActionAllowed("Edit"))
+                                    {
+                                        <a href="@Url.Action("Edit", new { id = landscape.Id })" class="btn btn-mini" rel="tooltip" title="Éditer"><i class="icon-pencil"></i></a>
+                                    }
+                                    
+                                    @Html.HistoryLink("Landscape", landscape.Id, "btn-mini", "Voir l'historique")
+
+                                    @if (IsActionAllowed("Delete"))
+                                    {
+                                        @Ajax.ModalActionLinkRaw("<i class=\"icon-remove icon-white\"></i>", "Delete", "Landscapes", new { id = landscape.Id }, new { @class = "btn btn-danger btn-mini", rel = "tooltip", title = "Supprimer" })
+                                    }
+                                </td>
+                            </tr>
+                            <tr style="display:none"></tr>
+                            <tr id="@addInfoId" style="display:none"></tr>
+                        }
+
+                    </table>
+
+                @Html.Pager()
+         }
+         else
+         {
+              <blockquote>
+                  <p>Aucun résultat trouvé.</p>
+              </blockquote>
+         }
+
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    //Expand
+    $("#container").on('click', 'a[data-expand-landscape-id]', function () {
+        var id = $(this).attr('data-expand-landscape-id');
+        var target = "#addInfo" + id;
+        var curState = $(target).css("display");
+
+        if (curState == "none") {
+            if ($(target).html() == "") {
+                $.ajax({
+                    url: '@Url.Action("GetLandscapeInfo")',
+                    data: { landscapeId: id },
+                    type: 'GET',
+                    success: function (data) {
+                        $(target).html(data);
+                    }
+                });
+            }
+            $(target).css("display", ""); //Empty value, fix for IE7 (Orignally table-row)
+        }
+        else {
+            $(target).css("display", "none");
+        }
+    });
+</script>

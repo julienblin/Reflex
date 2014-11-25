@@ -1,0 +1,3 @@
+﻿@model int?
+
+@Html.DropDownListFor(m => m, new SelectList(new CGI.Reflex.Core.Queries.ApplicationQuery().OrderBy(a => a.Name).List(), "Id", "Name", Model), "")

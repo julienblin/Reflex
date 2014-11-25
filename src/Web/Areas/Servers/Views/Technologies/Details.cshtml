@@ -1,0 +1,84 @@
+﻿@model CGI.Reflex.Web.Areas.Servers.Models.Technologies.TechnologiesList
+@{
+    ViewBag.Title = @Model.ServerName + " - Technologies";
+    Layout = "~/Areas/Servers/Views/Shared/_ServerLayout.cshtml";
+}
+<section>
+    <div class="page-header">
+        <h2>
+            Technologies du serveur
+            @if (IsActionAllowed("Add"))
+            {
+                @Ajax.LargeModalActionLinkRaw("<i class='icon-plus-sign icon-white'></i>", "TechnologiesModal", "Pickers", new { area = "", PostUrl = @Url.Action("Add", new { serverId = Model.ServerId }) }, new { @class = "btn btn-success btn-mini", rel = "tooltip", title = "Associer des technologies au serveur" })
+            }
+
+            @Html.HistoryLinkProperty("Server", Model.ServerId, "btn-mini", "Voir l'historique", "TechnologyLinks")
+        </h2>
+        
+    </div>
+    <div class="row">
+        <div class="span10">
+        <div class="row-fluid">
+            <div id="applicationTechnoContainer" class="span12">
+                @if (Model.ServerTechnologies.Any())
+                {
+                    @Html.Partial("_Technologies", Model.ServerTechnologies, new ViewDataDictionary { { "editable", IsActionAllowed("Delete") } })
+                }
+                else
+                {
+                    <blockquote>
+                        <p>Pas de technologie associée au serveur.</p>
+                    </blockquote>
+                }
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+ @if (Model.DbInstanceTechnologies.Any())
+ {
+    <section>
+        <div class="page-header">
+                <h2>
+                    Technologies des instances de BD
+                </h2>
+            </div>
+        <div class="row">
+            <div class="span10">
+                @Html.Partial("_Technologies", Model.DbInstanceTechnologies, new ViewDataDictionary { { "editable", false } })
+            </div>
+        </div>
+    </section>
+ }
+
+ @if (Model.ApplicationTechnologies.Any())
+ {
+    <section>
+        <div class="page-header">
+                <h2>
+                    Technologies des applications
+                </h2>
+            </div>
+        <div class="row">
+            <div class="span10">
+                @Html.Partial("_Technologies", Model.ApplicationTechnologies, new ViewDataDictionary { { "editable", false } })
+            </div>
+        </div>
+    </section>
+ }
+ 
+
+<script type="text/javascript">
+        $("#applicationTechnoContainer").on('click', 'a[data-delete-techno]', function (event) {
+        $.ajax({
+            url: '@Url.Action("Delete", "Technologies", new { serverId = Model.ServerId })',
+            data: { technoId: $(this).attr('data-techno-id') },
+            success: function (data) {
+                $('#defaultModal').html(data);
+                $('#defaultModal').modal('show');
+            }
+        });
+        event.preventDefault();
+    });
+</script>
